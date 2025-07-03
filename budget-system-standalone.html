@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดทำงบประมาณประจำปี</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- XLSX Library -->
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        
+        /* Custom styles for better appearance */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            min-width: 300px;
+            max-width: 500px;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+        
+        .toast.error {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo } = React;
+        
+        // Icons (simplified SVG icons)
+        const Icons = {
+            Calculator: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z' })
+            ),
+            Settings: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' }),
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z' })
+            ),
+            Car: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z' }),
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M13 6H5L3 14v4a1 1 0 001 1h1m0-5h12m0 0v5a1 1 0 001 1h1v-4L17 6h-4z' })
+            ),
+            Heart: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' })
+            ),
+            Home: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' })
+            ),
+            Users: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z' })
+            ),
+            RotateCcw: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6' })
+            ),
+            Banknote: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' })
+            ),
+            Clock: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' })
+            ),
+            Calendar: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' })
+            ),
+            Save: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4' })
+            ),
+            Download: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' })
+            ),
+            Upload: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12' })
+            ),
+            Plus: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M12 4v16m8-8H4' })
+            ),
+            Trash2: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' })
+            ),
+            FileSpreadsheet: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' })
+            ),
+            Info: () => React.createElement('svg', { className: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' })
+            ),
+            CheckCircle: () => React.createElement('svg', { className: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' })
+            ),
+            AlertCircle: () => React.createElement('svg', { className: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' })
+            ),
+            X: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M6 18L18 6M6 6l12 12' })
+            ),
+            ChevronLeft: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M15 19l-7-7 7-7' })
+            ),
+            ChevronRight: () => React.createElement('svg', { className: 'w-4 h-4', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' },
+                React.createElement('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M9 5l7 7-7 7' })
+            )
+        };
+
+        // Default data
+        const defaultBudgetItems = [
+            { type: 'main_header', name: 'รวมงบประมาณรายจ่ายดำเนินงาน' },
+            { type: 'header', name: 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน' },
+            { code: '52021100', name: 'ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร', notes: '' },
+            { code: '52010700', name: 'ค่าล่วงเวลา', notes: '' },
+            { type: 'header', name: 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป' },
+            { code: '53010200', name: 'ค่าไฟฟ้า', notes: '' },
+            { code: '53010300', name: 'ค่าน้ำประปา', notes: '' },
+            { code: '53010400', name: 'ค่าโทรศัพท์', notes: '' },
+            { code: '53040100', name: 'ค่าวัสดุทั่วไป', notes: '' },
+            { code: '53040200', name: 'ค่าวัสดุงานบ้านงานครัว', notes: '' },
+            { code: '53050100', name: 'ค่าน้ำมันเชื้อเพลิง', notes: '' },
+            { code: '53100001', name: 'ค่าจ้าง', notes: '' },
+            { code: '53010100', name: 'ค่าไปรษณียากรและพัสดุไปรษณีย์', notes: '' },
+            { code: '53050500', name: 'ค่าขนส่ง', notes: '' },
+            { code: '53100400', name: 'ค่าจ้างแรงงานและทำของ', notes: '' },
+            { code: '53103900', name: 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก', notes: '' },
+            { code: '53021100', name: 'ค่าซ่อมแซมและบำรุงรักษา', notes: '' },
+            { code: '53060600', name: 'ค่าตอบแทน', notes: '' },
+            { code: '53100004', name: 'ค่าเช่า', notes: '' },
+            { code: '53040300', name: 'ค่าเช่าเครื่องถ่ายเอกสาร', notes: '' },
+            { code: '53050200', name: 'ค่าเช่ายานพาหนะ', notes: '' },
+            { code: '53070400', name: 'ค่าธรรมเนียม', notes: '' },
+            { code: '53100100', name: 'ค่ารับรอง', notes: '' },
+            { code: '53100200', name: 'ค่าใช้จ่ายในการเดินทาง', notes: '' },
+            { code: '53100201', name: 'ค่าเดินทางเยี่ยมครอบครัว', notes: '' },
+            { code: '53100202', name: 'ค่าเดินทางหมุนเวียนงาน ผจศ.', notes: '' },
+            { code: '53101000', name: 'ค่าทรัพยากรสาสนเทศห้องสมุด', notes: '' },
+            { code: '53103600', name: 'ค่าจัดประชุม/ชี้แจง', notes: '' },
+            { code: '53101500', name: 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', notes: '' },
+            { code: '53109900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
+            { type: 'header', name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค' },
+            { code: '55080300', name: 'เงินบริจาค', notes: '' },
+            { code: '55080400', name: 'เงินช่วยเหลืออื่นๆ', notes: '' },
+            { type: 'header', name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต' },
+            { code: '53110700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
+            { type: 'main_header', name: 'รวมงบประมาณรายจ่ายสินทรัพย์' },
+            { type: 'header', name: 'หมวด 7 : สินทรัพย์ถาวร' },
+            { code: '10', name: 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', notes: '' },
+            { code: '16', name: 'ครุภัณฑ์เบ็ดเตล็ด', notes: '' },
+            { code: '25', name: 'ครุภัณฑ์ยานพาหนะและขนส่ง', notes: '' },
+            { code: '5', name: 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', notes: '' },
+        ];
+
+        const defaultMasterRates = {
+            '7': { position: 'ผู้บริหารส่วน', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '6': { position: 'ผู้บริหารทีม', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '5.5': { position: 'เจ้าหน้าที่ชำนาญงาน (ควบ)', rent: 9500, monthlyAssist: 6250, lumpSum: 6000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '5': { position: 'เจ้าหน้าที่ชำนาญงาน', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '4.5': { position: 'เจ้าหน้าที่ (ควบ)', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '4': { position: 'เจ้าหน้าที่', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '3': { position: 'พนักงานปฏิบัติการ', rent: 6500, monthlyAssist: 4750, lumpSum: 5000, travel: 300, local: 250, perDiem: 450, hotel: 1800 }
+        };
+
+        const defaultEmployees = [
+            { id: '62539086', name: 'พัทธดนย์ ทรัพย์ประสม', gender: 'ชาย', startYear: 2539, level: '7', visitProvince: 'พิษณุโลก', homeVisitBusFare: 1200 },
+            { id: '52531175', name: 'พีรนุช ธนบดีภัทร', gender: 'หญิง', startYear: 2531, level: '6', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '82532130', name: 'นลินรัตน์ ตรีไพศาลศักดิ์', gender: 'หญิง', startYear: 2532, level: '5.5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '42538115', name: 'อุมารักษ์ เตลันยืน', gender: 'หญิง', startYear: 2538, level: 'ท้องถิ่น', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '42538092', name: 'สมควร กลิ่นสุคนธ์', gender: 'หญิง', startYear: 2538, level: 'ท้องถิ่น', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '52542046', name: 'สรวิชญ์ ธรรศเดชา', gender: 'ชาย', startYear: 2542, level: '5', visitProvince: '', homeVisitBusFare: 600 },
+            { id: '22538173', name: 'ประภัสสร เล็กศรีสกุล', gender: 'หญิง', startYear: 2538, level: '5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '82542011', name: 'มลธิรา สุขสำราญ', gender: 'หญิง', startYear: 2542, level: '5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 1200 },
+            { id: '42539087', name: 'สุภาณี จำปานุ้ย', gender: 'หญิง', startYear: 2539, level: '5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '62537025', name: 'วิชญ อุปันนัทธ์', gender: 'ชาย', startYear: 2537, level: '5', visitProvince: 'เชียงใหม่', homeVisitBusFare: 600 },
+            { id: '82536096', name: 'นุสรา อัศวโชคชัย', gender: 'หญิง', startYear: 2536, level: '5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '72539071', name: 'สันติภาพ ทองประดี', gender: 'ชาย', startYear: 2539, level: '5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '82538194', name: 'ขวัญญาณัฐ จุลเกษม', gender: 'หญิง', startYear: 2538, level: '4.5', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '52538087', name: 'สงวน ร้องเกาะเกิด', gender: 'ชาย', startYear: 2538, level: 'ท้องถิ่น', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '2539140', name: 'สุมาพร จงภู่', gender: 'หญิง', startYear: 2539, level: '3', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '42540033', name: 'คมสันติ์ นุชนารถ', gender: 'ชาย', startYear: 2540, level: 'ท้องถิ่น', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '82540031', name: 'พิชิต แจ่มศรี', gender: 'ชาย', startYear: 2540, level: 'ท้องถิ่น', visitProvince: '', homeVisitBusFare: 0 },
+        ];
+
+        // Utility functions
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        };
+
+        const getRatesForEmployee = (employee, masterRates) => {
+            const defaultRates = {
+                position: 'ไม่ระบุ',
+                rent: 0,
+                monthlyAssist: 0,
+                lumpSum: 0,
+                travel: 0,
+                local: 0,
+                perDiem: 0,
+                hotel: 0
+            };
+            
+            return masterRates[employee.level] || defaultRates;
+        };
+
+        // Storage functions
+        const saveToStorage = (key, data) => {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
+        };
+
+        const loadFromStorage = (key, defaultValue) => {
+            try {
+                const stored = localStorage.getItem(key);
+                return stored ? JSON.parse(stored) : defaultValue;
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+                return defaultValue;
+            }
+        };
+
+        // Excel export functions
+        const exportBudgetToExcel = (budgetData, currentYear, nextYear) => {
+            const dataRows = budgetData
+                .filter(item => item.code)
+                .map(item => {
+                    const currentValue = item.values?.[currentYear] || 0;
+                    const nextValue = item.values?.[nextYear] || 0;
+                    return [
+                        item.code,
+                        item.name,
+                        currentValue,
+                        nextValue,
+                        nextValue - currentValue,
+                        item.notes || ''
+                    ];
+                });
+
+            const totalCurrent = dataRows.reduce((sum, row) => sum + row[2], 0);
+            const totalNext = dataRows.reduce((sum, row) => sum + row[3], 0);
+            const totalRow = ['', 'ยอดรวมทั้งหมด', totalCurrent, totalNext, totalNext - totalCurrent, ''];
+
+            const headers = [
+                'รหัสบัญชี',
+                'รายการ',
+                `งบประมาณปี ${currentYear} (บาท)`,
+                `คำของบประมาณปี ${nextYear} (บาท)`,
+                'ผลต่าง (+/-)',
+                'หมายเหตุ'
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet([headers, ...dataRows, totalRow]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'งบประมาณ');
+            XLSX.writeFile(wb, `งบประมาณประจำปี_${currentYear}_vs_${nextYear}.xlsx`);
+        };
+
+        const exportEmployeesToExcel = (employees) => {
+            const headers = {
+                id: 'รหัสพนักงาน',
+                name: 'ชื่อ-สกุล',
+                gender: 'เพศ',
+                startYear: 'ปี พ.ศ. เริ่มงาน',
+                level: 'ระดับ',
+                visitProvince: 'จังหวัดเยี่ยมบ้าน',
+                homeVisitBusFare: 'ค่ารถทัวร์เยี่ยมบ้าน'
+            };
+
+            const dataToExport = employees.map(emp => {
+                const row = {};
+                for (const [key, header] of Object.entries(headers)) {
+                    row[header] = emp[key];
+                }
+                return row;
+            });
+
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'ข้อมูลพนักงาน');
+            XLSX.writeFile(wb, 'ข้อมูลพนักงาน.xlsx');
+        };
+
+        // Toast component
+        const Toast = ({ isVisible, message, type, onClose }) => {
+            useEffect(() => {
+                if (isVisible) {
+                    const timer = setTimeout(onClose, 3000);
+                    return () => clearTimeout(timer);
+                }
+            }, [isVisible, onClose]);
+
+            if (!isVisible) return null;
+
+            return React.createElement('div', {
+                className: `toast ${type} ${isVisible ? 'show' : ''}`,
+                style: { display: isVisible ? 'block' : 'none' }
+            }, [
+                React.createElement('div', { key: 'content', className: 'flex items-center' }, [
+                    React.createElement(type === 'success' ? Icons.CheckCircle : Icons.AlertCircle, { key: 'icon' }),
+                    React.createElement('p', { key: 'message', className: 'flex-1 text-sm font-medium ml-3' }, message),
+                    React.createElement('button', {
+                        key: 'close',
+                        onClick: onClose,
+                        className: 'ml-3 p-1 hover:bg-opacity-20 hover:bg-gray-500 rounded transition-colors'
+                    }, React.createElement(Icons.X))
+                ])
+            ]);
+        };
+
+        // Button component
+        const Button = ({ variant = 'primary', size = 'md', children, className = '', ...props }) => {
+            const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+            
+            const variants = {
+                primary: 'btn-primary text-white focus:ring-blue-500',
+                secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900 focus:ring-gray-500',
+                success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
+                danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
+                warning: 'bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500'
+            };
+            
+            const sizes = {
+                sm: 'px-3 py-1.5 text-sm',
+                md: 'px-4 py-2 text-sm',
+                lg: 'px-6 py-3 text-base'
+            };
+
+            return React.createElement('button', {
+                className: `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`,
+                ...props
+            }, children);
+        };
+
+        // Card component
+        const Card = ({ children, className = '' }) => {
+            return React.createElement('div', {
+                className: `bg-white rounded-xl card-shadow overflow-hidden fade-in ${className}`
+            }, children);
+        };
+
+        // Tab Navigation component
+        const TabNavigation = ({ activeTab, onTabChange }) => {
+            const tabs = [
+                { id: 'budget', label: 'ตารางงบประมาณ', icon: Icons.Calculator },
+                { id: 'config', label: 'กำหนดข้อมูล', icon: Icons.Settings },
+                { id: 'travel', label: 'คำนวณค่าเดินทาง', icon: Icons.Car },
+                { id: 'special-assist', label: 'เงินช่วยเหลืออื่นๆ', icon: Icons.Heart },
+                { id: 'family-visit', label: 'เดินทางเยี่ยมครอบครัว', icon: Icons.Home },
+                { id: 'company-trip', label: 'เดินทางร่วมงานวันพนักงาน', icon: Icons.Users },
+                { id: 'manager-rotation', label: 'เดินทางหมุนเวียน ผจศ.', icon: Icons.RotateCcw },
+                { id: 'special-assist-1', label: 'เงินช่วยเหลือพิเศษ', icon: Icons.Banknote },
+                { id: 'overtime', label: 'ค่าล่วงเวลาทำงานวันหยุด', icon: Icons.Clock },
+                { id: 'workday-calc', label: 'คำนวณวันทำงาน', icon: Icons.Calendar },
+            ];
+
+            return React.createElement('div', {
+                className: 'mb-8 border-b border-gray-200 bg-white rounded-t-xl shadow-sm'
+            }, 
+                React.createElement('nav', {
+                    className: 'flex flex-wrap overflow-x-auto',
+                    'aria-label': 'Tabs'
+                }, 
+                    tabs.map(tab => 
+                        React.createElement('button', {
+                            key: tab.id,
+                            onClick: () => onTabChange(tab.id),
+                            className: `relative flex items-center whitespace-nowrap py-4 px-6 text-sm font-medium transition-all duration-200 hover:text-blue-600 ${
+                                activeTab === tab.id
+                                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                                    : 'text-gray-600 hover:bg-gray-50'
+                            }`
+                        }, [
+                            React.createElement(tab.icon, { key: 'icon' }),
+                            React.createElement('span', { key: 'label', className: 'ml-2' }, tab.label)
+                        ])
+                    )
+                )
+            );
+        };
+
+        // Budget Table component
+        const BudgetTable = ({ budgetData, currentYear, nextYear, onUpdateBudget, onUpdateNotes }) => {
+            const calculateTotals = () => {
+                const totalCurrent = budgetData.reduce((sum, item) => 
+                    sum + (item.values ? (item.values[currentYear] || 0) : 0), 0
+                );
+                const totalNext = budgetData.reduce((sum, item) => 
+                    sum + (item.values ? (item.values[nextYear] || 0) : 0), 0
+                );
+                const totalDiff = totalNext - totalCurrent;
+                
+                return { totalCurrent, totalNext, totalDiff };
+            };
+
+            const { totalCurrent, totalNext, totalDiff } = calculateTotals();
+            const diffClass = totalDiff > 0 ? "text-green-600" : totalDiff < 0 ? "text-red-600" : "text-gray-500";
+
+            return React.createElement(Card, {},
+                React.createElement('div', { className: 'overflow-x-auto' },
+                    React.createElement('table', { className: 'w-full min-w-[1000px] text-sm text-left text-gray-700' }, [
+                        React.createElement('thead', { key: 'thead', className: 'text-xs text-gray-700 uppercase table-header sticky top-0 z-10' },
+                            React.createElement('tr', {}, [
+                                React.createElement('th', { key: 'code', className: 'px-6 py-4 w-1/12' }, 'รหัสบัญชี'),
+                                React.createElement('th', { key: 'name', className: 'px-6 py-4 w-4/12' }, 'รายการ'),
+                                React.createElement('th', { key: 'current', className: 'px-6 py-4 w-2/12 text-center' }, `งบประมาณปี ${currentYear}`),
+                                React.createElement('th', { key: 'next', className: 'px-6 py-4 w-2/12 text-center' }, `คำของบประมาณปี ${nextYear}`),
+                                React.createElement('th', { key: 'diff', className: 'px-6 py-4 w-1/12 text-right' }, 'ผลต่าง (+/-)'),
+                                React.createElement('th', { key: 'notes', className: 'px-6 py-4 w-2/12 text-center' }, 'หมายเหตุ')
+                            ])
+                        ),
+                        React.createElement('tbody', { key: 'tbody' },
+                            budgetData.map((item, index) => {
+                                if (item.type) {
+                                    const headerClass = item.type === 'main_header' 
+                                        ? "gradient-bg text-white font-bold text-base" 
+                                        : "bg-gradient-to-r from-blue-50 to-blue-100 font-semibold text-blue-800";
+                                    
+                                    return React.createElement('tr', { key: index, className: headerClass },
+                                        React.createElement('td', { colSpan: 6, className: 'px-6 py-4' }, item.name)
+                                    );
+                                }
+
+                                const currentValue = item.values?.[currentYear] || 0;
+                                const nextValue = item.values?.[nextYear] || 0;
+                                const diff = nextValue - currentValue;
+                                const diffClass = diff > 0 ? "text-green-600" : diff < 0 ? "text-red-600" : "text-gray-500";
+
+                                return React.createElement('tr', { key: index, className: 'border-b border-gray-200 hover:bg-gray-50 transition-colors' }, [
+                                    React.createElement('td', { key: 'code', className: 'px-6 py-3 font-mono text-sm' }, item.code),
+                                    React.createElement('td', { key: 'name', className: 'px-6 py-3 font-medium' }, item.name),
+                                    React.createElement('td', { key: 'current-input', className: 'px-6 py-3' },
+                                        React.createElement('input', {
+                                            type: 'number',
+                                            className: 'w-full p-2 text-right bg-white border border-gray-300 rounded-md input-focus transition-colors',
+                                            value: currentValue,
+                                            onChange: (e) => onUpdateBudget(index, currentYear, parseFloat(e.target.value) || 0)
+                                        })
+                                    ),
+                                    React.createElement('td', { key: 'next-input', className: 'px-6 py-3' },
+                                        React.createElement('input', {
+                                            type: 'number',
+                                            className: 'w-full p-2 text-right bg-white border border-gray-300 rounded-md input-focus transition-colors',
+                                            value: nextValue,
+                                            onChange: (e) => onUpdateBudget(index, nextYear, parseFloat(e.target.value) || 0)
+                                        })
+                                    ),
+                                    React.createElement('td', { key: 'diff', className: `px-6 py-3 text-right font-medium ${diffClass}` }, formatCurrency(diff)),
+                                    React.createElement('td', { key: 'notes-input', className: 'px-6 py-3' },
+                                        React.createElement('input', {
+                                            type: 'text',
+                                            className: 'w-full p-2 bg-white border border-gray-300 rounded-md input-focus transition-colors',
+                                            value: item.notes || '',
+                                            onChange: (e) => onUpdateNotes(index, e.target.value)
+                                        })
+                                    )
+                                ]);
+                            })
+                        ),
+                        React.createElement('tfoot', { key: 'tfoot', className: 'font-bold table-header sticky bottom-0' },
+                            React.createElement('tr', { className: 'border-t-2 border-gray-300' }, [
+                                React.createElement('td', { key: 'total-label', colSpan: 2, className: 'px-6 py-4 text-lg' }, 'ยอดรวมทั้งหมด'),
+                                React.createElement('td', { key: 'total-current', className: 'px-6 py-4 text-right text-lg' }, formatCurrency(totalCurrent)),
+                                React.createElement('td', { key: 'total-next', className: 'px-6 py-4 text-right text-lg' }, formatCurrency(totalNext)),
+                                React.createElement('td', { key: 'total-diff', className: `px-6 py-4 text-right text-lg font-bold ${diffClass}` }, formatCurrency(totalDiff)),
+                                React.createElement('td', { key: 'total-empty', className: 'px-6 py-4' })
+                            ])
+                        )
+                    ])
+                )
+            );
+        };
+
+        // Employee Table component
+        const EmployeeTable = ({ employees, masterRates, onUpdateEmployee, onAddEmployee, onDeleteEmployee }) => {
+            const updateEmployeeField = (index, field, value) => {
+                const employee = employees[index];
+                const updatedEmployee = { ...employee, [field]: value };
+                onUpdateEmployee(index, updatedEmployee);
+            };
+
+            const levelOptions = Object.keys(masterRates).sort((a, b) => parseFloat(b) - parseFloat(a));
+            const allLevelOptions = [...levelOptions, 'ท้องถิ่น'];
+
+            return React.createElement(Card, {}, [
+                React.createElement('div', { key: 'header', className: 'p-6 border-b border-gray-200' },
+                    React.createElement('div', { className: 'flex justify-between items-center mb-4' }, [
+                        React.createElement('h3', { key: 'title', className: 'text-xl font-semibold text-gray-900' }, 'รายชื่อพนักงาน'),
+                        React.createElement('div', { key: 'actions', className: 'flex gap-3' },
+                            React.createElement(Button, { onClick: onAddEmployee, size: 'sm' }, [
+                                React.createElement(Icons.Plus, { key: 'icon' }),
+                                React.createElement('span', { key: 'text', className: 'ml-2' }, 'เพิ่มพนักงาน')
+                            ])
+                        )
+                    ])
+                ),
+                React.createElement('div', { key: 'table', className: 'overflow-x-auto' },
+                    React.createElement('table', { className: 'w-full text-sm text-left' }, [
+                        React.createElement('thead', { key: 'thead', className: 'text-xs text-gray-700 uppercase table-header' },
+                            React.createElement('tr', {}, [
+                                React.createElement('th', { key: 'id', className: 'px-4 py-3' }, 'รหัสพนักงาน'),
+                                React.createElement('th', { key: 'name', className: 'px-4 py-3' }, 'ชื่อ-สกุล'),
+                                React.createElement('th', { key: 'gender', className: 'px-4 py-3' }, 'เพศ'),
+                                React.createElement('th', { key: 'startYear', className: 'px-4 py-3' }, 'ปีเริ่มงาน'),
+                                React.createElement('th', { key: 'level', className: 'px-4 py-3' }, 'ระดับ'),
+                                React.createElement('th', { key: 'visitProvince', className: 'px-4 py-3' }, 'จังหวัดเยี่ยมบ้าน'),
+                                React.createElement('th', { key: 'homeVisitBusFare', className: 'px-4 py-3 text-right' }, 'ค่ารถทัวร์เยี่ยมบ้าน'),
+                                React.createElement('th', { key: 'actions', className: 'px-4 py-3 text-center' }, 'จัดการ')
+                            ])
+                        ),
+                        React.createElement('tbody', { key: 'tbody' },
+                            employees.length === 0 ? 
+                                React.createElement('tr', {},
+                                    React.createElement('td', { colSpan: 8, className: 'text-center text-gray-500 py-8' }, 'ไม่มีข้อมูลพนักงาน')
+                                ) :
+                                employees.map((emp, index) =>
+                                    React.createElement('tr', { key: index, className: 'border-b border-gray-200 hover:bg-gray-50 transition-colors' }, [
+                                        React.createElement('td', { key: 'id', className: 'p-3' },
+                                            React.createElement('input', {
+                                                type: 'text',
+                                                className: 'w-full p-2 border border-gray-300 rounded-md input-focus',
+                                                value: emp.id,
+                                                onChange: (e) => updateEmployeeField(index, 'id', e.target.value)
+                                            })
+                                        ),
+                                        React.createElement('td', { key: 'name', className: 'p-3' },
+                                            React.createElement('input', {
+                                                type: 'text',
+                                                className: 'w-full p-2 border border-gray-300 rounded-md input-focus',
+                                                value: emp.name,
+                                                onChange: (e) => updateEmployeeField(index, 'name', e.target.value)
+                                            })
+                                        ),
+                                        React.createElement('td', { key: 'gender', className: 'p-3' },
+                                            React.createElement('select', {
+                                                className: 'w-full p-2 border border-gray-300 rounded-md bg-white input-focus',
+                                                value: emp.gender,
+                                                onChange: (e) => updateEmployeeField(index, 'gender', e.target.value)
+                                            }, [
+                                                React.createElement('option', { key: 'male', value: 'ชาย' }, 'ชาย'),
+                                                React.createElement('option', { key: 'female', value: 'หญิง' }, 'หญิง')
+                                            ])
+                                        ),
+                                        React.createElement('td', { key: 'startYear', className: 'p-3' },
+                                            React.createElement('input', {
+                                                type: 'number',
+                                                className: 'w-full p-2 border border-gray-300 rounded-md text-center input-focus',
+                                                value: emp.startYear,
+                                                onChange: (e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)
+                                            })
+                                        ),
+                                        React.createElement('td', { key: 'level', className: 'p-3' },
+                                            React.createElement('select', {
+                                                className: 'w-full p-2 border border-gray-300 rounded-md bg-white input-focus',
+                                                value: emp.level,
+                                                onChange: (e) => updateEmployeeField(index, 'level', e.target.value)
+                                            }, 
+                                                allLevelOptions.map(level =>
+                                                    React.createElement('option', { key: level, value: level }, level)
+                                                )
+                                            )
+                                        ),
+                                        React.createElement('td', { key: 'visitProvince', className: 'p-3' },
+                                            React.createElement('input', {
+                                                type: 'text',
+                                                className: 'w-full p-2 border border-gray-300 rounded-md input-focus',
+                                                value: emp.visitProvince,
+                                                onChange: (e) => updateEmployeeField(index, 'visitProvince', e.target.value)
+                                            })
+                                        ),
+                                        React.createElement('td', { key: 'homeVisitBusFare', className: 'p-3' },
+                                            React.createElement('input', {
+                                                type: 'number',
+                                                className: 'w-full p-2 border border-gray-300 rounded-md text-right input-focus',
+                                                value: emp.homeVisitBusFare,
+                                                onChange: (e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)
+                                            })
+                                        ),
+                                        React.createElement('td', { key: 'actions', className: 'p-3 text-center' },
+                                            React.createElement(Button, {
+                                                variant: 'danger',
+                                                size: 'sm',
+                                                onClick: () => onDeleteEmployee(index)
+                                            }, React.createElement(Icons.Trash2))
+                                        )
+                                    ])
+                                )
+                        )
+                    ])
+                )
+            ]);
+        };
+
+        // Travel Calculation Table component
+        const TravelCalculationTable = ({ employees, masterRates, calcYear }) => {
+            const [customDays, setCustomDays] = useState({ hotelNights: 2, perDiemDays: 3 });
+            
+            const eligibleServiceYears = [20, 25, 30, 35, 40];
+            
+            const travelEmployees = employees
+                .map(emp => ({ ...emp, serviceYears: calcYear - emp.startYear }))
+                .filter(emp => eligibleServiceYears.includes(emp.serviceYears))
+                .map(emp => {
+                    const rates = getRatesForEmployee(emp, masterRates);
+                    const hotel = customDays.hotelNights * (rates.hotel || 0);
+                    const perDiem = customDays.perDiemDays * (rates.perDiem || 0);
+                    const travelRoundTrip = 2 * (rates.travel || 0);
+                    const localRoundTrip = 2 * (rates.local || 0);
+                    const total = hotel + perDiem + travelRoundTrip + localRoundTrip;
+                    
+                    return {
+                        ...emp,
+                        hotel,
+                        perDiem,
+                        travelRoundTrip,
+                        localRoundTrip,
+                        total
+                    };
+                });
+
+            const travelTotal = travelEmployees.reduce((sum, emp) => sum + emp.total, 0);
+
+            return React.createElement(Card, {}, [
+                React.createElement('div', { key: 'header', className: 'p-6 border-b border-gray-200' }, [
+                    React.createElement('h3', { key: 'title', className: 'text-xl font-semibold text-gray-900 mb-4' }, 
+                        `สรุปค่าใช้จ่ายเดินทางเพื่อรับของที่ระลึก (ปี ${calcYear})`
+                    ),
+                    React.createElement('div', { key: 'info', className: 'bg-blue-50 p-4 rounded-lg mb-4' },
+                        React.createElement('div', { className: 'flex items-start gap-2' }, [
+                            React.createElement(Icons.Info, { key: 'icon' }),
+                            React.createElement('div', { key: 'content', className: 'text-sm text-blue-700' }, [
+                                React.createElement('p', { key: 'title', className: 'font-semibold mb-2' }, 'เกณฑ์การคำนวณ:'),
+                                React.createElement('ul', { key: 'list', className: 'space-y-1 text-xs' }, [
+                                    React.createElement('li', { key: '1' }, '• แสดงเฉพาะพนักงานที่มีอายุงาน 20, 25, 30, 35, หรือ 40 ปี'),
+                                    React.createElement('li', { key: '2' }, '• ค่าที่พัก, ค่าเบี้ยเลี้ยง, ค่าเดินทาง: อ้างอิงจากตารางอัตราค่าใช้จ่ายมาตรฐาน'),
+                                    React.createElement('li', { key: '3' }, '• จำนวนวัน/คืน: สามารถปรับแต่งได้')
+                                ])
+                            ])
+                        ])
+                    ),
+                    React.createElement('div', { key: 'controls', className: 'bg-yellow-50 p-4 rounded-lg' }, [
+                        React.createElement('h5', { key: 'title', className: 'font-semibold text-yellow-800 mb-3' }, 'จำนวนวัน/คืน (ใช้สำหรับทุกคน)'),
+                        React.createElement('div', { key: 'inputs', className: 'grid grid-cols-2 gap-4' }, [
+                            React.createElement('div', { key: 'hotel' }, [
+                                React.createElement('label', { key: 'label', className: 'text-sm text-yellow-700' }, 'จำนวนคืนที่พัก'),
+                                React.createElement('input', {
+                                    key: 'input',
+                                    type: 'number',
+                                    className: 'mt-1 w-full p-2 border border-gray-300 rounded-md input-focus',
+                                    value: customDays.hotelNights,
+                                    onChange: (e) => setCustomDays(prev => ({ ...prev, hotelNights: parseInt(e.target.value) || 0 }))
+                                })
+                            ]),
+                            React.createElement('div', { key: 'perDiem' }, [
+                                React.createElement('label', { key: 'label', className: 'text-sm text-yellow-700' }, 'จำนวนวันเบี้ยเลี้ยง'),
+                                React.createElement('input', {
+                                    key: 'input',
+                                    type: 'number',
+                                    className: 'mt-1 w-full p-2 border border-gray-300 rounded-md input-focus',
+                                    value: customDays.perDiemDays,
+                                    onChange: (e) => setCustomDays(prev => ({ ...prev, perDiemDays: parseInt(e.target.value) || 0 }))
+                                })
+                            ])
+                        ])
+                    ])
+                ]),
+                React.createElement('div', { key: 'table', className: 'overflow-x-auto' },
+                    React.createElement('table', { className: 'w-full text-sm text-left' }, [
+                        React.createElement('thead', { key: 'thead', className: 'table-header' },
+                            React.createElement('tr', {}, [
+                                React.createElement('th', { key: 'id', className: 'px-4 py-3' }, 'รหัสพนักงาน'),
+                                React.createElement('th', { key: 'name', className: 'px-4 py-3' }, 'ชื่อ-สกุล'),
+                                React.createElement('th', { key: 'serviceYears', className: 'px-4 py-3 text-center' }, 'อายุงาน (ปี)'),
+                                React.createElement('th', { key: 'hotel', className: 'px-4 py-3 text-right' }, `ค่าที่พัก (${customDays.hotelNights} คืน)`),
+                                React.createElement('th', { key: 'perDiem', className: 'px-4 py-3 text-right' }, `ค่าเบี้ยเลี้ยง (${customDays.perDiemDays} วัน)`),
+                                React.createElement('th', { key: 'travel', className: 'px-4 py-3 text-right' }, 'ค่ารถประจำทาง (ไป-กลับ)'),
+                                React.createElement('th', { key: 'local', className: 'px-4 py-3 text-right' }, 'ค่ารถรับจ้าง (ไป-กลับ)'),
+                                React.createElement('th', { key: 'total', className: 'px-4 py-3 text-right font-semibold' }, 'รวม (บาท)')
+                            ])
+                        ),
+                        React.createElement('tbody', { key: 'tbody' },
+                            travelEmployees.length === 0 ? 
+                                React.createElement('tr', {},
+                                    React.createElement('td', { colSpan: 8, className: 'text-center text-gray-500 py-8' }, 
+                                        `ไม่พบพนักงานที่เข้าเกณฑ์สำหรับปี พ.ศ. ${calcYear}`
+                                    )
+                                ) :
+                                travelEmployees.map((emp, index) => {
+                                    const rates = getRatesForEmployee(emp, masterRates);
+                                    return React.createElement('tr', { key: index, className: 'border-b border-gray-200 hover:bg-gray-50' }, [
+                                        React.createElement('td', { key: 'id', className: 'px-4 py-3 text-gray-600' }, emp.id),
+                                        React.createElement('td', { key: 'name', className: 'px-4 py-3 font-medium' }, emp.name),
+                                        React.createElement('td', { key: 'serviceYears', className: 'px-4 py-3 text-center font-bold text-blue-600' }, emp.serviceYears),
+                                        React.createElement('td', { key: 'hotel', className: 'px-4 py-3 text-right' }, [
+                                            React.createElement('div', { key: 'amount' }, formatCurrency(emp.hotel)),
+                                            React.createElement('div', { key: 'detail', className: 'text-xs text-gray-500' }, 
+                                                `(${formatCurrency(rates.hotel)} × ${customDays.hotelNights} คืน)`
+                                            )
+                                        ]),
+                                        React.createElement('td', { key: 'perDiem', className: 'px-4 py-3 text-right' }, [
+                                            React.createElement('div', { key: 'amount' }, formatCurrency(emp.perDiem)),
+                                            React.createElement('div', { key: 'detail', className: 'text-xs text-gray-500' }, 
+                                                `(${formatCurrency(rates.perDiem)} × ${customDays.perDiemDays} วัน)`
+                                            )
+                                        ]),
+                                        React.createElement('td', { key: 'travel', className: 'px-4 py-3 text-right' }, [
+                                            React.createElement('div', { key: 'amount' }, formatCurrency(emp.travelRoundTrip)),
+                                            React.createElement('div', { key: 'detail', className: 'text-xs text-gray-500' }, 
+                                                `(${formatCurrency(rates.travel)} × 2 เที่ยว)`
+                                            )
+                                        ]),
+                                        React.createElement('td', { key: 'local', className: 'px-4 py-3 text-right' }, [
+                                            React.createElement('div', { key: 'amount' }, formatCurrency(emp.localRoundTrip)),
+                                            React.createElement('div', { key: 'detail', className: 'text-xs text-gray-500' }, 
+                                                `(${formatCurrency(rates.local)} × 2 เที่ยว)`
+                                            )
+                                        ]),
+                                        React.createElement('td', { key: 'total', className: 'px-4 py-3 text-right font-bold' }, formatCurrency(emp.total))
+                                    ]);
+                                })
+                        )
+                    ])
+                ),
+                React.createElement('div', { key: 'footer', className: 'p-6 table-header border-t border-gray-200 flex justify-between items-center' }, [
+                    React.createElement('div', { key: 'total', className: 'flex items-center gap-4' }, [
+                        React.createElement('span', { key: 'label', className: 'text-lg font-semibold' }, 'ยอดรวมทั้งหมด:'),
+                        React.createElement('span', { key: 'amount', className: 'text-2xl font-bold text-blue-600' }, 
+                            `${formatCurrency(travelTotal)} บาท`
+                        )
+                    ])
+                ])
+            ]);
+        };
+
+        // Main App component
+        const App = () => {
+            const [budgetData, setBudgetData] = useState([]);
+            const [employees, setEmployees] = useState([]);
+            const [masterRates, setMasterRates] = useState({});
+            const [activeTab, setActiveTab] = useState('budget');
+            const [currentYear, setCurrentYear] = useState(2568);
+            const [nextYear, setNextYear] = useState(2569);
+            const [calcYear, setCalcYear] = useState(2569);
+            const [isLoading, setIsLoading] = useState(true);
+            const [toast, setToast] = useState({
+                isVisible: false,
+                message: '',
+                type: 'success'
+            });
+
+            // Initialize budget data with default values for all years
+            const initializeBudgetData = (items) => {
+                return items.map(item => {
+                    if (item.type) return item;
+                    const newItem = { ...item, values: {} };
+                    for (let year = 2568; year <= 2580; year++) {
+                        newItem.values[year] = 0;
+                    }
+                    return newItem;
+                });
+            };
+
+            useEffect(() => {
+                const loadData = () => {
+                    try {
+                        // Load budget data
+                        const savedBudget = loadFromStorage('BUDGET', []);
+                        const defaultData = initializeBudgetData(defaultBudgetItems);
+                        
+                        if (savedBudget.length > 0) {
+                            const mergedBudget = defaultData.map(defaultItem => {
+                                if (defaultItem.type) return defaultItem;
+                                const savedItem = savedBudget.find(s => s.code === defaultItem.code);
+                                if (savedItem) {
+                                    const mergedValues = { ...defaultItem.values, ...savedItem.values };
+                                    return { ...defaultItem, ...savedItem, values: mergedValues };
+                                }
+                                return defaultItem;
+                            });
+                            setBudgetData(mergedBudget);
+                        } else {
+                            setBudgetData(defaultData);
+                        }
+
+                        // Load other data
+                        setEmployees(loadFromStorage('EMPLOYEES', defaultEmployees));
+                        setMasterRates(loadFromStorage('MASTER_RATES', defaultMasterRates));
+                    } catch (error) {
+                        console.error('Error loading data:', error);
+                        // Fallback to defaults
+                        setBudgetData(initializeBudgetData(defaultBudgetItems));
+                        setEmployees(defaultEmployees);
+                        setMasterRates(defaultMasterRates);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+
+                loadData();
+            }, []);
+
+            const showToast = useCallback((message, type = 'success') => {
+                setToast({ isVisible: true, message, type });
+            }, []);
+
+            const hideToast = useCallback(() => {
+                setToast(prev => ({ ...prev, isVisible: false }));
+            }, []);
+
+            const saveAllData = () => {
+                try {
+                    saveToStorage('BUDGET', budgetData);
+                    saveToStorage('EMPLOYEES', employees);
+                    saveToStorage('MASTER_RATES', masterRates);
+                    showToast('บันทึกข้อมูลเรียบร้อยแล้ว');
+                } catch (error) {
+                    showToast('เกิดข้อผิดพลาดในการบันทึก', 'error');
+                }
+            };
+
+            const updateBudgetItem = (index, year, value) => {
+                setBudgetData(prev => {
+                    const updated = [...prev];
+                    if (updated[index].values) {
+                        updated[index].values[year] = value;
+                    }
+                    return updated;
+                });
+            };
+
+            const updateBudgetNotes = (index, notes) => {
+                setBudgetData(prev => {
+                    const updated = [...prev];
+                    updated[index].notes = notes;
+                    return updated;
+                });
+            };
+
+            const updateEmployee = (index, employee) => {
+                setEmployees(prev => {
+                    const updated = [...prev];
+                    updated[index] = employee;
+                    return updated;
+                });
+            };
+
+            const addEmployee = () => {
+                const newEmployee = {
+                    id: '',
+                    name: '',
+                    gender: 'ชาย',
+                    startYear: new Date().getFullYear() + 543,
+                    level: '3',
+                    visitProvince: '',
+                    homeVisitBusFare: 0
+                };
+                setEmployees(prev => [newEmployee, ...prev]);
+            };
+
+            const deleteEmployee = (index) => {
+                setEmployees(prev => prev.filter((_, i) => i !== index));
+            };
+
+            const updateMasterRate = (level, key, value) => {
+                setMasterRates(prev => ({
+                    ...prev,
+                    [level]: {
+                        ...prev[level],
+                        [key]: key === 'position' ? value : (parseFloat(value) || 0)
+                    }
+                }));
+            };
+
+            const handleExportBudget = () => {
+                try {
+                    exportBudgetToExcel(budgetData, currentYear, nextYear);
+                    showToast('ส่งออกข้อมูลงบประมาณเรียบร้อยแล้ว');
+                } catch (error) {
+                    showToast('เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
+                }
+            };
+
+            const handleExportEmployees = () => {
+                try {
+                    exportEmployeesToExcel(employees);
+                    showToast('ส่งออกข้อมูลพนักงานเรียบร้อยแล้ว');
+                } catch (error) {
+                    showToast('เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
+                }
+            };
+
+            const resetAllData = () => {
+                if (window.confirm('คุณต้องการลบข้อมูลที่บันทึกไว้ทั้งหมดและกลับไปใช้ค่าเริ่มต้นใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+                    localStorage.clear();
+                    setBudgetData(initializeBudgetData(defaultBudgetItems));
+                    setEmployees([...defaultEmployees]);
+                    setMasterRates({ ...defaultMasterRates });
+                    showToast('ล้างข้อมูลเรียบร้อยแล้ว');
+                }
+            };
+
+            const yearOptions = Array.from({ length: 13 }, (_, i) => 2568 + i);
+
+            const renderTabContent = () => {
+                switch (activeTab) {
+                    case 'budget':
+                        return React.createElement('div', { className: 'fade-in' }, [
+                            React.createElement(Card, { key: 'budget-card' }, [
+                                React.createElement('div', { key: 'controls', className: 'p-6 table-header border-b border-gray-200' },
+                                    React.createElement('div', { className: 'flex flex-wrap items-center justify-center gap-6' }, [
+                                        React.createElement('div', { key: 'current-year', className: 'flex items-center gap-3' }, [
+                                            React.createElement('label', { key: 'label', className: 'font-semibold text-gray-700' }, 'เปรียบเทียบปี:'),
+                                            React.createElement('select', {
+                                                key: 'select',
+                                                value: currentYear,
+                                                onChange: (e) => setCurrentYear(Number(e.target.value)),
+                                                className: 'px-4 py-2 border border-gray-300 rounded-lg bg-white input-focus'
+                                            }, 
+                                                yearOptions.map(year =>
+                                                    React.createElement('option', { key: year, value: year }, year)
+                                                )
+                                            )
+                                        ]),
+                                        React.createElement('div', { key: 'next-year', className: 'flex items-center gap-3' }, [
+                                            React.createElement('label', { key: 'label', className: 'font-semibold text-gray-700' }, 'กับปี:'),
+                                            React.createElement('select', {
+                                                key: 'select',
+                                                value: nextYear,
+                                                onChange: (e) => {
+                                                    const year = Number(e.target.value);
+                                                    setNextYear(year);
+                                                    setCalcYear(year);
+                                                },
+                                                className: 'px-4 py-2 border border-gray-300 rounded-lg bg-white input-focus'
+                                            }, 
+                                                yearOptions.map(year =>
+                                                    React.createElement('option', { key: year, value: year }, year)
+                                                )
+                                            )
+                                        ])
+                                    ])
+                                ),
+                                React.createElement(BudgetTable, {
+                                    key: 'budget-table',
+                                    budgetData,
+                                    currentYear,
+                                    nextYear,
+                                    onUpdateBudget: updateBudgetItem,
+                                    onUpdateNotes: updateBudgetNotes
+                                }),
+                                React.createElement('div', { key: 'actions', className: 'p-6 table-header border-t border-gray-200 flex justify-between items-center' },
+                                    React.createElement('div', { className: 'flex gap-4' }, [
+                                        React.createElement(Button, { key: 'save', onClick: saveAllData }, [
+                                            React.createElement(Icons.Save, { key: 'icon' }),
+                                            React.createElement('span', { key: 'text', className: 'ml-2' }, 'บันทึก')
+                                        ]),
+                                        React.createElement(Button, { key: 'export', onClick: handleExportBudget, variant: 'success' }, [
+                                            React.createElement(Icons.FileSpreadsheet, { key: 'icon' }),
+                                            React.createElement('span', { key: 'text', className: 'ml-2' }, 'ส่งออกเป็น Excel')
+                                        ])
+                                    ])
+                                )
+                            ])
+                        ]);
+
+                    case 'config':
+                        return React.createElement('div', { className: 'fade-in space-y-8' }, [
+                            // Master Rates Table
+                            React.createElement(Card, { key: 'master-rates' }, [
+                                React.createElement('div', { key: 'header', className: 'p-6 border-b border-gray-200' },
+                                    React.createElement('h3', { className: 'text-xl font-semibold text-gray-900' }, 'ตารางอัตราค่าใช้จ่ายมาตรฐาน')
+                                ),
+                                React.createElement('div', { key: 'table', className: 'overflow-x-auto' },
+                                    React.createElement('table', { className: 'w-full text-sm text-left' }, [
+                                        React.createElement('thead', { key: 'thead', className: 'table-header' },
+                                            React.createElement('tr', {}, [
+                                                React.createElement('th', { key: 'position', className: 'px-4 py-3' }, 'ตำแหน่ง'),
+                                                React.createElement('th', { key: 'level', className: 'px-4 py-3' }, 'ระดับ'),
+                                                React.createElement('th', { key: 'rent', className: 'px-4 py-3 text-right' }, 'ค่าเช่าบ้าน'),
+                                                React.createElement('th', { key: 'monthlyAssist', className: 'px-4 py-3 text-right' }, 'เงินช่วยเหลือรายเดือน'),
+                                                React.createElement('th', { key: 'lumpSum', className: 'px-4 py-3 text-right' }, 'ค่าซื้อของเหมาจ่าย'),
+                                                React.createElement('th', { key: 'travel', className: 'px-4 py-3 text-right' }, 'ค่ารถประจำทาง โคราช - กทม'),
+                                                React.createElement('th', { key: 'local', className: 'px-4 py-3 text-right' }, 'ค่ารถรับจ้าง ขนส่ง-ที่พัก'),
+                                                React.createElement('th', { key: 'perDiem', className: 'px-4 py-3 text-right' }, 'ค่าเบี้ยเลี้ยง'),
+                                                React.createElement('th', { key: 'hotel', className: 'px-4 py-3 text-right' }, 'ค่าที่พัก')
+                                            ])
+                                        ),
+                                        React.createElement('tbody', { key: 'tbody' },
+                                            Object.keys(masterRates)
+                                                .sort((a, b) => parseFloat(b) - parseFloat(a))
+                                                .map(level => {
+                                                    const data = masterRates[level];
+                                                    return React.createElement('tr', { key: level, className: 'border-b border-gray-200 hover:bg-gray-50' }, [
+                                                        React.createElement('td', { key: 'position', className: 'p-3' },
+                                                            React.createElement('input', {
+                                                                type: 'text',
+                                                                className: 'w-full p-2 border border-gray-300 rounded-md input-focus',
+                                                                value: data.position,
+                                                                onChange: (e) => updateMasterRate(level, 'position', e.target.value)
+                                                            })
+                                                        ),
+                                                        React.createElement('td', { key: 'level', className: 'px-4 py-3 text-center font-medium' }, level),
+                                                        ...['rent', 'monthlyAssist', 'lumpSum', 'travel', 'local', 'perDiem', 'hotel'].map(key =>
+                                                            React.createElement('td', { key, className: 'p-3' },
+                                                                React.createElement('input', {
+                                                                    type: 'number',
+                                                                    className: 'w-full p-2 border border-gray-300 rounded-md text-right input-focus',
+                                                                    value: data[key],
+                                                                    onChange: (e) => updateMasterRate(level, key, e.target.value)
+                                                                })
+                                                            )
+                                                        )
+                                                    ]);
+                                                })
+                                        )
+                                    ])
+                                )
+                            ]),
+
+                            // Employee Management
+                            React.createElement('div', { key: 'employees', className: 'space-y-6' }, [
+                                React.createElement('div', { key: 'header', className: 'flex flex-wrap justify-between items-center gap-4' }, [
+                                    React.createElement('h3', { key: 'title', className: 'text-xl font-semibold text-gray-900' }, 'รายชื่อพนักงาน'),
+                                    React.createElement('div', { key: 'actions', className: 'flex gap-3' }, [
+                                        React.createElement(Button, { key: 'export', onClick: handleExportEmployees, variant: 'success', size: 'sm' }, [
+                                            React.createElement(Icons.Download, { key: 'icon' }),
+                                            React.createElement('span', { key: 'text', className: 'ml-2' }, 'ส่งออกข้อมูล')
+                                        ]),
+                                        React.createElement(Button, { key: 'reset', onClick: resetAllData, variant: 'danger', size: 'sm' }, [
+                                            React.createElement(Icons.RotateCcw, { key: 'icon' }),
+                                            React.createElement('span', { key: 'text', className: 'ml-2' }, 'ล้างข้อมูลทั้งหมด')
+                                        ])
+                                    ])
+                                ]),
+                                
+                                React.createElement(EmployeeTable, {
+                                    key: 'employee-table',
+                                    employees,
+                                    masterRates,
+                                    onUpdateEmployee: updateEmployee,
+                                    onAddEmployee: addEmployee,
+                                    onDeleteEmployee: deleteEmployee
+                                })
+                            ]),
+
+                            React.createElement('div', { key: 'save-section', className: 'flex justify-end pt-6 border-t border-gray-200' },
+                                React.createElement(Button, { onClick: saveAllData, size: 'lg' }, [
+                                    React.createElement(Icons.Save, { key: 'icon' }),
+                                    React.createElement('span', { key: 'text', className: 'ml-2' }, 'บันทึกทั้งหมด')
+                                ])
+                            )
+                        ]);
+
+                    case 'travel':
+                        return React.createElement('div', { className: 'fade-in space-y-6' },
+                            React.createElement(TravelCalculationTable, {
+                                employees,
+                                masterRates,
+                                calcYear
+                            })
+                        );
+
+                    default:
+                        return React.createElement('div', { className: 'fade-in' },
+                            React.createElement(Card, {},
+                                React.createElement('div', { className: 'p-12 text-center' }, [
+                                    React.createElement('p', { key: 'message', className: 'text-gray-500 text-lg' }, 'ฟีเจอร์นี้อยู่ระหว่างการพัฒนา'),
+                                    React.createElement('p', { key: 'instruction', className: 'text-gray-400 mt-2' }, 'กรุณาเลือกแท็บอื่นเพื่อใช้งาน')
+                                ])
+                            )
+                        );
+                }
+            };
+
+            if (isLoading) {
+                return React.createElement('div', { className: 'flex items-center justify-center min-h-screen' },
+                    React.createElement('div', { className: 'spinner' })
+                );
+            }
+
+            return React.createElement('div', { className: 'min-h-screen gradient-bg' }, [
+                React.createElement('div', { key: 'container', className: 'container mx-auto px-4 py-8' }, [
+                    // Header
+                    React.createElement('header', { key: 'header', className: 'text-center mb-8 fade-in' }, [
+                        React.createElement('h1', { key: 'title', className: 'text-4xl font-bold text-white mb-2' }, 'ระบบจัดทำงบประมาณประจำปี'),
+                        React.createElement('p', { key: 'subtitle', className: 'text-white opacity-90 text-lg' }, 'ระบบจัดการและคำนวณงบประมาณอย่างมีประสิทธิภาพ')
+                    ]),
+
+                    // Tab Navigation
+                    React.createElement(TabNavigation, { key: 'tabs', activeTab, onTabChange: setActiveTab }),
+
+                    // Tab Content
+                    renderTabContent()
+                ]),
+
+                // Toast Notifications
+                React.createElement(Toast, {
+                    key: 'toast',
+                    isVisible: toast.isVisible,
+                    message: toast.message,
+                    type: toast.type,
+                    onClose: hideToast
+                })
+            ]);
+        };
+
+        // Render the app
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        // Configure Babel
+        Babel.registerPlugin("babel-plugin-transform-react-jsx", window.BabelPluginTransformReactJSX);
+    </script>
+</body>
+</html>

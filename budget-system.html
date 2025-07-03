@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดทำงบประมาณประจำปี</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, createElement: h } = React;
+        const { motion, AnimatePresence } = Motion;
+        const { 
+            Calculator, Settings, Car, Heart, Home, Users, RotateCcw, 
+            Banknote, Clock, Calendar, BarChart3, FileText, Shield, 
+            Database, Layout, Plus, Trash2, UserCheck, UserX, Save, 
+            Download, Upload, Info, Edit3, Check, X, ChevronLeft, 
+            ChevronRight, TrendingUp, TrendingDown, AlertTriangle,
+            CheckCircle, XCircle, RefreshCw, PieChart, Target,
+            DollarSign, MapPin, Award, AlertCircle, Filter
+        } = LucideReact;
+
+        // Default Data
+        const defaultBudgetItems = [
+            { type: 'main_header', name: 'รวมงบประมาณรายจ่ายดำเนินงาน' },
+            { type: 'header', name: 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน' },
+            { code: '52021100', name: 'ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร', notes: '' },
+            { code: '52010700', name: 'ค่าล่วงเวลา', notes: '' },
+            { type: 'header', name: 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป' },
+            { code: '53010200', name: 'ค่าไฟฟ้า', notes: '' },
+            { code: '53010300', name: 'ค่าน้ำประปา', notes: '' },
+            { code: '53010400', name: 'ค่าโทรศัพท์', notes: '' },
+            { code: '53040100', name: 'ค่าวัสดุทั่วไป', notes: '' },
+            { code: '53040200', name: 'ค่าวัสดุงานบ้านงานครัว', notes: '' },
+            { code: '53050100', name: 'ค่าน้ำมันเชื้อเพลิง', notes: '' },
+            { code: '53100001', name: 'ค่าจ้าง', notes: '' },
+            { code: '53010100', name: 'ค่าไปรษณียากรและพัสดุไปรษณีย์', notes: '' },
+            { code: '53050500', name: 'ค่าขนส่ง', notes: '' },
+            { code: '53100400', name: 'ค่าจ้างแรงงานและทำของ', notes: '' },
+            { code: '53103900', name: 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก', notes: '' },
+            { code: '53021100', name: 'ค่าซ่อมแซมและบำรุงรักษา', notes: '' },
+            { code: '53060600', name: 'ค่าตอบแทน', notes: '' },
+            { code: '53100004', name: 'ค่าเช่า', notes: '' },
+            { code: '53040300', name: 'ค่าเช่าเครื่องถ่ายเอกสาร', notes: '' },
+            { code: '53050200', name: 'ค่าเช่ายานพาหนะ', notes: '' },
+            { code: '53070400', name: 'ค่าธรรมเนียม', notes: '' },
+            { code: '53100100', name: 'ค่ารับรอง', notes: '' },
+            { code: '53100200', name: 'ค่าใช้จ่ายในการเดินทาง', notes: '' },
+            { code: '53100201', name: 'ค่าเดินทางเยี่ยมครอบครัว', notes: '' },
+            { code: '53100202', name: 'ค่าเดินทางหมุนเวียนงาน ผจศ.', notes: '' },
+            { code: '53101000', name: 'ค่าทรัพยากรสาสนเทศห้องสมุด', notes: '' },
+            { code: '53103600', name: 'ค่าจัดประชุม/ชี้แจง', notes: '' },
+            { code: '53101500', name: 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', notes: '' },
+            { code: '53109900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
+            { type: 'header', name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค' },
+            { code: '55080300', name: 'เงินบริจาค', notes: '' },
+            { code: '55080400', name: 'เงินช่วยเหลืออื่นๆ', notes: '' },
+            { type: 'header', name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต' },
+            { code: '53110700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
+            { type: 'main_header', name: 'รวมงบประมาณรายจ่ายสินทรัพย์' },
+            { type: 'header', name: 'หมวด 7 : สินทรัพย์ถาวร' },
+            { code: '10', name: 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', notes: '' },
+            { code: '16', name: 'ครุภัณฑ์เบ็ดเตล็ด', notes: '' },
+            { code: '25', name: 'ครุภัณฑ์ยานพาหนะและขนส่ง', notes: '' },
+            { code: '5', name: 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', notes: '' },
+        ];
+
+        const defaultMasterRates = {
+            '7': { position: 'ผู้บริหารส่วน', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '6': { position: 'ผู้บริหารทีม', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '5.5': { position: 'เจ้าหน้าที่ชำนาญงาน (ควบ)', rent: 9500, monthlyAssist: 6250, lumpSum: 6000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+            '5': { position: 'เจ้าหน้าที่ชำนาญงาน', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '4.5': { position: 'เจ้าหน้าที่ (ควบ)', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '4': { position: 'เจ้าหน้าที่', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+            '3': { position: 'พนักงานปฏิบัติการ', rent: 6500, monthlyAssist: 4750, lumpSum: 5000, travel: 300, local: 250, perDiem: 450, hotel: 1800 }
+        };
+
+        const defaultEmployees = [
+            { id: '62539086', name: 'พัทธดนย์ ทรัพย์ประสม', gender: 'ชาย', startYear: 2539, level: '7', status: 'มีสิทธิ์', visitProvince: 'พิษณุโลก', homeVisitBusFare: 1200 },
+            { id: '52531175', name: 'พีรนุช ธนบดีภัทร', gender: 'หญิง', startYear: 2531, level: '6', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '82532130', name: 'นลินรัตน์ ตรีไพศาลศักดิ์', gender: 'หญิง', startYear: 2532, level: '5.5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '42538115', name: 'อุมารักษ์ เตลันยืน', gender: 'หญิง', startYear: 2538, level: '5', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '42538092', name: 'สมควร กลิ่นสุคนธ์', gender: 'หญิง', startYear: 2538, level: '4', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '52542046', name: 'สรวิชญ์ ธรรศเดชา', gender: 'ชาย', startYear: 2542, level: '5', status: 'มีสิทธิ์', visitProvince: '', homeVisitBusFare: 600 },
+            { id: '22538173', name: 'ประภัสสร เล็กศรีสกุล', gender: 'หญิง', startYear: 2538, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '82542011', name: 'มลธิรา สุขสำราญ', gender: 'หญิง', startYear: 2542, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 1200 },
+            { id: '42539087', name: 'สุภาณี จำปานุ้ย', gender: 'หญิง', startYear: 2539, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '62537025', name: 'วิชญ อุปันนัทธ์', gender: 'ชาย', startYear: 2537, level: '5', status: 'มีสิทธิ์', visitProvince: 'เชียงใหม่', homeVisitBusFare: 600 },
+            { id: '82536096', name: 'นุสรา อัศวโชคชัย', gender: 'หญิง', startYear: 2536, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '72539071', name: 'สันติภาพ ทองประดี', gender: 'ชาย', startYear: 2539, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '82538194', name: 'ขวัญญาณัฐ จุลเกษม', gender: 'หญิง', startYear: 2538, level: '4.5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
+            { id: '52538087', name: 'สงวน ร้องเกาะเกิด', gender: 'ชาย', startYear: 2538, level: '4', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '2539140', name: 'สุมาพร จงภู่', gender: 'หญิง', startYear: 2539, level: '3', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 0 },
+            { id: '42540033', name: 'คมสันติ์ นุชนารถ', gender: 'ชาย', startYear: 2540, level: '3', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
+            { id: '82540031', name: 'พิชิต แจ่มศรี', gender: 'ชาย', startYear: 2540, level: '3', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
+        ];
+
+        // Utility Functions
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        };
+
+        const getRatesForEmployee = (employee, masterRates) => {
+            const defaultRates = {
+                position: 'ไม่ระบุ',
+                rent: 0,
+                monthlyAssist: 0,
+                lumpSum: 0,
+                travel: 0,
+                local: 0,
+                perDiem: 0,
+                hotel: 0
+            };
+            
+            return masterRates[employee.level] || defaultRates;
+        };
+
+        const calculateSpecialAssist = (employees, masterRates) => {
+            return employees
+                .filter(emp => emp.status === 'มีสิทธิ์')
+                .map(emp => {
+                    const rates = getRatesForEmployee(emp, masterRates);
+                    const totalRent = (rates.rent || 0) * 12;
+                    const totalMonthlyAssist = (rates.monthlyAssist || 0) * 12;
+                    const lumpSum = rates.lumpSum || 0;
+                    const total = totalRent + totalMonthlyAssist;
+                    
+                    return {
+                        ...emp,
+                        totalRent,
+                        totalMonthlyAssist,
+                        lumpSum,
+                        total,
+                        rentPerMonth: rates.rent || 0,
+                        monthlyAssistPerMonth: rates.monthlyAssist || 0
+                    };
+                });
+        };
+
+        // Storage Manager
+        const StorageManager = {
+            save: (key, data) => {
+                try {
+                    localStorage.setItem(`budgetSystem_${key}`, JSON.stringify(data));
+                } catch (error) {
+                    console.error('Error saving to localStorage:', error);
+                }
+            },
+            load: (key, defaultValue) => {
+                try {
+                    const stored = localStorage.getItem(`budgetSystem_${key}`);
+                    return stored ? JSON.parse(stored) : defaultValue;
+                } catch (error) {
+                    console.error('Error loading from localStorage:', error);
+                    return defaultValue;
+                }
+            },
+            clear: () => {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('budgetSystem_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            }
+        };
+
+        // Components
+        const Card = ({ children, className = '', hover = false }) => {
+            return h(motion.div, {
+                initial: { opacity: 0, y: 20 },
+                animate: { opacity: 1, y: 0 },
+                transition: { duration: 0.3 },
+                whileHover: hover ? { y: -2, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" } : undefined,
+                className: `bg-white rounded-xl shadow-lg overflow-hidden ${className}`
+            }, children);
+        };
+
+        const Button = ({ variant = 'primary', size = 'md', loading = false, children, className = '', disabled, ...props }) => {
+            const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+            
+            const variants = {
+                primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
+                secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900 focus:ring-gray-500',
+                success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
+                danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
+                warning: 'bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500'
+            };
+            
+            const sizes = {
+                sm: 'px-3 py-1.5 text-sm',
+                md: 'px-4 py-2 text-sm',
+                lg: 'px-6 py-3 text-base'
+            };
+
+            return h(motion.button, {
+                whileHover: { scale: 1.02 },
+                whileTap: { scale: 0.98 },
+                className: `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`,
+                disabled: disabled || loading,
+                ...props
+            }, loading ? [
+                h('div', { key: 'spinner', className: 'loading-spinner w-4 h-4 mr-2' }),
+                'กำลังโหลด...'
+            ] : children);
+        };
+
+        const Toast = ({ isVisible, message, type, onClose }) => {
+            useEffect(() => {
+                if (isVisible) {
+                    const timer = setTimeout(onClose, 3000);
+                    return () => clearTimeout(timer);
+                }
+            }, [isVisible, onClose]);
+
+            const bgColor = type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+            const textColor = type === 'success' ? 'text-green-800' : 'text-red-800';
+            const Icon = type === 'success' ? CheckCircle : AlertCircle;
+            const iconColor = type === 'success' ? 'text-green-600' : 'text-red-600';
+
+            return h(AnimatePresence, null,
+                isVisible && h(motion.div, {
+                    key: 'toast',
+                    initial: { opacity: 0, y: -50, scale: 0.9 },
+                    animate: { opacity: 1, y: 0, scale: 1 },
+                    exit: { opacity: 0, y: -50, scale: 0.9 },
+                    className: `fixed top-4 right-4 z-50 ${bgColor} border rounded-lg shadow-lg p-4 min-w-[300px] max-w-[500px]`
+                }, [
+                    h('div', { className: 'flex items-center' }, [
+                        h(Icon, { key: 'icon', className: `w-5 h-5 mr-3 ${iconColor}` }),
+                        h('p', { key: 'message', className: `flex-1 text-sm font-medium ${textColor}` }, message),
+                        h('button', {
+                            key: 'close',
+                            onClick: onClose,
+                            className: `ml-3 p-1 hover:bg-opacity-20 hover:bg-gray-500 rounded transition-colors ${textColor}`
+                        }, h(X, { className: 'w-4 h-4' }))
+                    ])
+                ])
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const [budgetData, setBudgetData] = useState([]);
+            const [employees, setEmployees] = useState([]);
+            const [masterRates, setMasterRates] = useState({});
+            const [selectedEmployees, setSelectedEmployees] = useState([]);
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [currentYear, setCurrentYear] = useState(2568);
+            const [nextYear, setNextYear] = useState(2569);
+            const [isLoading, setIsLoading] = useState(true);
+            const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+
+            const showToast = useCallback((message, type = 'success') => {
+                setToast({ isVisible: true, message, type });
+            }, []);
+
+            const hideToast = useCallback(() => {
+                setToast(prev => ({ ...prev, isVisible: false }));
+            }, []);
+
+            // Initialize budget data with default values for all years
+            const initializeBudgetData = (items) => {
+                return items.map(item => {
+                    if (item.type) return item;
+                    const newItem = { ...item, values: {} };
+                    for (let year = 2568; year <= 2580; year++) {
+                        newItem.values[year] = 0;
+                    }
+                    return newItem;
+                });
+            };
+
+            useEffect(() => {
+                const loadData = () => {
+                    try {
+                        // Load budget data
+                        const savedBudget = StorageManager.load('budgetData_v3', []);
+                        const defaultData = initializeBudgetData(defaultBudgetItems);
+                        
+                        if (savedBudget.length > 0) {
+                            const mergedBudget = defaultData.map(defaultItem => {
+                                if (defaultItem.type) return defaultItem;
+                                const savedItem = savedBudget.find(s => s.code === defaultItem.code);
+                                if (savedItem) {
+                                    const mergedValues = { ...defaultItem.values, ...savedItem.values };
+                                    return { ...defaultItem, ...savedItem, values: mergedValues };
+                                }
+                                return defaultItem;
+                            });
+                            setBudgetData(mergedBudget);
+                        } else {
+                            setBudgetData(defaultData);
+                        }
+
+                        // Load other data
+                        const loadedEmployees = StorageManager.load('employeeData_v2', defaultEmployees);
+                        setEmployees(loadedEmployees);
+                        setMasterRates(StorageManager.load('masterRates_v1', defaultMasterRates));
+
+                        // Initialize employee selections with all employees
+                        const allEmployeeIds = loadedEmployees.map(emp => emp.id);
+                        setSelectedEmployees(allEmployeeIds);
+                    } catch (error) {
+                        console.error('Error loading data:', error);
+                        // Fallback to defaults
+                        setBudgetData(initializeBudgetData(defaultBudgetItems));
+                        setEmployees(defaultEmployees);
+                        setMasterRates(defaultMasterRates);
+                        
+                        const allEmployeeIds = defaultEmployees.map(emp => emp.id);
+                        setSelectedEmployees(allEmployeeIds);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+
+                loadData();
+            }, []);
+
+            const saveAllData = () => {
+                StorageManager.save('budgetData_v3', budgetData);
+                StorageManager.save('employeeData_v2', employees);
+                StorageManager.save('masterRates_v1', masterRates);
+            };
+
+            const updateBudgetItem = (index, year, value) => {
+                setBudgetData(prev => {
+                    const updated = [...prev];
+                    if (updated[index].values) {
+                        updated[index].values[year] = value;
+                    }
+                    return updated;
+                });
+            };
+
+            const updateBudgetNotes = (index, notes) => {
+                setBudgetData(prev => {
+                    const updated = [...prev];
+                    updated[index].notes = notes;
+                    return updated;
+                });
+            };
+
+            const updateEmployee = (index, employee) => {
+                setEmployees(prev => {
+                    const updated = [...prev];
+                    updated[index] = employee;
+                    return updated;
+                });
+            };
+
+            const addEmployee = () => {
+                const newEmployee = {
+                    id: '',
+                    name: '',
+                    gender: 'ชาย',
+                    startYear: new Date().getFullYear() + 543,
+                    level: '3',
+                    status: 'มีสิทธิ์',
+                    visitProvince: '',
+                    homeVisitBusFare: 0
+                };
+                setEmployees(prev => [newEmployee, ...prev]);
+            };
+
+            const deleteEmployee = (index) => {
+                setEmployees(prev => prev.filter((_, i) => i !== index));
+            };
+
+            const updateMasterRate = (level, key, value) => {
+                setMasterRates(prev => ({
+                    ...prev,
+                    [level]: {
+                        ...prev[level],
+                        [key]: key === 'position' ? value : (parseFloat(value) || 0)
+                    }
+                }));
+            };
+
+            const handleSave = useCallback(() => {
+                try {
+                    saveAllData();
+                    showToast('บันทึกข้อมูลเรียบร้อยแล้ว');
+                } catch (error) {
+                    showToast('เกิดข้อผิดพลาดในการบันทึก', 'error');
+                }
+            }, [budgetData, employees, masterRates, showToast]);
+
+            const resetAllData = () => {
+                StorageManager.clear();
+                setBudgetData(initializeBudgetData(defaultBudgetItems));
+                setEmployees([...defaultEmployees]);
+                setMasterRates({ ...defaultMasterRates });
+                
+                const allEmployeeIds = defaultEmployees.map(emp => emp.id);
+                setSelectedEmployees(allEmployeeIds);
+            };
+
+            const handleReset = useCallback(() => {
+                if (window.confirm('คุณต้องการลบข้อมูลที่บันทึกไว้ทั้งหมดและกลับไปใช้ค่าเริ่มต้นใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+                    resetAllData();
+                    showToast('ล้างข้อมูลเรียบร้อยแล้ว');
+                }
+            }, [showToast]);
+
+            // Tab Navigation Component
+            const TabNavigation = () => {
+                const tabs = [
+                    { id: 'dashboard', label: 'แดชบอร์ด', icon: h(Layout, { className: 'w-4 h-4' }) },
+                    { id: 'budget', label: 'ตารางงบประมาณ', icon: h(Calculator, { className: 'w-4 h-4' }) },
+                    { id: 'config', label: 'กำหนดข้อมูล', icon: h(Settings, { className: 'w-4 h-4' }) },
+                    { id: 'special-assist', label: 'เงินช่วยเหลืออื่นๆ', icon: h(Heart, { className: 'w-4 h-4' }) },
+                ];
+
+                return h('div', { className: 'mb-8 border-b border-gray-200 bg-white rounded-t-xl shadow-sm' },
+                    h('nav', { className: 'flex flex-wrap overflow-x-auto', 'aria-label': 'Tabs' },
+                        tabs.map(tab =>
+                            h('button', {
+                                key: tab.id,
+                                onClick: () => setActiveTab(tab.id),
+                                className: `relative flex items-center whitespace-nowrap py-4 px-6 text-sm font-medium transition-all duration-200 hover:text-blue-600 ${
+                                    activeTab === tab.id
+                                        ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                                        : 'text-gray-600 hover:bg-gray-50'
+                                }`
+                            }, [
+                                tab.icon,
+                                h('span', { key: 'label', className: 'ml-2' }, tab.label),
+                                activeTab === tab.id && h(motion.div, {
+                                    key: 'indicator',
+                                    layoutId: 'activeTab',
+                                    className: 'absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600',
+                                    initial: false,
+                                    transition: { type: "spring", stiffness: 500, damping: 30 }
+                                })
+                            ])
+                        )
+                    )
+                );
+            };
+
+            // Dashboard Component
+            const Dashboard = () => {
+                const budgetSummary = budgetData
+                    .filter(item => !item.type && item.values)
+                    .reduce((acc, item) => {
+                        const current = item.values[currentYear] || 0;
+                        const next = item.values[nextYear] || 0;
+                        return {
+                            current: acc.current + current,
+                            next: acc.next + next,
+                            difference: acc.difference + (next - current)
+                        };
+                    }, { current: 0, next: 0, difference: 0 });
+
+                const employeeStats = {
+                    total: employees.length,
+                    withStatus: employees.filter(emp => emp.status === 'มีสิทธิ์').length,
+                    withVisitProvince: employees.filter(emp => 
+                        emp.visitProvince && emp.visitProvince.trim() !== '' && emp.visitProvince !== 'ขอนแก่น'
+                    ).length
+                };
+
+                return h('div', { className: 'space-y-8' }, [
+                    h('div', { key: 'header', className: 'text-center' }, [
+                        h('h2', { className: 'text-3xl font-bold text-gray-900 mb-2' }, 'แดชบอร์ดภาพรวม'),
+                        h('p', { className: 'text-gray-600' }, 'สรุปข้อมูลสำคัญและการดำเนินงานของระบบ')
+                    ]),
+                    h('div', { key: 'metrics', className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6' }, [
+                        h(Card, { key: 'budget', className: 'p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200' },
+                            h('div', { className: 'flex items-center justify-between' }, [
+                                h('div', { key: 'content' }, [
+                                    h('p', { className: 'text-blue-600 text-sm font-medium' }, `งบประมาณปี ${nextYear}`),
+                                    h('p', { className: 'text-2xl font-bold text-blue-900' }, formatCurrency(budgetSummary.next))
+                                ]),
+                                h('div', { key: 'icon', className: 'p-3 bg-blue-500 rounded-full' },
+                                    h(TrendingUp, { className: 'w-6 h-6 text-white' })
+                                )
+                            ])
+                        ),
+                        h(Card, { key: 'employees', className: 'p-6 bg-gradient-to-br from-green-50 to-green-100 border-green-200' },
+                            h('div', { className: 'flex items-center justify-between' }, [
+                                h('div', { key: 'content' }, [
+                                    h('p', { className: 'text-green-600 text-sm font-medium' }, 'จำนวนพนักงาน'),
+                                    h('p', { className: 'text-2xl font-bold text-green-900' }, `${employeeStats.total} คน`)
+                                ]),
+                                h('div', { key: 'icon', className: 'p-3 bg-green-500 rounded-full' },
+                                    h(Users, { className: 'w-6 h-6 text-white' })
+                                )
+                            ])
+                        ),
+                        h(Card, { key: 'eligible', className: 'p-6 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200' },
+                            h('div', { className: 'flex items-center justify-between' }, [
+                                h('div', { key: 'content' }, [
+                                    h('p', { className: 'text-purple-600 text-sm font-medium' }, 'มีสิทธิ์เงินช่วยเหลือ'),
+                                    h('p', { className: 'text-2xl font-bold text-purple-900' }, `${employeeStats.withStatus} คน`)
+                                ]),
+                                h('div', { key: 'icon', className: 'p-3 bg-purple-500 rounded-full' },
+                                    h(Target, { className: 'w-6 h-6 text-white' })
+                                )
+                            ])
+                        ),
+                        h(Card, { key: 'status', className: 'p-6 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200' },
+                            h('div', { className: 'flex items-center justify-between' }, [
+                                h('div', { key: 'content' }, [
+                                    h('p', { className: 'text-orange-600 text-sm font-medium' }, 'สถานะระบบ'),
+                                    h('p', { className: 'text-lg font-bold text-orange-900 flex items-center' }, [
+                                        h(CheckCircle, { key: 'icon', className: 'w-5 h-5 mr-2 text-green-500' }),
+                                        'พร้อมใช้งาน'
+                                    ])
+                                ]),
+                                h('div', { key: 'icon', className: 'p-3 bg-orange-500 rounded-full' },
+                                    h(BarChart3, { className: 'w-6 h-6 text-white' })
+                                )
+                            ])
+                        )
+                    ])
+                ]);
+            };
+
+            // Budget Table Component
+            const BudgetTable = () => {
+                const calculateTotals = () => {
+                    const totalCurrent = budgetData.reduce((sum, item) => 
+                        sum + (item.values ? (item.values[currentYear] || 0) : 0), 0
+                    );
+                    const totalNext = budgetData.reduce((sum, item) => 
+                        sum + (item.values ? (item.values[nextYear] || 0) : 0), 0
+                    );
+                    const totalDiff = totalNext - totalCurrent;
+                    
+                    return { totalCurrent, totalNext, totalDiff };
+                };
+
+                const { totalCurrent, totalNext, totalDiff } = calculateTotals();
+                const diffClass = totalDiff > 0 ? "text-green-600" : totalDiff < 0 ? "text-red-600" : "text-gray-500";
+
+                return h(Card, null, [
+                    h('div', { key: 'header', className: 'p-6 bg-gray-50 border-b border-gray-200' },
+                        h('div', { className: 'flex flex-wrap items-center justify-center gap-6' }, [
+                            h('div', { key: 'current', className: 'flex items-center gap-3' }, [
+                                h('label', { className: 'font-semibold text-gray-700' }, 'เปรียบเทียบปี:'),
+                                h('select', {
+                                    value: currentYear,
+                                    onChange: (e) => setCurrentYear(Number(e.target.value)),
+                                    className: 'px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                                }, Array.from({ length: 13 }, (_, i) => 2568 + i).map(year =>
+                                    h('option', { key: year, value: year }, year)
+                                ))
+                            ]),
+                            h('div', { key: 'next', className: 'flex items-center gap-3' }, [
+                                h('label', { className: 'font-semibold text-gray-700' }, 'กับปี:'),
+                                h('select', {
+                                    value: nextYear,
+                                    onChange: (e) => setNextYear(Number(e.target.value)),
+                                    className: 'px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                                }, Array.from({ length: 13 }, (_, i) => 2568 + i).map(year =>
+                                    h('option', { key: year, value: year }, year)
+                                ))
+                            ])
+                        ])
+                    ),
+                    h('div', { key: 'table', className: 'overflow-x-auto' },
+                        h('table', { className: 'w-full min-w-[1000px] text-sm text-left text-gray-700' }, [
+                            h('thead', { key: 'thead', className: 'text-xs text-gray-700 uppercase bg-gray-50 sticky top-0 z-10' },
+                                h('tr', null, [
+                                    h('th', { key: 'code', className: 'px-6 py-4 w-1/12' }, 'รหัสบัญชี'),
+                                    h('th', { key: 'name', className: 'px-6 py-4 w-4/12' }, 'รายการ'),
+                                    h('th', { key: 'current', className: 'px-6 py-4 w-2/12 text-center' }, `งบประมาณปี ${currentYear}`),
+                                    h('th', { key: 'next', className: 'px-6 py-4 w-2/12 text-center' }, `คำของบประมาณปี ${nextYear}`),
+                                    h('th', { key: 'diff', className: 'px-6 py-4 w-1/12 text-right' }, 'ผลต่าง (+/-)'),
+                                    h('th', { key: 'notes', className: 'px-6 py-4 w-2/12 text-center' }, 'หมายเหตุ')
+                                ])
+                            ),
+                            h('tbody', { key: 'tbody' },
+                                budgetData.map((item, index) => {
+                                    if (item.type) {
+                                        const headerClass = item.type === 'main_header' 
+                                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold text-base" 
+                                            : "bg-gradient-to-r from-blue-50 to-blue-100 font-semibold text-blue-800";
+                                        
+                                        return h('tr', { key: index, className: headerClass },
+                                            h('td', { colSpan: 6, className: 'px-6 py-4' }, item.name)
+                                        );
+                                    }
+
+                                    const currentValue = item.values?.[currentYear] || 0;
+                                    const nextValue = item.values?.[nextYear] || 0;
+                                    const diff = nextValue - currentValue;
+                                    const diffClass = diff > 0 ? "text-green-600" : diff < 0 ? "text-red-600" : "text-gray-500";
+
+                                    return h('tr', { key: index, className: 'border-b border-gray-200 hover:bg-gray-50 transition-colors' }, [
+                                        h('td', { key: 'code', className: 'px-6 py-3 font-mono text-sm' }, item.code),
+                                        h('td', { key: 'name', className: 'px-6 py-3 font-medium' }, item.name),
+                                        h('td', { key: 'current', className: 'px-6 py-3' },
+                                            h('input', {
+                                                type: 'number',
+                                                className: 'w-full p-2 text-right bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
+                                                value: currentValue,
+                                                onChange: (e) => updateBudgetItem(index, currentYear, parseFloat(e.target.value) || 0)
+                                            })
+                                        ),
+                                        h('td', { key: 'next', className: 'px-6 py-3' },
+                                            h('input', {
+                                                type: 'number',
+                                                className: 'w-full p-2 text-right bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
+                                                value: nextValue,
+                                                onChange: (e) => updateBudgetItem(index, nextYear, parseFloat(e.target.value) || 0)
+                                            })
+                                        ),
+                                        h('td', { key: 'diff', className: `px-6 py-3 text-right font-medium ${diffClass}` }, formatCurrency(diff)),
+                                        h('td', { key: 'notes', className: 'px-6 py-3' },
+                                            h('input', {
+                                                type: 'text',
+                                                className: 'w-full p-2 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
+                                                value: item.notes || '',
+                                                onChange: (e) => updateBudgetNotes(index, e.target.value)
+                                            })
+                                        )
+                                    ]);
+                                })
+                            ),
+                            h('tfoot', { key: 'tfoot', className: 'font-bold bg-gradient-to-r from-gray-100 to-gray-200 sticky bottom-0' },
+                                h('tr', { className: 'border-t-2 border-gray-300' }, [
+                                    h('td', { key: 'label', colSpan: 2, className: 'px-6 py-4 text-lg' }, 'ยอดรวมทั้งหมด'),
+                                    h('td', { key: 'current', className: 'px-6 py-4 text-right text-lg' }, formatCurrency(totalCurrent)),
+                                    h('td', { key: 'next', className: 'px-6 py-4 text-right text-lg' }, formatCurrency(totalNext)),
+                                    h('td', { key: 'diff', className: `px-6 py-4 text-right text-lg font-bold ${diffClass}` }, formatCurrency(totalDiff)),
+                                    h('td', { key: 'empty', className: 'px-6 py-4' })
+                                ])
+                            )
+                        ])
+                    ),
+                    h('div', { key: 'footer', className: 'p-6 bg-gray-50 border-t border-gray-200 flex justify-between items-center' },
+                        h('div', { className: 'flex gap-4' }, [
+                            h(Button, { key: 'save', onClick: handleSave }, [
+                                h(Save, { key: 'icon', className: 'w-4 h-4 mr-2' }),
+                                'บันทึก'
+                            ])
+                        ])
+                    )
+                ]);
+            };
+
+            // Employee Table Component
+            const EmployeeTable = () => {
+                const updateEmployeeField = (index, field, value) => {
+                    const employee = employees[index];
+                    const updatedEmployee = { ...employee, [field]: value };
+                    updateEmployee(index, updatedEmployee);
+                };
+
+                const levelOptions = Object.keys(masterRates).sort((a, b) => parseFloat(b) - parseFloat(a));
+
+                const handleSelectionChange = (employeeId, isSelected) => {
+                    let newSelection;
+                    if (isSelected) {
+                        newSelection = [...selectedEmployees, employeeId];
+                    } else {
+                        newSelection = selectedEmployees.filter(id => id !== employeeId);
+                    }
+                    setSelectedEmployees(newSelection);
+                };
+
+                const handleSelectAll = () => {
+                    const allEmployeeIds = employees.map(emp => emp.id);
+                    setSelectedEmployees(allEmployeeIds);
+                };
+
+                const handleSelectNone = () => {
+                    setSelectedEmployees([]);
+                };
+
+                const isEmployeeSelected = (employeeId) => {
+                    return selectedEmployees.includes(employeeId);
+                };
+
+                return h(Card, null, [
+                    h('div', { key: 'header', className: 'p-6 border-b border-gray-200' }, [
+                        h('div', { key: 'title', className: 'flex justify-between items-center mb-4' }, [
+                            h('h3', { className: 'text-xl font-semibold text-gray-900' }, 'รายชื่อพนักงาน'),
+                            h(Button, { onClick: addEmployee, size: 'sm' }, [
+                                h(Plus, { key: 'icon', className: 'w-4 h-4 mr-2' }),
+                                'เพิ่มพนักงาน'
+                            ])
+                        ]),
+                        h('div', { key: 'controls', className: 'bg-blue-50 border-2 border-blue-200 p-4 rounded-lg' },
+                            h('div', { className: 'flex justify-between items-center' }, [
+                                h('div', { key: 'info' }, [
+                                    h('h5', { className: 'font-semibold text-blue-700 text-lg flex items-center' }, [
+                                        h(UserCheck, { key: 'icon', className: 'w-5 h-5 mr-2' }),
+                                        'เลือกพนักงานสำหรับการคำนวณ'
+                                    ]),
+                                    h('p', { className: 'text-sm text-blue-700 opacity-80' },
+                                        `เลือกแล้ว ${selectedEmployees.length} คน จากทั้งหมด ${employees.length} คน`
+                                    )
+                                ]),
+                                h('div', { key: 'buttons', className: 'flex gap-2' }, [
+                                    h(Button, {
+                                        variant: 'secondary',
+                                        size: 'sm',
+                                        onClick: handleSelectAll,
+                                        disabled: selectedEmployees.length === employees.length
+                                    }, [
+                                        h(UserCheck, { key: 'icon', className: 'w-4 h-4 mr-1' }),
+                                        'เลือกทั้งหมด'
+                                    ]),
+                                    h(Button, {
+                                        variant: 'secondary',
+                                        size: 'sm',
+                                        onClick: handleSelectNone,
+                                        disabled: selectedEmployees.length === 0
+                                    }, [
+                                        h(UserX, { key: 'icon', className: 'w-4 h-4 mr-1' }),
+                                        'ยกเลิกทั้งหมด'
+                                    ])
+                                ])
+                            ])
+                        )
+                    ]),
+                    h('div', { key: 'table', className: 'overflow-x-auto' },
+                        h('table', { className: 'w-full text-sm text-left' }, [
+                            h('thead', { key: 'thead', className: 'text-xs text-gray-700 uppercase bg-gray-50' },
+                                h('tr', null, [
+                                    h('th', { key: 'select', className: 'px-4 py-3 w-16 text-center' },
+                                        h('div', { className: 'flex items-center justify-center' },
+                                            h('input', {
+                                                type: 'checkbox',
+                                                checked: selectedEmployees.length === employees.length && employees.length > 0,
+                                                onChange: (e) => e.target.checked ? handleSelectAll() : handleSelectNone(),
+                                                className: 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                                            })
+                                        )
+                                    ),
+                                    h('th', { key: 'id', className: 'px-4 py-3' }, 'รหัสพนักงาน'),
+                                    h('th', { key: 'name', className: 'px-4 py-3' }, 'ชื่อ-สกุล'),
+                                    h('th', { key: 'gender', className: 'px-4 py-3' }, 'เพศ'),
+                                    h('th', { key: 'year', className: 'px-4 py-3' }, 'ปีเริ่มงาน'),
+                                    h('th', { key: 'level', className: 'px-4 py-3' }, 'ระดับ'),
+                                    h('th', { key: 'status', className: 'px-4 py-3' }, 'สถานะ'),
+                                    h('th', { key: 'province', className: 'px-4 py-3' }, 'จังหวัดเยี่ยมบ้าน'),
+                                    h('th', { key: 'fare', className: 'px-4 py-3 text-right' }, 'ค่ารถทัวร์เยี่ยมบ้าน'),
+                                    h('th', { key: 'actions', className: 'px-4 py-3 text-center' }, 'จัดการ')
+                                ])
+                            ),
+                            h('tbody', { key: 'tbody' },
+                                employees.length === 0 ? 
+                                    h('tr', { key: 'empty' },
+                                        h('td', { colSpan: 10, className: 'text-center text-gray-500 py-8' }, 'ไม่มีข้อมูลพนักงาน')
+                                    ) :
+                                    employees.map((emp, index) =>
+                                        h('tr', {
+                                            key: index,
+                                            className: `border-b border-gray-200 transition-colors ${
+                                                isEmployeeSelected(emp.id) ? 'bg-blue-50 hover:bg-blue-100' : 'hover:bg-gray-50'
+                                            }`
+                                        }, [
+                                            h('td', { key: 'select', className: 'px-4 py-3 text-center' },
+                                                h('input', {
+                                                    type: 'checkbox',
+                                                    checked: isEmployeeSelected(emp.id),
+                                                    onChange: (e) => handleSelectionChange(emp.id, e.target.checked),
+                                                    className: 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                                                })
+                                            ),
+                                            h('td', { key: 'id', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'text',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.id,
+                                                    onChange: (e) => updateEmployeeField(index, 'id', e.target.value)
+                                                })
+                                            ),
+                                            h('td', { key: 'name', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'text',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.name,
+                                                    onChange: (e) => updateEmployeeField(index, 'name', e.target.value)
+                                                })
+                                            ),
+                                            h('td', { key: 'gender', className: 'p-3' },
+                                                h('select', {
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.gender,
+                                                    onChange: (e) => updateEmployeeField(index, 'gender', e.target.value)
+                                                }, [
+                                                    h('option', { key: 'male', value: 'ชาย' }, 'ชาย'),
+                                                    h('option', { key: 'female', value: 'หญิง' }, 'หญิง')
+                                                ])
+                                            ),
+                                            h('td', { key: 'year', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'number',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.startYear,
+                                                    onChange: (e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)
+                                                })
+                                            ),
+                                            h('td', { key: 'level', className: 'p-3' },
+                                                h('select', {
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.level,
+                                                    onChange: (e) => updateEmployeeField(index, 'level', e.target.value)
+                                                }, levelOptions.map(level =>
+                                                    h('option', { key: level, value: level }, level)
+                                                ))
+                                            ),
+                                            h('td', { key: 'status', className: 'p-3' },
+                                                h('div', { className: 'flex justify-center gap-2' }, [
+                                                    h('button', {
+                                                        key: 'eligible',
+                                                        type: 'button',
+                                                        onClick: () => updateEmployeeField(index, 'status', 'มีสิทธิ์'),
+                                                        className: `px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                                            emp.status === 'มีสิทธิ์' || !emp.status
+                                                                ? 'bg-green-100 text-green-800 border border-green-300' 
+                                                                : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-green-50'
+                                                        }`
+                                                    }, 'มีสิทธิ์'),
+                                                    h('button', {
+                                                        key: 'ineligible',
+                                                        type: 'button',
+                                                        onClick: () => updateEmployeeField(index, 'status', 'หมดสิทธิ์'),
+                                                        className: `px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                                            emp.status === 'หมดสิทธิ์'
+                                                                ? 'bg-red-100 text-red-800 border border-red-300' 
+                                                                : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-red-50'
+                                                        }`
+                                                    }, 'หมดสิทธิ์')
+                                                ])
+                                            ),
+                                            h('td', { key: 'province', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'text',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.visitProvince,
+                                                    onChange: (e) => updateEmployeeField(index, 'visitProvince', e.target.value)
+                                                })
+                                            ),
+                                            h('td', { key: 'fare', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'number',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                                                    value: emp.homeVisitBusFare,
+                                                    onChange: (e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)
+                                                })
+                                            ),
+                                            h('td', { key: 'actions', className: 'p-3 text-center' },
+                                                h(Button, {
+                                                    variant: 'danger',
+                                                    size: 'sm',
+                                                    onClick: () => deleteEmployee(index)
+                                                }, h(Trash2, { className: 'w-4 h-4' }))
+                                            )
+                                        ])
+                                    )
+                            )
+                        ])
+                    )
+                ]);
+            };
+
+            // Master Rates Table Component
+            const MasterRatesTable = () => {
+                return h(Card, null, [
+                    h('div', { key: 'header', className: 'p-6 border-b border-gray-200' },
+                        h('h3', { className: 'text-xl font-semibold text-gray-900' }, 'ตารางอัตราค่าใช้จ่ายมาตรฐาน')
+                    ),
+                    h('div', { key: 'table', className: 'overflow-x-auto' },
+                        h('table', { className: 'w-full text-sm text-left' }, [
+                            h('thead', { key: 'thead', className: 'bg-gray-50' },
+                                h('tr', null, [
+                                    h('th', { key: 'position', className: 'px-4 py-3' }, 'ตำแหน่ง'),
+                                    h('th', { key: 'level', className: 'px-4 py-3' }, 'ระดับ'),
+                                    h('th', { key: 'rent', className: 'px-4 py-3 text-right' }, 'ค่าเช่าบ้าน'),
+                                    h('th', { key: 'assist', className: 'px-4 py-3 text-right' }, 'เงินช่วยเหลือรายเดือน'),
+                                    h('th', { key: 'lump', className: 'px-4 py-3 text-right' }, 'ค่าซื้อของเหมาจ่าย'),
+                                    h('th', { key: 'travel', className: 'px-4 py-3 text-right' }, 'ค่ารถประจำทาง โคราช - กทม'),
+                                    h('th', { key: 'local', className: 'px-4 py-3 text-right' }, 'ค่ารถรับจ้าง ขนส่ง-ที่พัก'),
+                                    h('th', { key: 'perdiem', className: 'px-4 py-3 text-right' }, 'ค่าเบี้ยเลี้ยง'),
+                                    h('th', { key: 'hotel', className: 'px-4 py-3 text-right' }, 'ค่าที่พัก')
+                                ])
+                            ),
+                            h('tbody', { key: 'tbody' },
+                                Object.keys(masterRates)
+                                    .sort((a, b) => parseFloat(b) - parseFloat(a))
+                                    .map(level => {
+                                        const data = masterRates[level];
+                                        return h('tr', { key: level, className: 'border-b border-gray-200 hover:bg-gray-50' }, [
+                                            h('td', { key: 'position', className: 'p-3' },
+                                                h('input', {
+                                                    type: 'text',
+                                                    className: 'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500',
+                                                    value: data.position,
+                                                    onChange: (e) => updateMasterRate(level, 'position', e.target.value)
+                                                })
+                                            ),
+                                            h('td', { key: 'level', className: 'px-4 py-3 text-center font-medium' }, level),
+                                            ...['rent', 'monthlyAssist', 'lumpSum', 'travel', 'local', 'perDiem', 'hotel'].map(key =>
+                                                h('td', { key: key, className: 'p-3' },
+                                                    h('input', {
+                                                        type: 'number',
+                                                        className: 'w-full p-2 border border-gray-300 rounded-md text-right focus:ring-2 focus:ring-blue-500',
+                                                        value: data[key],
+                                                        onChange: (e) => updateMasterRate(level, key, e.target.value)
+                                                    })
+                                                )
+                                            )
+                                        ]);
+                                    })
+                            )
+                        ])
+                    )
+                ]);
+            };
+
+            // Special Assist Calculation Component
+            const SpecialAssistCalculation = () => {
+                const [customMonths, setCustomMonths] = useState({});
+                const [customLumpSum, setCustomLumpSum] = useState({});
+
+                const eligibleEmployees = employees.filter(emp => 
+                    selectedEmployees.includes(emp.id) && emp.status === 'มีสิทธิ์'
+                );
+                
+                const specialAssistData = calculateSpecialAssist(eligibleEmployees, masterRates);
+
+                const getMonthsForEmployee = (empId) => {
+                    return customMonths[empId] || 12;
+                };
+
+                const getLumpSumForEmployee = (empId) => {
+                    return customLumpSum[empId] || 0;
+                };
+
+                const calculateCustomTotal = () => {
+                    return specialAssistData.reduce((sum, emp) => {
+                        const rates = getRatesForEmployee(emp, masterRates);
+                        const months = getMonthsForEmployee(emp.id);
+                        const totalRent = rates.rent * months;
+                        const totalMonthlyAssist = rates.monthlyAssist * months;
+                        const lumpSum = getLumpSumForEmployee(emp.id);
+                        return sum + totalRent + totalMonthlyAssist + lumpSum;
+                    }, 0);
+                };
+
+                const stats = {
+                    totalEmployees: employees.length,
+                    eligibleEmployees: eligibleEmployees.length,
+                    totalBudget: calculateCustomTotal(),
+                    averagePerEmployee: eligibleEmployees.length > 0 ? calculateCustomTotal() / eligibleEmployees.length : 0
+                };
+
+                return h(Card, null, [
+                    h('div', { key: 'header', className: 'p-6 border-b border-gray-200' }, [
+                        h('h3', { className: 'text-xl font-semibold text-gray-900 mb-6' }, 'สรุปยอดเงินช่วยเหลืออื่นๆ'),
+                        
+                        // Executive Summary
+                        h('div', { className: 'bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg mb-6 border border-blue-200' }, [
+                            h('h4', { className: 'text-lg font-semibold text-blue-900 mb-4 flex items-center' }, [
+                                h(TrendingUp, { key: 'icon', className: 'w-5 h-5 mr-2' }),
+                                'สรุปสำหรับผู้บริหาร'
+                            ]),
+                            h('div', { className: 'grid grid-cols-2 md:grid-cols-4 gap-4' }, [
+                                h('div', { key: 'eligible', className: 'text-center' }, [
+                                    h('div', { className: 'text-2xl font-bold text-blue-900' }, stats.eligibleEmployees),
+                                    h('div', { className: 'text-sm text-blue-700' }, 'พนักงานที่มีสิทธิ์')
+                                ]),
+                                h('div', { key: 'budget', className: 'text-center' }, [
+                                    h('div', { className: 'text-2xl font-bold text-green-900' }, formatCurrency(stats.totalBudget)),
+                                    h('div', { className: 'text-sm text-green-700' }, 'งบประมาณรวม')
+                                ]),
+                                h('div', { key: 'average', className: 'text-center' }, [
+                                    h('div', { className: 'text-2xl font-bold text-purple-900' }, formatCurrency(stats.averagePerEmployee)),
+                                    h('div', { className: 'text-sm text-purple-700' }, 'เฉลี่ยต่อคน')
+                                ]),
+                                h('div', { key: 'status', className: 'text-center' }, [
+                                    h('div', { className: 'text-2xl font-bold text-orange-900' }, 'พร้อม'),
+                                    h('div', { className: 'text-sm text-orange-700' }, 'สถานะระบบ')
+                                ])
+                            ])
+                        ]),
+
+                        // Calculation Info
+                        h('div', { className: 'bg-yellow-50 p-4 rounded-lg mb-6 border border-yellow-200' }, [
+                            h('h5', { className: 'font-semibold text-yellow-800 mb-3 flex items-center' }, [
+                                h(Info, { key: 'icon', className: 'w-4 h-4 mr-2' }),
+                                'วิธีการคำนวณและที่มาของข้อมูล'
+                            ]),
+                            h('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-yellow-700' }, [
+                                h('div', { key: 'rent' }, [
+                                    h('p', { className: 'font-medium mb-2' }, '🏠 ค่าเช่าบ้าน'),
+                                    h('ul', { className: 'space-y-1 text-xs' }, [
+                                        h('li', { key: '1' }, '• อ้างอิงจากตารางอัตราค่าใช้จ่ายมาตรฐาน'),
+                                        h('li', { key: '2' }, '• คำนวณ: อัตราต่อเดือน × จำนวนเดือน'),
+                                        h('li', { key: '3' }, '• จำนวนเดือนสามารถปรับแต่งได้')
+                                    ])
+                                ]),
+                                h('div', { key: 'assist' }, [
+                                    h('p', { className: 'font-medium mb-2' }, '💰 เงินช่วยเหลือรายเดือน'),
+                                    h('ul', { className: 'space-y-1 text-xs' }, [
+                                        h('li', { key: '1' }, '• อ้างอิงจากตารางอัตราค่าใช้จ่ายมาตรฐาน'),
+                                        h('li', { key: '2' }, '• คำนวณ: อัตราต่อเดือน × จำนวนเดือน'),
+                                        h('li', { key: '3' }, '• เชื่อมโยงกับระดับพนักงาน')
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ]),
+
+                    h('div', { key: 'table', className: 'overflow-x-auto' },
+                        h('table', { className: 'w-full text-sm text-left' }, [
+                            h('thead', { key: 'thead', className: 'bg-gray-50' },
+                                h('tr', null, [
+                                    h('th', { key: 'id', className: 'px-4 py-3 font-medium text-gray-900' }, 'รหัสพนักงาน'),
+                                    h('th', { key: 'name', className: 'px-4 py-3 font-medium text-gray-900' }, 'ชื่อ-สกุล'),
+                                    h('th', { key: 'level', className: 'px-4 py-3 font-medium text-gray-900 text-center' }, 'ระดับ'),
+                                    h('th', { key: 'rent', className: 'px-4 py-3 text-right font-medium text-gray-900' }, [
+                                        h('div', { className: 'flex items-center justify-end gap-1' }, [
+                                            h(DollarSign, { key: 'icon', className: 'w-4 h-4' }),
+                                            'ค่าเช่าบ้าน'
+                                        ])
+                                    ]),
+                                    h('th', { key: 'assist', className: 'px-4 py-3 text-right font-medium text-gray-900' }, [
+                                        h('div', { className: 'flex items-center justify-end gap-1' }, [
+                                            h(Heart, { key: 'icon', className: 'w-4 h-4' }),
+                                            'เงินช่วยเหลือรายเดือน'
+                                        ])
+                                    ]),
+                                    h('th', { key: 'lump', className: 'px-4 py-3 text-right font-medium text-gray-900' }, [
+                                        h('div', { className: 'flex items-center justify-end gap-1' }, [
+                                            h(Edit3, { key: 'icon', className: 'w-4 h-4' }),
+                                            'ค่าซื้อของเหมาจ่าย'
+                                        ])
+                                    ]),
+                                    h('th', { key: 'total', className: 'px-4 py-3 text-right font-semibold text-gray-900 bg-blue-50' }, [
+                                        h('div', { className: 'flex items-center justify-end gap-1' }, [
+                                            h(Calculator, { key: 'icon', className: 'w-4 h-4' }),
+                                            'รวม (บาท)'
+                                        ])
+                                    ])
+                                ])
+                            ),
+                            h('tbody', { key: 'tbody' },
+                                specialAssistData.length === 0 ? 
+                                    h('tr', { key: 'empty' },
+                                        h('td', { colSpan: 7, className: 'text-center text-gray-500 py-12' },
+                                            h('div', { className: 'flex flex-col items-center gap-3' }, [
+                                                h(AlertCircle, { key: 'icon', className: 'w-12 h-12 text-gray-300' }),
+                                                h('div', { key: 'text' }, [
+                                                    h('p', { className: 'font-medium' }, 'ไม่มีข้อมูลพนักงานที่เข้าเกณฑ์'),
+                                                    h('p', { className: 'text-sm mt-1' }, 'พนักงานต้องมีสถานะ "มีสิทธิ์"')
+                                                ])
+                                            ])
+                                        )
+                                    ) :
+                                    specialAssistData.map((emp, index) => {
+                                        const rates = getRatesForEmployee(emp, masterRates);
+                                        const months = getMonthsForEmployee(emp.id);
+                                        const totalRent = rates.rent * months;
+                                        const totalMonthlyAssist = rates.monthlyAssist * months;
+                                        const lumpSum = getLumpSumForEmployee(emp.id);
+                                        const total = totalRent + totalMonthlyAssist + lumpSum;
+                                        
+                                        return h('tr', { key: index, className: 'border-b border-gray-200 hover:bg-gray-50 transition-colors' }, [
+                                            h('td', { key: 'id', className: 'px-4 py-3' },
+                                                h('span', { className: 'font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded text-xs' }, emp.id)
+                                            ),
+                                            h('td', { key: 'name', className: 'px-4 py-3' }, [
+                                                h('div', { key: 'name', className: 'font-medium text-gray-900' }, emp.name),
+                                                h('div', { key: 'info', className: 'text-xs text-gray-500 flex items-center gap-2' }, [
+                                                    h('span', { key: 'gender' }, `เพศ${emp.gender}`),
+                                                    h('span', { key: 'sep' }, '•'),
+                                                    h('span', { key: 'status', className: 'inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800' }, [
+                                                        h(CheckCircle, { key: 'icon', className: 'w-3 h-3 mr-1' }),
+                                                        'มีสิทธิ์'
+                                                    ])
+                                                ])
+                                            ]),
+                                            h('td', { key: 'level', className: 'px-4 py-3 text-center' },
+                                                h('span', { className: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800' }, emp.level)
+                                            ),
+                                            h('td', { key: 'rent', className: 'px-4 py-3 text-right' }, [
+                                                h('div', { key: 'amount', className: 'font-medium text-green-600' }, formatCurrency(totalRent)),
+                                                h('div', { key: 'calc', className: 'text-xs text-gray-500' }, `${formatCurrency(rates.rent)} × ${months} เดือน`),
+                                                h('div', { key: 'source', className: 'text-xs text-blue-600' }, 'จากตารางมาตรฐาน')
+                                            ]),
+                                            h('td', { key: 'assist', className: 'px-4 py-3 text-right' }, [
+                                                h('div', { key: 'amount', className: 'font-medium text-purple-600' }, formatCurrency(totalMonthlyAssist)),
+                                                h('div', { key: 'calc', className: 'text-xs text-gray-500' }, `${formatCurrency(rates.monthlyAssist)} × ${months} เดือน`),
+                                                h('div', { key: 'source', className: 'text-xs text-blue-600' }, 'จากตารางมาตรฐาน')
+                                            ]),
+                                            h('td', { key: 'lump', className: 'px-4 py-3 text-right' }, [
+                                                h('div', { key: 'amount', className: 'font-medium' }, formatCurrency(lumpSum)),
+                                                h('div', { key: 'edit', className: 'text-xs text-orange-600 flex items-center justify-end gap-1' }, [
+                                                    h(Edit3, { key: 'icon', className: 'w-3 h-3' }),
+                                                    'แก้ไขได้'
+                                                ])
+                                            ]),
+                                            h('td', { key: 'total', className: 'px-4 py-3 text-right bg-blue-50' }, [
+                                                h('div', { key: 'amount', className: 'font-bold text-lg text-blue-900' }, formatCurrency(total)),
+                                                h('div', { key: 'unit', className: 'text-xs text-blue-600' }, 'บาท')
+                                            ])
+                                        ]);
+                                    })
+                            ),
+                            specialAssistData.length > 0 && h('tfoot', { key: 'tfoot', className: 'bg-gradient-to-r from-blue-50 to-blue-100 border-t-2 border-blue-200' },
+                                h('tr', null, [
+                                    h('td', { key: 'label', colSpan: 6, className: 'px-4 py-4 text-right font-bold text-lg text-blue-900' }, 'ยอดรวมทั้งหมด:'),
+                                    h('td', { key: 'total', className: 'px-4 py-4 text-right' }, [
+                                        h('div', { key: 'amount', className: 'font-bold text-2xl text-blue-900' }, formatCurrency(calculateCustomTotal())),
+                                        h('div', { key: 'unit', className: 'text-sm text-blue-700' }, 'บาท')
+                                    ])
+                                ])
+                            )
+                        ])
+                    ),
+
+                    h('div', { key: 'footer', className: 'p-6 bg-gray-50 border-t border-gray-200' },
+                        h('div', { className: 'flex flex-col md:flex-row justify-between items-start md:items-center gap-4' }, [
+                            h('div', { key: 'summary', className: 'flex items-center gap-6' }, [
+                                h('div', { key: 'eligible', className: 'text-center' }, [
+                                    h('div', { className: 'text-sm text-gray-600' }, 'พนักงานที่มีสิทธิ์'),
+                                    h('div', { className: 'text-2xl font-bold text-green-600' }, `${stats.eligibleEmployees} คน`)
+                                ]),
+                                h('div', { key: 'total', className: 'text-center' }, [
+                                    h('div', { className: 'text-sm text-gray-600' }, 'ยอดรวมทั้งหมด'),
+                                    h('div', { className: 'text-2xl font-bold text-blue-600' }, `${formatCurrency(calculateCustomTotal())} บาท`)
+                                ]),
+                                specialAssistData.length > 0 && h('div', { key: 'average', className: 'text-center' }, [
+                                    h('div', { className: 'text-sm text-gray-600' }, 'เฉลี่ยต่อคน'),
+                                    h('div', { className: 'text-xl font-bold text-purple-600' }, `${formatCurrency(calculateCustomTotal() / specialAssistData.length)} บาท`)
+                                ])
+                            ]),
+                            h('div', { key: 'actions', className: 'flex gap-4' },
+                                h(Button, { onClick: handleSave, size: 'lg' }, [
+                                    h(Save, { key: 'icon', className: 'w-4 h-4 mr-2' }),
+                                    'บันทึก'
+                                ])
+                            )
+                        ])
+                    )
+                ]);
+            };
+
+            // Render tab content
+            const renderTabContent = () => {
+                const contentVariants = {
+                    initial: { opacity: 0, y: 20 },
+                    animate: { opacity: 1, y: 0 },
+                    exit: { opacity: 0, y: -20 }
+                };
+
+                switch (activeTab) {
+                    case 'dashboard':
+                        return h(motion.div, {
+                            key: 'dashboard',
+                            variants: contentVariants,
+                            initial: 'initial',
+                            animate: 'animate',
+                            exit: 'exit',
+                            transition: { duration: 0.3 }
+                        }, h(Dashboard));
+
+                    case 'budget':
+                        return h(motion.div, {
+                            key: 'budget',
+                            variants: contentVariants,
+                            initial: 'initial',
+                            animate: 'animate',
+                            exit: 'exit',
+                            transition: { duration: 0.3 }
+                        }, h(BudgetTable));
+
+                    case 'config':
+                        return h(motion.div, {
+                            key: 'config',
+                            variants: contentVariants,
+                            initial: 'initial',
+                            animate: 'animate',
+                            exit: 'exit',
+                            transition: { duration: 0.3 },
+                            className: 'space-y-8'
+                        }, [
+                            h(MasterRatesTable, { key: 'rates' }),
+                            h('div', { key: 'employees', className: 'space-y-6' }, [
+                                h('div', { key: 'header', className: 'flex flex-wrap justify-between items-center gap-4' }, [
+                                    h('h3', { className: 'text-xl font-semibold text-gray-900' }, 'รายชื่อพนักงาน'),
+                                    h(Button, { onClick: handleReset, variant: 'danger', size: 'sm' }, [
+                                        h(RotateCcw, { key: 'icon', className: 'w-4 h-4 mr-2' }),
+                                        'ล้างข้อมูลทั้งหมด'
+                                    ])
+                                ]),
+                                h(EmployeeTable, { key: 'table' })
+                            ]),
+                            h('div', { key: 'save', className: 'flex justify-end pt-6 border-t border-gray-200' },
+                                h(Button, { onClick: handleSave, size: 'lg' }, [
+                                    h(Save, { key: 'icon', className: 'w-5 h-5 mr-2' }),
+                                    'บันทึกทั้งหมด'
+                                ])
+                            )
+                        ]);
+
+                    case 'special-assist':
+                        return h(motion.div, {
+                            key: 'special-assist',
+                            variants: contentVariants,
+                            initial: 'initial',
+                            animate: 'animate',
+                            exit: 'exit',
+                            transition: { duration: 0.3 },
+                            className: 'space-y-6'
+                        }, h(SpecialAssistCalculation));
+
+                    default:
+                        return h(motion.div, {
+                            key: 'placeholder',
+                            variants: contentVariants,
+                            initial: 'initial',
+                            animate: 'animate',
+                            exit: 'exit',
+                            transition: { duration: 0.3 }
+                        }, h(Card, null,
+                            h('div', { className: 'p-12 text-center' }, [
+                                h('p', { key: 'message', className: 'text-gray-500 text-lg' }, 'ฟีเจอร์นี้อยู่ระหว่างการพัฒนา'),
+                                h('p', { key: 'instruction', className: 'text-gray-400 mt-2' }, 'กรุณาเลือกแท็บอื่นเพื่อใช้งาน')
+                            ])
+                        ));
+                }
+            };
+
+            if (isLoading) {
+                return h('div', { className: 'flex items-center justify-center min-h-[400px]' },
+                    h('div', { className: 'loading-spinner' })
+                );
+            }
+
+            return h('div', { className: 'min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50' }, [
+                h('div', { key: 'container', className: 'container mx-auto px-4 py-8' }, [
+                    // Header
+                    h(motion.header, {
+                        key: 'header',
+                        initial: { opacity: 0, y: -20 },
+                        animate: { opacity: 1, y: 0 },
+                        transition: { duration: 0.5 },
+                        className: 'text-center mb-8'
+                    }, [
+                        h('h1', { key: 'title', className: 'text-4xl font-bold text-gray-900 mb-2' }, 'ระบบจัดทำงบประมาณประจำปี'),
+                        h('p', { key: 'subtitle', className: 'text-gray-600 text-lg' }, 'ระบบจัดการและคำนวณงบประมาณอย่างมีประสิทธิภาพ')
+                    ]),
+
+                    // Tab Navigation
+                    h(TabNavigation, { key: 'tabs' }),
+
+                    // Tab Content
+                    h(AnimatePresence, { key: 'content', mode: 'wait' }, renderTabContent())
+                ]),
+
+                // Toast Notifications
+                h(Toast, {
+                    key: 'toast',
+                    isVisible: toast.isVisible,
+                    message: toast.message,
+                    type: toast.type,
+                    onClose: hideToast
+                })
+            ]);
+        };
+
+        // Render the app
+        ReactDOM.render(h(App), document.getElementById('root'));
+    </script>
+</body>
+</html>
