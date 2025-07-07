@@ -474,14 +474,14 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, delay: index * 0.02 }}
-                          className="bg-gradient-to-r from-blue-100/80 to-indigo-100/80 backdrop-blur-sm border-b-2 border-blue-200/50"
+                          className="bg-gradient-to-r from-blue-200/90 to-indigo-200/90 backdrop-blur-sm border-y-4 border-blue-400/70 shadow-[0_8px_25px_rgba(59,130,246,0.3)] hover:shadow-[0_10px_30px_rgba(59,130,246,0.4)] transition-all duration-300"
                         >
-                          <td colSpan={7} className="px-6 py-6">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-                                <Banknote className="w-5 h-5 text-white" />
+                          <td colSpan={7} className="px-8 py-8">
+                            <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[12px_12px_24px_#93c5fd,-12px_-12px_24px_#ffffff] flex items-center justify-center">
+                                <Banknote className="w-7 h-7 text-white" />
                               </div>
-                              <h2 className="text-xl font-semibold text-blue-800">{item.name}</h2>
+                              <h2 className="text-2xl font-bold text-blue-900 tracking-wide drop-shadow-sm">{item.name}</h2>
                             </div>
                           </td>
                         </motion.tr>
@@ -493,65 +493,74 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                       const totalDiff = totals ? totals.next - totals.current : 0;
                       
                       return (
-                        <React.Fragment key={actualIndex}>
-                          <motion.tr
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3, delay: index * 0.02 }}
-                            className="bg-gradient-to-r from-slate-100/80 to-slate-200/80 backdrop-blur-sm border-b border-slate-300/50"
-                          >
-                            <td colSpan={7} className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 rounded-lg bg-slate-500 shadow-[6px_6px_12px_#cbd5e1,-6px_-6px_12px_#ffffff] flex items-center justify-center">
-                                  <Layers className="w-4 h-4 text-white" />
-                                </div>
-                                <h3 className="text-lg font-medium text-slate-700">{item.name}</h3>
+                        <motion.tr
+                          key={actualIndex}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3, delay: index * 0.02 }}
+                          className="bg-gradient-to-r from-indigo-100/90 to-purple-100/90 backdrop-blur-sm border-t-2 border-b-2 border-indigo-300/60 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.3)] transition-all duration-300"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[8px_8px_16px_#a5b4fc,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+                                <Layers className="w-5 h-5 text-white" />
                               </div>
-                            </td>
-                          </motion.tr>
-                          {totals && (
-                            <motion.tr
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -20 }}
-                              transition={{ duration: 0.3, delay: index * 0.02 + 0.1 }}
-                              className="bg-gradient-to-r from-emerald-50/80 to-blue-50/80 backdrop-blur-sm border-b border-emerald-200/50 font-medium"
-                            >
-                              <td className="px-6 py-3 text-emerald-700">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-4 h-4 rounded bg-emerald-500 shadow-[4px_4px_8px_#a7f3d0,-4px_-4px_8px_#ffffff]" />
-                                  <span className="text-sm font-medium">รวม</span>
-                                </div>
-                              </td>
-                              <td className="px-6 py-3"></td>
-                              <td className="px-6 py-3 text-emerald-700 font-medium">ยอดรวม{item.name}</td>
-                              <td className="px-6 py-3 text-right">
-                                <div className="text-lg font-semibold text-emerald-700 bg-emerald-50/50 px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]">
+                              <span className="text-sm font-bold text-indigo-700 tracking-wide">หมวด</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="inline-flex items-center px-3 py-1 rounded-lg bg-purple-50 shadow-[inset_4px_4px_8px_#ddd6fe,inset_-4px_-4px_8px_#ffffff] text-purple-700 font-mono text-xs font-bold">
+                              TOTAL
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <h3 className="text-lg font-bold text-indigo-800 tracking-wide">{item.name}</h3>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {totals ? (
+                              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-100 to-green-100 rounded-xl shadow-[8px_8px_16px_#a7f3d0,-8px_-8px_16px_#ffffff] border border-emerald-200/50">
+                                <div className="text-lg font-bold text-emerald-700">
                                   {formatCurrency(totals.current)}
                                 </div>
-                              </td>
-                              <td className="px-6 py-3 text-right">
-                                <div className="text-lg font-semibold text-emerald-700 bg-emerald-50/50 px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]">
+                              </div>
+                            ) : (
+                              <div className="text-slate-400">-</div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {totals ? (
+                              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl shadow-[8px_8px_16px_#93c5fd,-8px_-8px_16px_#ffffff] border border-blue-200/50">
+                                <div className="text-lg font-bold text-blue-700">
                                   {formatCurrency(totals.next)}
                                 </div>
-                              </td>
-                              <td className="px-6 py-3 text-center">
-                                <div className={`text-lg font-semibold px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] ${
-                                  totalDiff > 0 ? 'text-emerald-600 bg-emerald-50/50' : 
-                                  totalDiff < 0 ? 'text-red-500 bg-red-50/50' : 
-                                  'text-slate-500 bg-slate-50/50'
-                                }`}>
-                                  {getDiffIcon(totalDiff)}
-                                  <span className="ml-1">
-                                    {totalDiff >= 0 ? '+' : ''}{formatCurrency(totalDiff)}
-                                  </span>
-                                </div>
-                              </td>
-                              <td className="px-6 py-3"></td>
-                            </motion.tr>
-                          )}
-                        </React.Fragment>
+                              </div>
+                            ) : (
+                              <div className="text-slate-400">-</div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {totals ? (
+                              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] border font-bold ${
+                                totalDiff > 0 
+                                  ? 'text-emerald-600 bg-gradient-to-r from-emerald-100 to-green-100 border-emerald-200/50' 
+                                  : totalDiff < 0 
+                                  ? 'text-red-600 bg-gradient-to-r from-red-100 to-pink-100 border-red-200/50' 
+                                  : 'text-slate-600 bg-gradient-to-r from-slate-100 to-gray-100 border-slate-200/50'
+                              }`}>
+                                {getDiffIcon(totalDiff)}
+                                <span className="text-lg">
+                                  {totalDiff >= 0 ? '+' : ''}{formatCurrency(totalDiff)}
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="text-slate-400">-</div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-xs text-slate-500 italic">ไม่แก้ไขได้</div>
+                          </td>
+                        </motion.tr>
                       );
                     }
 
