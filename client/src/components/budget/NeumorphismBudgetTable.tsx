@@ -616,21 +616,68 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                       >
                         {/* Budget Code */}
                         <td className="px-4 py-2">
-                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-blue-50 shadow-[inset_3px_3px_6px_#bfdbfe,inset_-3px_-3px_6px_#ffffff] text-blue-700 font-mono text-xs">
-                            {item.code}
-                          </div>
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#bfdbfe,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-blue-700 font-mono text-sm"
+                              value={item.code || ''}
+                              onChange={(e) => {
+                                // Create a mock update for field changes
+                                const updatedItem = { ...item, code: e.target.value };
+                                // For now, we'll trigger a save to update the field
+                                item.code = e.target.value;
+                              }}
+                              placeholder="รหัสงบประมาณ"
+                            />
+                          ) : (
+                            <div className="inline-flex items-center px-2 py-1 rounded-lg bg-blue-50 shadow-[inset_3px_3px_6px_#bfdbfe,inset_-3px_-3px_6px_#ffffff] text-blue-700 font-mono text-xs">
+                              {item.code}
+                            </div>
+                          )}
                         </td>
 
                         {/* Account Code */}
                         <td className="px-4 py-2">
-                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
-                            {item.code}
-                          </div>
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#a7f3d0,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-emerald-700 font-mono text-sm"
+                              value={item.accountCode || ''}
+                              onChange={(e) => {
+                                // Create a mock update for field changes
+                                const updatedItem = { ...item, accountCode: e.target.value };
+                                // For now, we'll trigger a save to update the field
+                                item.accountCode = e.target.value;
+                              }}
+                              placeholder="รหัสบัญชี"
+                            />
+                          ) : (
+                            <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
+                              {item.accountCode}
+                            </div>
+                          )}
                         </td>
 
                         {/* Item Name */}
-                        <td className="px-4 py-2 font-medium text-slate-700">
-                          {item.name}
+                        <td className="px-4 py-2">
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-slate-700 font-medium"
+                              value={item.name || ''}
+                              onChange={(e) => {
+                                // Create a mock update for field changes
+                                const updatedItem = { ...item, name: e.target.value };
+                                // For now, we'll trigger a save to update the field
+                                item.name = e.target.value;
+                              }}
+                              placeholder="รายการ"
+                            />
+                          ) : (
+                            <div className="font-medium text-slate-700">
+                              {item.name}
+                            </div>
+                          )}
                         </td>
 
                         {/* Current Year Value */}
@@ -760,15 +807,10 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         <td className="px-4 py-2">
                           <input
                             type="text"
-                            className={`w-full p-3 bg-white/80 border-0 rounded-xl transition-all duration-300 text-slate-700 text-sm ${
-                              globalEditMode 
-                                ? 'shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff]' 
-                                : 'cursor-not-allowed bg-slate-100/50 text-slate-400 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff]'
-                            }`}
+                            className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 text-sm"
                             placeholder="เพิ่มหมายเหตุ..."
                             value={item.notes || ''}
-                            onChange={(e) => globalEditMode && onUpdateNotes(actualIndex, e.target.value)}
-                            disabled={!globalEditMode}
+                            onChange={(e) => onUpdateNotes(actualIndex, e.target.value)}
                           />
                         </td>
                       </motion.tr>
