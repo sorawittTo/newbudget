@@ -195,7 +195,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
         <table className="w-full min-w-[1200px] text-sm">
           <thead className="bg-gray-100 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left font-semibold text-gray-900 w-32">รหัสบัญชี</th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-900 w-32">ตัวชี้วัดส่วนกลาง</th>
               <th className="px-6 py-4 text-left font-semibold text-gray-900 w-96">รายการ</th>
               <th className="px-6 py-4 text-center font-semibold text-gray-900 w-40">
                 <div className="flex items-center justify-center gap-2">
