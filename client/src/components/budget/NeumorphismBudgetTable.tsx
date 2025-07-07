@@ -543,7 +543,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           <td className="px-4 py-2 text-right">
                             {totals ? (
                               <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-emerald-100 to-green-100 rounded-lg shadow-[6px_6px_12px_#a7f3d0,-6px_-6px_12px_#ffffff] border border-emerald-200/50">
-                                <div className="text-base font-bold text-emerald-700">
+                                <div className="text-lg font-bold text-emerald-700">
                                   {formatCurrency(totals.current)}
                                 </div>
                               </div>
@@ -554,7 +554,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           <td className="px-4 py-2 text-right">
                             {totals ? (
                               <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg shadow-[6px_6px_12px_#93c5fd,-6px_-6px_12px_#ffffff] border border-blue-200/50">
-                                <div className="text-base font-bold text-blue-700">
+                                <div className="text-lg font-bold text-blue-700">
                                   {formatCurrency(totals.next)}
                                 </div>
                               </div>
@@ -572,7 +572,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                                   : 'text-slate-600 bg-gradient-to-r from-slate-100 to-gray-100 border-slate-200/50'
                               }`}>
                                 {getDiffIcon(totalDiff)}
-                                <span className="text-base">
+                                <span className="text-lg">
                                   {totalDiff >= 0 ? '+' : ''}{formatCurrency(totalDiff)}
                                 </span>
                               </div>
@@ -626,7 +626,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700"
+                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700 text-lg font-semibold"
                                 value={editingCell === `${actualIndex}-${currentYear}` ? tempValue : currentValue}
                                 onChange={(e) => {
                                   if (globalEditMode) {
@@ -660,7 +660,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             </div>
                           ) : (
                             <div
-                              className={`text-right font-mono text-lg p-3 rounded-xl transition-all duration-300 ${
+                              className={`text-right font-mono text-xl font-bold p-3 rounded-xl transition-all duration-300 ${
                                 globalEditMode 
                                   ? 'cursor-pointer hover:bg-blue-50/50 hover:shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]' 
                                   : 'cursor-not-allowed text-slate-400'
@@ -678,7 +678,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700"
+                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700 text-lg font-semibold"
                                 value={editingCell === `${actualIndex}-${nextYear}` ? tempValue : nextValue}
                                 onChange={(e) => {
                                   if (globalEditMode) {
@@ -712,7 +712,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             </div>
                           ) : (
                             <div
-                              className={`text-right font-mono text-lg p-3 rounded-xl transition-all duration-300 ${
+                              className={`text-right font-mono text-xl font-bold p-3 rounded-xl transition-all duration-300 ${
                                 globalEditMode 
                                   ? 'cursor-pointer hover:bg-emerald-50/50 hover:shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]' 
                                   : 'cursor-not-allowed text-slate-400'
@@ -727,7 +727,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         {/* Difference */}
                         <td className="px-4 py-2">
                           <div className="text-center">
-                            <div className={`flex items-center justify-center gap-1 font-medium text-lg ${
+                            <div className={`flex items-center justify-center gap-1 font-bold text-xl ${
                               diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-red-500' : 'text-slate-400'
                             }`}>
                               {getDiffIcon(diff)}
