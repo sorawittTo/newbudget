@@ -59,7 +59,8 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   const [customSettings, setCustomSettings] = useState({
     hotelNights: 2,
     perDiemDays: 3,
-    busFare: 600
+    busFare: 600,
+    workDays: 245
   });
 
   // Calculate data for each section
@@ -172,7 +173,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         {/* Settings */}
         <Card className="p-6 bg-yellow-50 border-yellow-200">
           <h4 className="font-semibold text-yellow-800 mb-4">ตั้งค่าการคำนวณ</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium text-yellow-700 mb-2 block">จำนวนคืนที่พัก</label>
               {renderEditableValue('hotelNights', customSettings.hotelNights, 'จำนวนคืน')}
@@ -180,6 +181,10 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
             <div>
               <label className="text-sm font-medium text-yellow-700 mb-2 block">จำนวนวันเบี้ยเลี้ยง</label>
               {renderEditableValue('perDiemDays', customSettings.perDiemDays, 'จำนวนวัน')}
+            </div>
+            <div>
+              <label className="text-sm font-medium text-yellow-700 mb-2 block">จำนวนวันทำการ/ปี</label>
+              {renderEditableValue('workDays', customSettings.workDays, 'วันทำการ')}
             </div>
           </div>
         </Card>
@@ -242,45 +247,49 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
     const total = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
 
     return (
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-3 text-left">รหัสพนักงาน</th>
-                <th className="px-4 py-3 text-left">ชื่อ-สกุล</th>
-                <th className="px-4 py-3 text-left">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-4 py-3 text-right">ค่ารถต่อครั้ง</th>
-                <th className="px-4 py-3 text-right">รวม 4 ครั้ง × 2 เที่ยว</th>
-                <th className="px-4 py-3 text-right font-semibold">ยอดรวม</th>
-              </tr>
-            </thead>
-            <tbody>
-              {familyVisitData.map((emp, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-gray-600">{emp.id}</td>
-                  <td className="px-4 py-3 font-medium">{emp.name}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {emp.visitProvince}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">{formatCurrency(emp.homeVisitBusFare)}</td>
-                  <td className="px-4 py-3 text-right">{formatCurrency(emp.busFareTotal)}</td>
-                  <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(emp.total)}</td>
+      <div className="space-y-6">
+
+
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left">รหัสพนักงาน</th>
+                  <th className="px-4 py-3 text-left">ชื่อ-สกุล</th>
+                  <th className="px-4 py-3 text-left">จังหวัดเยี่ยมบ้าน</th>
+                  <th className="px-4 py-3 text-right">ค่ารถต่อครั้ง</th>
+                  <th className="px-4 py-3 text-right">รวม 4 ครั้ง × 2 เที่ยว</th>
+                  <th className="px-4 py-3 text-right font-semibold">ยอดรวม</th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot className="bg-gray-50 font-bold">
-              <tr>
-                <td colSpan={5} className="px-4 py-3 text-right">ยอดรวมทั้งหมด:</td>
-                <td className="px-4 py-3 text-right text-lg text-blue-600">{formatCurrency(total)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </Card>
+              </thead>
+              <tbody>
+                {familyVisitData.map((emp, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-3 font-mono text-gray-600">{emp.id}</td>
+                    <td className="px-4 py-3 font-medium">{emp.name}</td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {emp.visitProvince}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">{formatCurrency(emp.homeVisitBusFare)}</td>
+                    <td className="px-4 py-3 text-right">{formatCurrency(emp.busFareTotal)}</td>
+                    <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(emp.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot className="bg-gray-50 font-bold">
+                <tr>
+                  <td colSpan={5} className="px-4 py-3 text-right">ยอดรวมทั้งหมด:</td>
+                  <td className="px-4 py-3 text-right text-lg text-blue-600">{formatCurrency(total)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </Card>
+      </div>
     );
   };
 
