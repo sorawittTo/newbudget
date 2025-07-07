@@ -138,8 +138,8 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                 key={index}
                 className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30"
               >
-                <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-                  <div className="md:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
+                  <div className="md:col-span-3">
                     <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
                     <NeumorphismInput
                       type="text"
