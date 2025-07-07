@@ -15,7 +15,10 @@ import {
   Check,
   X,
   User,
-  UserCheck
+  UserCheck,
+  Crown,
+  ShieldCheck,
+  XCircle
 } from 'lucide-react';
 
 interface EmployeeManagementProps {
@@ -258,24 +261,26 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'ชาย')}
-                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                               emp.gender === 'ชาย' 
-                                ? 'bg-blue-500 text-white' 
-                                : 'bg-gray-200 text-gray-700 hover:bg-blue-100'
+                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 shadow-md' 
+                                : 'border-gray-300 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50'
                             }`}
+                            title="ชาย"
                           >
-                            ชาย
+                            <User className="w-5 h-5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'หญิง')}
-                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                               emp.gender === 'หญิง' 
-                                ? 'bg-pink-500 text-white' 
-                                : 'bg-gray-200 text-gray-700 hover:bg-pink-100'
+                                ? 'border-pink-500 bg-gradient-to-r from-pink-50 to-pink-100 text-pink-700 shadow-md' 
+                                : 'border-gray-300 bg-white text-gray-500 hover:border-pink-300 hover:bg-pink-50'
                             }`}
+                            title="หญิง"
                           >
-                            หญิง
+                            <Crown className="w-5 h-5" />
                           </button>
                         </div>
                       </td>
@@ -303,24 +308,26 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'มีสิทธิ์')}
-                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                               (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
-                                ? 'bg-green-500 text-white' 
-                                : 'bg-gray-200 text-gray-700 hover:bg-green-100'
+                                ? 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 text-green-700 shadow-md' 
+                                : 'border-gray-300 bg-white text-gray-500 hover:border-green-300 hover:bg-green-50'
                             }`}
+                            title="มีสิทธิ์"
                           >
-                            มีสิทธิ์
+                            <ShieldCheck className="w-5 h-5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'หมดสิทธิ์')}
-                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                               (emp as any).status === 'หมดสิทธิ์'
-                                ? 'bg-red-500 text-white' 
-                                : 'bg-gray-200 text-gray-700 hover:bg-red-100'
+                                ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-md' 
+                                : 'border-gray-300 bg-white text-gray-500 hover:border-red-300 hover:bg-red-50'
                             }`}
+                            title="หมดสิทธิ์"
                           >
-                            หมดสิทธิ์
+                            <XCircle className="w-5 h-5" />
                           </button>
                         </div>
                       </td>
