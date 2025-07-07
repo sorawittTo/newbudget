@@ -1,14 +1,16 @@
-import { build } from 'vite';
 import { execSync } from 'child_process';
+import fs from 'fs';
 
-// Build frontend
-console.log('Building frontend...');
-await build();
+console.log('🚀 Building for Vercel deployment...');
 
-// Build backend
-console.log('Building backend...');
-execSync('esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist', {
-  stdio: 'inherit'
-});
-
-console.log('Build complete!');
+try {
+  // Build frontend only (backend will be handled by Vercel)
+  console.log('📦 Building frontend...');
+  execSync('vite build', { stdio: 'inherit' });
+  
+  console.log('✅ Build completed successfully!');
+  
+} catch (error) {
+  console.error('❌ Build failed:', error);
+  process.exit(1);
+}

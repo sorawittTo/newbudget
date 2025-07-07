@@ -60,11 +60,21 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
+  // Export the app for Vercel
+  if (process.env.NODE_ENV === 'production') {
+    // In production (Vercel), export the app
+    globalThis.app = app;
+  } else {
+    // In development, start the server
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      log(`serving on port ${port}`);
+    });
+  }
 })();
+
+// Export for Vercel
+export default app;

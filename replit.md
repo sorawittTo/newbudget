@@ -117,6 +117,17 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Vercel Deployment Fix
+  * Fixed TypeScript configuration for Vercel compatibility
+  * Updated tsconfig.json to use "moduleResolution": "node" instead of "bundler"
+  * Upgraded drizzle-orm to version 0.44.2 to resolve dependency conflicts
+  * Created tsconfig.vercel.json for production builds
+  * Simplified build.js for frontend-only building (backend handled by Vercel)
+  * Updated vercel.json with proper serverless function configuration
+  * Created api/index.ts as Vercel serverless function entry point
+  * Modified server/index.ts to export app for Vercel while maintaining dev server
+  * Added comprehensive README.md with deployment instructions
+  * Fixed TypeScript errors related to module resolution and imports
 - July 07, 2025. Code Cleanup and localStorage Removal
   * Removed all localStorage-related files: storage.ts, dataMigration.ts, BackupManager.tsx
   * Cleaned up imports and function calls related to localStorage
