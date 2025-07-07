@@ -41,13 +41,15 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
 
   const yearCE = calcYear - 543;
   const holidays = holidaysData[yearCE] || [];
-  const workDayCalc = calculateWorkDays(calcYear, holidays);
+  const workDayCalc = calculateWorkDays(calcYear, holidays, true); // รวมวันหยุดพิเศษ
+  const workDayCalcWithoutSpecial = calculateWorkDays(calcYear, holidays, false); // ไม่รวมวันหยุดพิเศษ
 
   // Calculate statistics
   const statistics = useMemo(() => {
     const totalHolidays = holidays.length;
     const weekendCount = Math.floor(365 / 7) * 2 + (365 % 7 >= 6 ? 1 : 0);
     const workingDays = workDayCalc.totalWorkDays;
+    const workingDaysWithoutSpecial = workDayCalcWithoutSpecial.totalWorkDays;
     const bankingHolidays = holidays.filter(h => 
       !h.name.includes('วันหยุดพิเศษ') && !h.name.includes('ชดเชย')
     ).length;
@@ -57,9 +59,10 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
       bankingHolidays,
       specialHolidays: totalHolidays - bankingHolidays,
       workingDays,
+      workingDaysWithoutSpecial,
       weekendCount
     };
-  }, [holidays, workDayCalc]);
+  }, [holidays, workDayCalc, workDayCalcWithoutSpecial]);
 
   const handleAddHoliday = () => {
     if (!newHoliday.date || !newHoliday.name) {
@@ -343,10 +346,10 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
         </div>
 
         <div className="p-6 bg-slate-50 border-t border-slate-200">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-slate-800">{workDayCalc.weekdays}</div>
-              <div className="text-sm text-slate-600">วันในสัปดาห์</div>
+              <div className="text-sm text-slate-600">วันจันทร์-ศุกร์</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-red-600">{workDayCalc.holidaysOnWeekdays}</div>
@@ -354,7 +357,15 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
             </div>
             <div>
               <div className="text-2xl font-bold text-emerald-600">{workDayCalc.totalWorkDays}</div>
-              <div className="text-sm text-slate-600">วันทำการสุทธิ</div>
+              <div className="text-sm text-slate-600">วันทำการรวมพิเศษ</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">{statistics.workingDaysWithoutSpecial}</div>
+              <div className="text-sm text-slate-600">วันทำการ (ไม่รวมพิเศษ)</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-amber-600">{statistics.specialHolidays}</div>
+              <div className="text-sm text-slate-600">วันหยุดพิเศษ</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-blue-600">{Math.round((workDayCalc.totalWorkDays / 365) * 100)}%</div>

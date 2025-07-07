@@ -269,7 +269,7 @@ export const calculateManagerRotation = (
     });
 };
 
-export const calculateWorkDays = (year: number, holidays: Holiday[] = []): WorkDayCalculation => {
+export const calculateWorkDays = (year: number, holidays: Holiday[] = [], includeSpecialHolidays: boolean = true): WorkDayCalculation => {
   const yearCE = year - 543;
   let weekdays = 0;
   
@@ -284,9 +284,14 @@ export const calculateWorkDays = (year: number, holidays: Holiday[] = []): WorkD
     }
   }
   
+  // Filter holidays based on includeSpecialHolidays flag
+  const filteredHolidays = includeSpecialHolidays 
+    ? holidays 
+    : holidays.filter(h => !h.name.includes('วันหยุดพิเศษ'));
+  
   // Count holidays that fall on weekdays
   let holidaysOnWeekdays = 0;
-  holidays.forEach(holiday => {
+  filteredHolidays.forEach(holiday => {
     const date = new Date(holiday.date + 'T00:00:00');
     const dayOfWeek = date.getDay();
     if (dayOfWeek > 0 && dayOfWeek < 6) {
