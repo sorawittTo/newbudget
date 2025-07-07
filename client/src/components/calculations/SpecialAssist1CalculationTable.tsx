@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { SpecialAssistData, SpecialAssistItem } from '../../types';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
+import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { formatCurrency } from '../../utils/calculations';
-import { Save, Info, Edit3, Check, X, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { Save, Info, Edit3, Check, X, ChevronLeft, ChevronRight, Plus, Trash2, Banknote } from 'lucide-react';
 
 interface SpecialAssist1CalculationTableProps {
   calcYear: number;

@@ -17,8 +17,8 @@ import {
   X
 } from 'lucide-react';
 import { ModernSpecialAssistCalculationTable } from '../calculations/ModernSpecialAssistCalculationTable';
-import { SpecialAssist1CalculationTable } from '../calculations/SpecialAssist1CalculationTable';
-import { OvertimeCalculationTable } from '../calculations/OvertimeCalculationTable';
+import { ModernSpecialAssist1CalculationTable } from '../calculations/ModernSpecialAssist1CalculationTable';
+import { ModernOvertimeCalculationTable } from '../calculations/ModernOvertimeCalculationTable';
 
 interface SpecialAssistanceManagerProps {
   employees: Employee[];
@@ -81,7 +81,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
 
   const renderSpecialSection = () => {
     return (
-      <SpecialAssist1CalculationTable
+      <ModernSpecialAssist1CalculationTable
         calcYear={calcYear}
         specialAssist1Data={specialAssist1Data}
         onYearChange={onYearChange}
@@ -94,7 +94,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
 
   const renderOvertimeSection = () => {
     return (
-      <OvertimeCalculationTable
+      <ModernOvertimeCalculationTable
         calcYear={calcYear}
         overtimeData={overtimeData}
         holidaysData={holidaysData}
