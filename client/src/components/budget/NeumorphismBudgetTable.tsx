@@ -425,20 +425,16 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200/50">
-                  <th className="px-6 py-4 text-left font-medium text-slate-700 bg-gradient-to-r from-blue-50/80 to-cyan-50/80 backdrop-blur-sm">
+                  <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
                     <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-lg bg-blue-500 shadow-[4px_4px_8px_#bfdbfe,-4px_-4px_8px_#ffffff] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white"></div>
-                      </div>
-                      <span className="font-bold text-blue-700">รหัสงบประมาณ</span>
+                      <Layers className="w-4 h-4" />
+                      รหัสงบประมาณ
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left font-medium text-slate-700 bg-gradient-to-r from-emerald-50/80 to-teal-50/80 backdrop-blur-sm">
+                  <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
                     <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-lg bg-emerald-500 shadow-[4px_4px_8px_#a7f3d0,-4px_-4px_8px_#ffffff] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white"></div>
-                      </div>
-                      <span className="font-bold text-emerald-700">รหัสบัญชี</span>
+                      <Layers className="w-4 h-4" />
+                      รหัสบัญชี
                     </div>
                   </th>
                   <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
@@ -478,14 +474,14 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, delay: index * 0.02 }}
-                          className="bg-gradient-to-r from-blue-200/90 to-indigo-200/90 backdrop-blur-sm border-y-3 border-blue-400/70 shadow-[0_6px_18px_rgba(59,130,246,0.25)] hover:shadow-[0_8px_22px_rgba(59,130,246,0.35)] transition-all duration-300"
+                          className="bg-gradient-to-r from-blue-200/90 to-indigo-200/90 backdrop-blur-sm border-y-4 border-blue-400/70 shadow-[0_8px_25px_rgba(59,130,246,0.3)] hover:shadow-[0_10px_30px_rgba(59,130,246,0.4)] transition-all duration-300"
                         >
-                          <td colSpan={7} className="px-6 py-5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[8px_8px_16px_#93c5fd,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-                                <Banknote className="w-6 h-6 text-white" />
+                          <td colSpan={7} className="px-8 py-8">
+                            <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[12px_12px_24px_#93c5fd,-12px_-12px_24px_#ffffff] flex items-center justify-center">
+                                <Banknote className="w-7 h-7 text-white" />
                               </div>
-                              <h2 className="text-xl font-bold text-blue-900 tracking-wide drop-shadow-sm">{item.name}</h2>
+                              <h2 className="text-2xl font-bold text-blue-900 tracking-wide drop-shadow-sm">{item.name}</h2>
                             </div>
                           </td>
                         </motion.tr>
@@ -585,23 +581,15 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                       >
                         {/* Budget Code */}
                         <td className="px-6 py-4">
-                          <div className="group relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-                            <div className="relative inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-blue-100 to-cyan-100 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] border border-blue-200/50 text-blue-800 font-mono text-sm font-bold tracking-wider hover:shadow-[6px_6px_12px_#bfdbfe,-6px_-6px_12px_#ffffff] transition-all duration-300">
-                              <div className="w-2 h-2 rounded-full bg-blue-500 mr-2 shadow-sm"></div>
-                              {item.code}
-                            </div>
+                          <div className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff] text-blue-700 font-mono text-xs">
+                            {item.code}
                           </div>
                         </td>
 
                         {/* Account Code */}
                         <td className="px-6 py-4">
-                          <div className="group relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-                            <div className="relative inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-100 to-teal-100 shadow-[8px_8px_16px_#a7f3d0,-8px_-8px_16px_#ffffff] border border-emerald-200/50 text-emerald-800 font-mono text-sm font-bold tracking-wider hover:shadow-[6px_6px_12px_#a7f3d0,-6px_-6px_12px_#ffffff] transition-all duration-300">
-                              <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2 shadow-sm"></div>
-                              {item.code}
-                            </div>
+                          <div className="inline-flex items-center px-3 py-1 rounded-lg bg-emerald-50 shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff] text-emerald-700 font-mono text-xs">
+                            {item.code}
                           </div>
                         </td>
 
