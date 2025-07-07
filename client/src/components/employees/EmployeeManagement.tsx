@@ -82,43 +82,17 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
     const cellKey = `${level}-${field}`;
     const isEditing = editingCell === cellKey;
 
-    if (globalEditMode || isEditing) {
+    if (globalEditMode) {
       return (
         <div className="flex items-center gap-2">
           <input
             type={isText ? "text" : "number"}
             className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-            value={globalEditMode ? value : tempValue}
+            value={value}
             onChange={(e) => {
-              if (globalEditMode) {
-                onUpdateMasterRate(level, field, isText ? e.target.value : parseFloat(e.target.value) || 0);
-              } else {
-                setTempValue(e.target.value);
-              }
+              onUpdateMasterRate(level, field, isText ? e.target.value : parseFloat(e.target.value) || 0);
             }}
-            onBlur={() => !globalEditMode && handleRateSave(level, field)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !globalEditMode) handleRateSave(level, field);
-              if (e.key === 'Escape' && !globalEditMode) handleRateCancel();
-            }}
-            autoFocus={isEditing}
           />
-          {!globalEditMode && (
-            <div className="flex gap-1">
-              <button
-                onClick={() => handleRateSave(level, field)}
-                className="w-8 h-8 rounded-lg bg-emerald-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-emerald-600 transition-all duration-200"
-              >
-                <Check className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleRateCancel}
-                className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
       );
     }
@@ -128,11 +102,9 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         className={`p-3 rounded-xl transition-all duration-300 ${
           isText ? 'text-left' : 'text-right font-mono text-lg font-bold'
         } ${
-          !globalEditMode 
-            ? 'cursor-pointer hover:bg-blue-50/50 hover:shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]' 
-            : 'cursor-not-allowed opacity-60'
+          'cursor-default'
         }`}
-        onClick={() => !globalEditMode ? handleRateEdit(level, field, value.toString()) : null}
+        onClick={() => null}
       >
         {isText ? value : (
           <span className="text-slate-700">
