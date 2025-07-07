@@ -55,6 +55,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   const [editMode, setEditMode] = useState(false);
   const [customMonths, setCustomMonths] = useState<Record<string, number>>({});
   const [customLumpSum, setCustomLumpSum] = useState<Record<string, number>>({});
+  const [customPurchaseAllowance, setCustomPurchaseAllowance] = useState<Record<string, number>>({});
 
   const yearCE = calcYear - 543;
   const holidays = holidaysData[yearCE] || [];
@@ -62,11 +63,15 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   // Helper functions for assistance tab
   const getMonthsForEmployee = (empId: string) => customMonths[empId] || 12;
   const getLumpSumForEmployee = (empId: string) => customLumpSum[empId] || 0;
+  const getPurchaseAllowanceForEmployee = (empId: string) => customPurchaseAllowance[empId] || 0;
   const handleMonthsChange = (empId: string, months: number) => {
     setCustomMonths(prev => ({ ...prev, [empId]: months }));
   };
   const handleLumpSumChange = (empId: string, amount: number) => {
     setCustomLumpSum(prev => ({ ...prev, [empId]: amount }));
+  };
+  const handlePurchaseAllowanceChange = (empId: string, amount: number) => {
+    setCustomPurchaseAllowance(prev => ({ ...prev, [empId]: amount }));
   };
 
   // Filter eligible employees
@@ -91,79 +96,104 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
 
   const renderAssistanceTab = () => (
     <div className="space-y-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50 overflow-hidden">
         <div className="p-6 border-b border-slate-200/50">
-          <h3 className="text-lg font-bold text-slate-800">รายชื่อพนักงานที่มีสิทธิ์</h3>
-          <p className="text-sm text-slate-600 mt-1">ข้อมูลพนักงานสำหรับเงินช่วยเหลืออื่นๆ</p>
+          <h3 className="text-lg font-bold text-slate-800">รายชื่อพนักงานที่มีสิทธิ์เงินช่วยเหลืออื่นๆ</h3>
+          <p className="text-sm text-slate-600 mt-1">ตารางแสดงข้อมูลและจำนวนเงินช่วยเหลือสำหรับพนักงาน</p>
         </div>
         
-        <div className="p-6 space-y-4">
-          {eligibleEmployees.map((emp) => {
-            const rates = getRatesForEmployee(emp, masterRates);
-            const months = getMonthsForEmployee(emp.id);
-            const lumpSum = getLumpSumForEmployee(emp.id) || rates.lumpSum;
-
-            return (
-              <div key={emp.id} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="col-span-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold">
-                        {emp.id.slice(-2)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-800">{emp.name}</p>
-                        <p className="text-sm text-slate-600">รหัส: {emp.id} | ระดับ: {emp.level}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">จำนวนเดือน</label>
-                    {editMode ? (
-                      <NeumorphismInput
-                        type="number"
-                        min="1"
-                        max="12"
-                        value={months}
-                        onChange={(e) => handleMonthsChange(emp.id, parseInt(e.target.value) || 1)}
-                        className="w-full text-center"
-                      />
-                    ) : (
-                      <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                        <span className="font-medium text-slate-700">{months}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">เงินก้อน (บาท)</label>
-                    {editMode ? (
-                      <NeumorphismInput
-                        type="number"
-                        min="0"
-                        step="100"
-                        value={lumpSum}
-                        onChange={(e) => handleLumpSumChange(emp.id, parseFloat(e.target.value) || 0)}
-                        className="w-full text-right"
-                      />
-                    ) : (
-                      <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                        <span className="font-medium text-slate-700">{formatCurrency(lumpSum)}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gradient-to-r from-slate-600 to-purple-600 text-white">
+                <th className="px-6 py-4 text-left font-bold">รหัสพนักงาน</th>
+                <th className="px-6 py-4 text-left font-bold">ชื่อ-สกุล</th>
+                <th className="px-6 py-4 text-left font-bold">ระดับ</th>
+                <th className="px-6 py-4 text-right font-bold">ค่าเช่าบ้าน</th>
+                <th className="px-6 py-4 text-right font-bold">เงินช่วยเหลือรายเดือน</th>
+                <th className="px-6 py-4 text-right font-bold">จำนวนเดือน</th>
+                <th className="px-6 py-4 text-right font-bold">เงินซื้อของเหมาจ่าย</th>
+                <th className="px-6 py-4 text-right font-bold">ยอดรวม</th>
+              </tr>
+            </thead>
+            <tbody>
+              {eligibleEmployees.map((emp, index) => {
+                const rates = getRatesForEmployee(emp, masterRates);
+                const months = getMonthsForEmployee(emp.id);
+                const lumpSum = getLumpSumForEmployee(emp.id);
+                const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
                 
-                <div className="mt-4 pt-4 border-t border-slate-200/50">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-600">ค่าเช่าบ้าน: {formatCurrency(rates.rent)}/เดือน</span>
-                    <span className="text-slate-600">เงินช่วยเหลือ: {formatCurrency(rates.monthlyAssist)}/เดือน</span>
+                const totalRent = rates.rent * months;
+                const totalMonthlyAssist = rates.monthlyAssist * months;
+                const grandTotal = totalRent + totalMonthlyAssist + lumpSum + purchaseAllowance;
+
+                return (
+                  <tr key={emp.id} className="border-b border-slate-200/50 hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-slate-700">{emp.id}</td>
+                    <td className="px-6 py-4 font-medium text-slate-700">{emp.name}</td>
+                    <td className="px-6 py-4 text-slate-600">{emp.level}</td>
+                    <td className="px-6 py-4 text-right">
+                      <span className="font-bold text-lg text-blue-700">{formatCurrency(rates.rent)}</span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <span className="font-bold text-lg text-emerald-700">{formatCurrency(rates.monthlyAssist)}</span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {editMode ? (
+                        <input
+                          type="number"
+                          min="1"
+                          max="12"
+                          className="w-20 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-center"
+                          value={months}
+                          onChange={(e) => handleMonthsChange(emp.id, parseInt(e.target.value) || 1)}
+                        />
+                      ) : (
+                        <span className="font-bold text-lg text-slate-700">{months}</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {editMode ? (
+                        <input
+                          type="number"
+                          min="0"
+                          step="100"
+                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
+                          value={purchaseAllowance}
+                          onChange={(e) => handlePurchaseAllowanceChange(emp.id, parseFloat(e.target.value) || 0)}
+                        />
+                      ) : (
+                        <span className="font-bold text-lg text-purple-700">{formatCurrency(purchaseAllowance)}</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right bg-gradient-to-r from-purple-50 to-pink-50">
+                      <div className="font-bold text-xl text-purple-900">{formatCurrency(grandTotal)}</div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr className="bg-gradient-to-r from-slate-100 to-slate-200 font-bold">
+                <td colSpan={7} className="px-6 py-4 text-right text-lg">
+                  ยอดรวมทั้งหมด:
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="font-bold text-2xl text-purple-900">
+                    {formatCurrency(
+                      eligibleEmployees.reduce((sum, emp) => {
+                        const rates = getRatesForEmployee(emp, masterRates);
+                        const months = getMonthsForEmployee(emp.id);
+                        const lumpSum = getLumpSumForEmployee(emp.id);
+                        const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
+                        return sum + (rates.rent * months) + (rates.monthlyAssist * months) + lumpSum + purchaseAllowance;
+                      }, 0)
+                    )}
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
     </div>
