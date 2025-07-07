@@ -125,7 +125,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">แดshboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">DASHBOARD</h1>
           <p className="text-gray-600 mt-1">ภาพรวมระบบงบประมาณ ณ วันที่ {new Date().toLocaleDateString('th-TH')}</p>
         </div>
         <div className="flex gap-2">
