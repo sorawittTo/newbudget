@@ -78,6 +78,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
       if (field === 'homeVisitBusFare') {
         onUpdateEmployee(globalIndex, { ...employee, homeVisitBusFare: value });
       }
+      // Add support for editing quantity field if needed in the future
     }
   };
 
@@ -244,17 +245,16 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
               <tr className="bg-gradient-to-r from-slate-600 to-blue-600 text-white">
                 <th className="px-6 py-4 text-left font-bold">รหัสพนักงาน</th>
                 <th className="px-6 py-4 text-left font-bold">ชื่อ-สกุล</th>
-                <th className="px-6 py-4 text-left font-bold">ระดับ</th>
                 <th className="px-6 py-4 text-left font-bold">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-6 py-4 text-right font-bold">ค่ารถทัวร์ (ต่อครั้ง)</th>
-                <th className="px-6 py-4 text-right font-bold">รวม 4 ครั้ง × 2 เที่ยว</th>
+                <th className="px-6 py-4 text-right font-bold">ค่ารถทัวร์ไป-กลับ</th>
+                <th className="px-6 py-4 text-right font-bold">จำนวนครั้ง</th>
                 <th className="px-6 py-4 text-right font-bold bg-gradient-to-r from-blue-600 to-purple-600">ยอดรวม (บาท)</th>
               </tr>
             </thead>
             <tbody>
               {familyVisitData.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-16">
+                  <td colSpan={6} className="text-center py-16">
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-16 h-16 rounded-2xl bg-gray-100 shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] flex items-center justify-center">
                         <AlertCircle className="w-8 h-8 text-gray-400" />
@@ -278,12 +278,6 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                     </td>
                     <td className="px-6 py-4">
                       <div className="font-medium text-slate-800">{emp.name}</div>
-                      <div className="text-sm text-slate-500">เพศ{emp.gender}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="inline-flex items-center px-3 py-1 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff] text-sm font-medium text-blue-800">
-                        ระดับ {emp.level}
-                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
@@ -297,24 +291,37 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="space-y-2">
-                        {renderEditableValue(emp.id, 'homeVisitBusFare', emp.homeVisitBusFare, index, 'ค่ารถทัวร์')}
-                        {!globalEditMode && (
-                          <div className="text-xs text-amber-600 flex items-center justify-end gap-1">
-                            <Edit3 className="w-3 h-3" />
-                            แก้ไขได้
+                        {globalEditMode ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
+                              value={emp.homeVisitBusFare}
+                              onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
+                            />
                           </div>
+                        ) : (
+                          renderEditableValue(emp.id, 'homeVisitBusFare', emp.homeVisitBusFare, index, 'ค่ารถทัวร์')
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="space-y-2">
-                        <div className="font-bold text-lg text-blue-700">{formatCurrency(emp.busFareTotal)}</div>
-                        <div className="text-sm text-slate-500">
-                          ({formatCurrency(emp.homeVisitBusFare)} × 4 × 2)
-                        </div>
-                        <div className="text-xs text-blue-600 flex items-center justify-end gap-1">
+                        {globalEditMode ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              className="w-20 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-center"
+                              value={4}
+                              onChange={() => {}} // Fixed at 4 for now
+                            />
+                          </div>
+                        ) : (
+                          <div className="font-bold text-lg text-blue-700">4</div>
+                        )}
+                        <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
                           <Calculator className="w-3 h-3" />
-                          คำนวณอัตโนมัติ
+                          ครั้ง/ปี
                         </div>
                       </div>
                     </td>
@@ -329,7 +336,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
             {familyVisitData.length > 0 && (
               <tfoot className="bg-gradient-to-r from-slate-600 to-blue-600 text-white">
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-right font-bold text-lg">
+                  <td colSpan={5} className="px-6 py-4 text-right font-bold text-lg">
                     ยอดรวมทั้งหมด:
                   </td>
                   <td className="px-6 py-4 text-right">
