@@ -60,7 +60,6 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
   onSave,
   onExport
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [showOnlyChanges, setShowOnlyChanges] = useState(false);
   const [editingCell, setEditingCell] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>('');
@@ -111,18 +110,9 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     };
   }, [budgetData, currentYear, nextYear]);
 
-  // Filter and search data
+  // Filter data
   const filteredData = useMemo(() => {
     let result = budgetData.filter(item => !item.type);
-
-    // Search filter
-    if (searchTerm) {
-      result = result.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.notes?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
 
     // Category filter (based on code prefixes)
     if (selectedCategory !== 'all') {
@@ -139,18 +129,22 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     }
 
     return result;
-  }, [budgetData, searchTerm, selectedCategory, showOnlyChanges, currentYear, nextYear]);
+  }, [budgetData, selectedCategory, showOnlyChanges, currentYear, nextYear]);
 
-  // Categories based on budget codes
+  // Categories based on budget codes - clearly separated expense categories
   const categories = useMemo(() => {
     const codeMap: Record<string, string> = {
-      '52': 'หมวด 1: ค่าใช้จ่ายพนักงาน',
-      '53': 'หมวด 2: ค่าดำเนินงานทั่วไป',
-      '55': 'หมวด 4: เงินช่วยเหลือ',
-      '10': 'หมวด 7: ครุภัณฑ์',
-      '16': 'หมวด 7: ครุภัณฑ์เบ็ดเตล็ด',
-      '25': 'หมวด 7: ยานพาหนะ',
-      '5': 'หมวด 7: ปรับปรุงอาคาร'
+      'all': 'ทุกหมวดค่าใช้จ่าย',
+      '52': 'หมวดที่ 1: ค่าใช้จ่ายบุคลากร',
+      '53': 'หมวดที่ 2: ค่าใช้สอยและวัสดุ', 
+      '54': 'หมวดที่ 3: ค่าสาธารณูปโภค',
+      '55': 'หมวดที่ 4: เงินช่วยเหลือและเงินอุดหนุน',
+      '56': 'หมวดที่ 5: ค่าใช้จ่ายในการเดินทาง',
+      '57': 'หมวดที่ 6: ค่าใช้จ่ายในการฝึกอบรม',
+      '10': 'หมวดที่ 7: ครุภัณฑ์',
+      '16': 'หมวดที่ 8: ครุภัณฑ์เบ็ดเตล็ด',
+      '25': 'หมวดที่ 9: ยานพาหนะและขนส่ง',
+      '5': 'หมวดที่ 10: ปรับปรุงอาคารสถานที่'
     };
 
     const found = new Set<string>();
@@ -162,8 +156,8 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     });
 
     return [
-      { value: 'all', label: 'ทุกหมวด' },
-      ...Array.from(found).map(prefix => ({
+      { value: 'all', label: 'ทุกหมวดค่าใช้จ่าย' },
+      ...Array.from(found).sort().map(prefix => ({
         value: prefix,
         label: codeMap[prefix]
       }))
@@ -293,22 +287,10 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
         </div>
       </div>
 
-      {/* Advanced Filters and Controls */}
+      {/* Controls */}
       <Card className="p-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <div className="flex flex-wrap gap-4 items-center">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="ค้นหารายการ รหัส หรือหมายเหตุ..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-80"
-              />
-            </div>
-
             {/* Category Filter */}
             <select
               value={selectedCategory}
@@ -362,10 +344,13 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           <table className="w-full min-w-[1200px] text-sm">
             <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-900 w-32">
-                  ตัวชี้วัดส่วนกลาง
+                <th className="px-4 py-4 text-left font-semibold text-gray-900 w-24">
+                  รหัสงบประมาณ
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-900 w-96">
+                <th className="px-4 py-4 text-left font-semibold text-gray-900 w-24">
+                  รหัสบัญชี
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-900 w-80">
                   รายการ
                 </th>
                 <th className="px-6 py-4 text-center font-semibold text-gray-900 w-40">
@@ -407,8 +392,15 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                       className="border-b border-gray-100 hover:bg-blue-50/50 transition-all duration-200 group"
                     >
                       {/* Budget Code */}
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         <span className="font-mono text-sm bg-gradient-to-r from-blue-100 to-indigo-100 px-3 py-1 rounded-lg text-blue-800 font-medium">
+                          {item.code}
+                        </span>
+                      </td>
+
+                      {/* Account Code */}
+                      <td className="px-4 py-4">
+                        <span className="font-mono text-sm bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-1 rounded-lg text-green-800 font-medium">
                           {item.code}
                         </span>
                       </td>
@@ -420,7 +412,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
                       {/* Current Year Value */}
                       <td className="px-6 py-4">
-                        {editingCell === `${actualIndex}-${currentYear}` || globalEditMode ? (
+                        {globalEditMode || editingCell === `${actualIndex}-${currentYear}` ? (
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
@@ -462,8 +454,10 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                           </div>
                         ) : (
                           <div
-                            className="text-right font-mono text-lg cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors"
-                            onClick={() => handleCellEdit(actualIndex, currentYear, currentValue)}
+                            className={`text-right font-mono text-lg p-2 rounded transition-colors ${
+                              globalEditMode ? 'cursor-pointer hover:bg-blue-100' : 'cursor-not-allowed text-gray-400'
+                            }`}
+                            onClick={() => globalEditMode && handleCellEdit(actualIndex, currentYear, currentValue)}
                           >
                             {formatCurrency(currentValue)}
                           </div>
@@ -472,7 +466,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
                       {/* Next Year Value */}
                       <td className="px-6 py-4">
-                        {editingCell === `${actualIndex}-${nextYear}` || globalEditMode ? (
+                        {globalEditMode || editingCell === `${actualIndex}-${nextYear}` ? (
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
@@ -514,8 +508,10 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                           </div>
                         ) : (
                           <div
-                            className="text-right font-mono text-lg cursor-pointer hover:bg-green-100 p-2 rounded transition-colors"
-                            onClick={() => handleCellEdit(actualIndex, nextYear, nextValue)}
+                            className={`text-right font-mono text-lg p-2 rounded transition-colors ${
+                              globalEditMode ? 'cursor-pointer hover:bg-green-100' : 'cursor-not-allowed text-gray-400'
+                            }`}
+                            onClick={() => globalEditMode && handleCellEdit(actualIndex, nextYear, nextValue)}
                           >
                             {formatCurrency(nextValue)}
                           </div>
@@ -543,10 +539,13 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                       <td className="px-6 py-4">
                         <input
                           type="text"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className={`w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
+                            !globalEditMode ? 'cursor-not-allowed bg-gray-100 text-gray-400' : ''
+                          }`}
                           placeholder="เพิ่มหมายเหตุ..."
                           value={item.notes || ''}
-                          onChange={(e) => onUpdateNotes(actualIndex, e.target.value)}
+                          onChange={(e) => globalEditMode && onUpdateNotes(actualIndex, e.target.value)}
+                          disabled={!globalEditMode}
                         />
                       </td>
                     </motion.tr>
