@@ -117,6 +117,22 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Manager Rotation Tab Modernization with Advanced UI
+  * Created ModernManagerRotationCalculationTable with neumorphism design matching other travel tabs
+  * Added comprehensive settings panel for destination, per diem days, hotel nights, and transportation costs
+  * Implemented statistics cards showing manager count, eligible level 7 employees, per diem days, and total amount
+  * Added global edit mode functionality for real-time editing of all calculation fields
+  * Included detailed breakdown of travel costs (bus, flight, taxi) with configurable rates
+  * Enhanced UI with gradient backgrounds, shadow effects, and smooth transitions
+  * Maintained automatic filtering for level 7 employees only (managers eligible for rotation)
+- July 07, 2025. Company Trip Tab Complete Modernization
+  * Created ModernCompanyTripCalculationTable with advanced neumorphism design
+  * Added destination input and bus fare configuration in header settings panel
+  * Implemented accommodation eligibility logic based on employee home province vs destination
+  * Level 7 employees get single rooms, others share rooms by gender (cost divided by 2)
+  * Bus fare calculated as input × 2 for round trip travel
+  * Added comprehensive statistics showing total employees, eligible/ineligible counts, and total costs
+  * Integrated global edit mode for all fields with neumorphism input styling
 - July 07, 2025. Family Visit Travel Tab Simplification
   * Removed filtering criteria information panel from ModernFamilyVisitCalculationTable
   * Simplified employee filtering to show only employees with status "มีสิทธิ์" (eligible)
