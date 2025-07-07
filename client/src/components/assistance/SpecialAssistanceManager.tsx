@@ -87,8 +87,10 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
   };
 
   const handleEditStart = (field: string, currentValue: any) => {
-    setEditingValues(prev => ({ ...prev, [field]: currentValue }));
-    setEditMode(prev => ({ ...prev, [field]: true }));
+    if (globalEditMode) {
+      setEditingValues(prev => ({ ...prev, [field]: currentValue }));
+      setEditMode(prev => ({ ...prev, [field]: true }));
+    }
   };
 
   const handleEditSave = (field: string, empId?: string) => {
@@ -112,7 +114,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
   const renderEditableValue = (field: string, currentValue: any, empId?: string, isText = false) => {
     const isEditing = editMode[field];
     
-    if (isEditing) {
+    if (isEditing && globalEditMode) {
       return (
         <div className="flex items-center gap-2">
           <NeumorphismInput
