@@ -321,7 +321,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
               <table className="w-full min-w-[1200px]">
                 <thead>
                   <tr className="text-left">
-                    <th className="p-4 text-sm font-semibold text-gray-700 w-48">พนักงาน</th>
+                    <th className="p-4 text-sm font-semibold text-gray-700 w-32">รหัสพนักงาน</th>
+                    <th className="p-4 text-sm font-semibold text-gray-700 w-48">ชื่อ-นามสกุล</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">อายุงาน</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าที่พัก</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเบี้ยเลี้ยง</th>
@@ -347,15 +348,12 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           className={`group ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-100'} transition-all duration-200`}
                         >
                           <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm"
-                                   style={{ boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff' }}>
-                                {employee.name.charAt(0)}
-                              </div>
-                              <div>
-                                <p className="font-semibold text-gray-900">{employee.name}</p>
-                                <p className="text-sm text-gray-600">ระดับ {employee.level}</p>
-                              </div>
+                            <div className="font-semibold text-gray-900">{employee.id}</div>
+                          </td>
+                          <td className="p-4">
+                            <div>
+                              <p className="font-semibold text-gray-900">{employee.name}</p>
+                              <p className="text-sm text-gray-600">ระดับ {employee.level}</p>
                             </div>
                           </td>
                           <td className="p-4 text-center">
