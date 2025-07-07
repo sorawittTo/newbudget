@@ -1,32 +1,29 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Holiday } from '../../types';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { NeumorphismInput } from '../ui/NeumorphismInput';
+import React, { useState, useMemo } from 'react';
+import { Holiday, WorkDayCalculation } from '../../types';
 import { calculateWorkDays } from '../../utils/calculations';
 import { 
-  Calendar, 
   Plus, 
   Trash2, 
+  ChevronLeft, 
+  ChevronRight, 
+  Calendar, 
   Save,
-  ChevronLeft,
-  ChevronRight,
+  TrendingUp, 
   Clock,
-  Award,
-  Target,
-  TrendingUp,
-  Sun,
-  Moon,
-  Edit3
+  AlertCircle,
+  Info,
+  Check,
+  X,
+  Edit3,
+  Building
 } from 'lucide-react';
 
 interface ModernWorkdayManagerProps {
   calcYear: number;
   holidaysData: Record<number, Holiday[]>;
   onYearChange: (year: number) => void;
-  onAddHoliday: (year: number, holiday: Holiday) => void;
-  onDeleteHoliday: (year: number, index: number) => void;
+  onAddHoliday: (yearCE: number, holiday: Holiday) => void;
+  onDeleteHoliday: (yearCE: number, index: number) => void;
   onSave: () => void;
 }
 
@@ -39,250 +36,333 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
   onSave
 }) => {
   const [newHoliday, setNewHoliday] = useState({ date: '', name: '' });
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [globalEditMode, setGlobalEditMode] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingHoliday, setEditingHoliday] = useState({ date: '', name: '' });
 
-  const currentYearHolidays = holidaysData[calcYear] || [];
-  const workDayCalc = calculateWorkDays(calcYear, currentYearHolidays);
+  const yearCE = calcYear - 543;
+  const holidays = holidaysData[yearCE] || [];
+  const workDayCalc = calculateWorkDays(calcYear, holidays);
+
+  // Calculate statistics
+  const statistics = useMemo(() => {
+    const totalHolidays = holidays.length;
+    const weekendCount = Math.floor(365 / 7) * 2 + (365 % 7 >= 6 ? 1 : 0);
+    const workingDays = workDayCalc.totalWorkDays;
+    const bankingHolidays = holidays.filter(h => 
+      !h.name.includes('วันหยุดพิเศษ') && !h.name.includes('ชดเชย')
+    ).length;
+    
+    return {
+      totalHolidays,
+      bankingHolidays,
+      specialHolidays: totalHolidays - bankingHolidays,
+      workingDays,
+      weekendCount
+    };
+  }, [holidays, workDayCalc]);
 
   const handleAddHoliday = () => {
-    if (newHoliday.date && newHoliday.name) {
-      onAddHoliday(calcYear, newHoliday);
-      setNewHoliday({ date: '', name: '' });
-      setShowAddForm(false);
+    if (!newHoliday.date || !newHoliday.name) {
+      alert('กรุณาระบุวันที่และชื่อวันหยุด');
+      return;
+    }
+
+    onAddHoliday(yearCE, {
+      date: newHoliday.date,
+      name: newHoliday.name
+    });
+
+    setNewHoliday({ date: '', name: '' });
+  };
+
+  const handleEditStart = (index: number, holiday: Holiday) => {
+    setEditingIndex(index);
+    setEditingHoliday({ ...holiday });
+  };
+
+  const handleEditSave = () => {
+    if (editingIndex !== null) {
+      // Remove old and add new (simplified update)
+      onDeleteHoliday(yearCE, editingIndex);
+      onAddHoliday(yearCE, editingHoliday);
+      setEditingIndex(null);
+      setEditingHoliday({ date: '', name: '' });
     }
   };
 
-  const handleDeleteHoliday = (index: number) => {
-    if (window.confirm('คุณต้องการลบวันหยุดนี้ใช่หรือไม่?')) {
-      onDeleteHoliday(calcYear, index);
-    }
+  const handleEditCancel = () => {
+    setEditingIndex(null);
+    setEditingHoliday({ date: '', name: '' });
   };
 
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('th-TH', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    } catch {
-      return dateString;
-    }
-  };
+  const isCurrentYear = yearCE === 2025; // ปี 2568
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center gap-4">
-              <motion.div 
-                className="p-3 rounded-2xl"
-                style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Calendar className="w-6 h-6 text-indigo-600" />
-              </motion.div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">จัดการวันทำการ</h2>
-                <p className="text-gray-600">ระบบจัดการวันหยุดและคำนวณวันทำการ</p>
-              </div>
+    <div className="space-y-8">
+      {/* Header with Year Navigation */}
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
+              <Calendar className="w-6 h-6 text-blue-600" />
             </div>
-            <div className="flex gap-3">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => onYearChange(calcYear - 1)}
-                  className="p-2 rounded-xl text-blue-600 hover:text-blue-700 transition-colors"
-                  style={{
-                    boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
-                    backgroundColor: '#f9fafb'
-                  }}
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <motion.div 
-                  className="px-6 py-3 rounded-2xl min-w-[120px] text-center"
-                  style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <span className="text-lg font-bold text-blue-900">ปี พ.ศ. {calcYear}</span>
-                </motion.div>
-                <button
-                  onClick={() => onYearChange(calcYear + 1)}
-                  className="p-2 rounded-xl text-blue-600 hover:text-blue-700 transition-colors"
-                  style={{
-                    boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
-                    backgroundColor: '#f9fafb'
-                  }}
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-              <Button 
-                onClick={() => setGlobalEditMode(!globalEditMode)}
-                variant={globalEditMode ? "secondary" : "primary"}
-                className={globalEditMode 
-                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-                }
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-              </Button>
-              <Button onClick={onSave} className="flex items-center gap-2">
-                <Save className="w-4 h-4" />
-                บันทึก
-              </Button>
-            </div>
-          </div>
-
-          {/* Statistics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: 'วันทำการ', value: workDayCalc.totalWorkDays, icon: Clock, color: 'text-green-600' },
-              { label: 'วันหยุดราชการ', value: workDayCalc.holidaysOnWeekdays, icon: Sun, color: 'text-red-600' },
-              { label: 'วันจันทร์-ศุกร์', value: workDayCalc.weekdays, icon: Target, color: 'text-blue-600' },
-              { label: 'วันหยุดทั้งหมด', value: currentYearHolidays.length, icon: Moon, color: 'text-purple-600' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                className="p-4 rounded-2xl bg-gray-100"
-                style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-xl ${stat.color}`} style={{ boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff', backgroundColor: '#f9fafb' }}>
-                    <stat.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">{stat.label}</p>
-                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </Card>
-
-      {/* Add Holiday Form */}
-      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">เพิ่มวันหยุดใหม่</h3>
-            <Button
-              onClick={() => setShowAddForm(!showAddForm)}
-              variant={showAddForm ? "secondary" : "primary"}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {showAddForm ? 'ยกเลิก' : 'เพิ่มวันหยุด'}
-            </Button>
-          </div>
-
-          <AnimatePresence>
-            {showAddForm && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4"
-              >
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">วันที่</label>
-                  <NeumorphismInput
-                    type="date"
-                    value={newHoliday.date}
-                    onChange={(e) => setNewHoliday(prev => ({ ...prev, date: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">ชื่อวันหยุด</label>
-                  <NeumorphismInput
-                    type="text"
-                    value={newHoliday.name}
-                    onChange={(e) => setNewHoliday(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="เช่น วันแรงงานแห่งชาติ"
-                  />
-                </div>
-                <div className="flex items-end">
-                  <Button
-                    onClick={handleAddHoliday}
-                    disabled={!newHoliday.date || !newHoliday.name}
-                    className="w-full"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    เพิ่มวันหยุด
-                  </Button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </Card>
-
-      {/* Holidays List */}
-      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-        <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">รายการวันหยุดราชการ</h3>
-          
-          <div className="overflow-hidden rounded-2xl" style={{ boxShadow: 'inset 12px 12px 24px #d1d5db, inset -12px -12px 24px #ffffff' }}>
-            <div className="overflow-x-auto bg-gray-50 p-4">
-              {currentYearHolidays.length === 0 ? (
-                <div className="text-center py-12">
-                  <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 font-medium">ยังไม่มีวันหยุดราชการ</p>
-                  <p className="text-sm text-gray-400">เพิ่มวันหยุดเพื่อคำนวณวันทำการที่แม่นยำ</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <AnimatePresence>
-                    {currentYearHolidays.map((holiday, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="flex items-center justify-between p-4 rounded-2xl transition-all duration-300"
-                        style={{
-                          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-                          backgroundColor: '#f9fafb'
-                        }}
-                        whileHover={{
-                          boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff',
-                        }}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 rounded-xl text-red-600" style={{ boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff', backgroundColor: '#f9fafb' }}>
-                            <Calendar className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-gray-900">{holiday.name}</h4>
-                            <p className="text-sm text-gray-600">{formatDate(holiday.date)}</p>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteHoliday(index)}
-                          className="p-2 rounded-xl text-red-600 hover:text-red-700 transition-colors"
-                          style={{
-                            boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
-                            backgroundColor: '#f9fafb'
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">จัดการวันทำการ</h2>
+              <p className="text-slate-600">จัดการวันหยุดและคำนวณวันทำการในปี {calcYear}</p>
+              {isCurrentYear && (
+                <div className="flex items-center gap-2 mt-2 text-emerald-600">
+                  <Building className="w-4 h-4" />
+                  <span className="text-sm font-medium">วันหยุดสถาบันการเงิน ธนาคารแห่งประเทศไทย</span>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Year Navigation */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-white/80 p-2 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
+              <button
+                onClick={() => onYearChange(calcYear - 1)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5 text-slate-600" />
+              </button>
+              <div className="px-4 py-2 font-bold text-lg text-slate-800">
+                ปี {calcYear} ({yearCE})
+              </div>
+              <button
+                onClick={() => onYearChange(calcYear + 1)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <ChevronRight className="w-5 h-5 text-slate-600" />
+              </button>
+            </div>
+          </div>
         </div>
-      </Card>
+      </div>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-blue-200/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-600 text-sm font-medium">วันทำการ</p>
+              <p className="text-3xl font-bold text-blue-900">{statistics.workingDays}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#93c5fd,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-emerald-200/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-emerald-600 text-sm font-medium">วันหยุดรวม</p>
+              <p className="text-3xl font-bold text-emerald-900">{statistics.totalHolidays}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-emerald-500 shadow-[8px_8px_16px_#a7f3d0,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-purple-200/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-600 text-sm font-medium">วันหยุดธนาคาร</p>
+              <p className="text-3xl font-bold text-purple-900">{statistics.bankingHolidays}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-[8px_8px_16px_#ddd6fe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+              <Building className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-amber-200/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-amber-600 text-sm font-medium">วันหยุดพิเศษ</p>
+              <p className="text-3xl font-bold text-amber-900">{statistics.specialHolidays}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-amber-500 shadow-[8px_8px_16px_#fde68a,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+              <AlertCircle className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-600 text-sm font-medium">วันหยุดสุดสัปดาห์</p>
+              <p className="text-3xl font-bold text-slate-900">{statistics.weekendCount}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-slate-500 shadow-[8px_8px_16px_#cbd5e1,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Add New Holiday */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50 p-6">
+        <h3 className="text-lg font-bold text-slate-800 mb-4">เพิ่มวันหยุดใหม่</h3>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-slate-700 mb-2">วันที่</label>
+            <input
+              type="date"
+              className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700"
+              value={newHoliday.date}
+              onChange={(e) => setNewHoliday(prev => ({ ...prev, date: e.target.value }))}
+            />
+          </div>
+          <div className="flex-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">ชื่อวันหยุด</label>
+            <input
+              type="text"
+              placeholder="ระบุชื่อวันหยุด"
+              className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700"
+              value={newHoliday.name}
+              onChange={(e) => setNewHoliday(prev => ({ ...prev, name: e.target.value }))}
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={handleAddHoliday}
+              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              เพิ่ม
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Holidays List */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50 overflow-hidden">
+        <div className="p-6 bg-gradient-to-r from-slate-600 to-blue-600">
+          <h3 className="text-xl font-bold text-white">วันหยุดประจำปี {calcYear}</h3>
+          {isCurrentYear && (
+            <p className="text-blue-100 text-sm mt-1">ข้อมูลตามประกาศธนาคารแห่งประเทศไทย ไม่รวมวันหยุดพิเศษ</p>
+          )}
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-100 border-b border-slate-200">
+                <th className="px-6 py-3 text-left font-bold text-slate-700">วันที่</th>
+                <th className="px-6 py-3 text-left font-bold text-slate-700">ชื่อวันหยุด</th>
+                <th className="px-6 py-3 text-left font-bold text-slate-700">ประเภท</th>
+                <th className="px-6 py-3 text-center font-bold text-slate-700">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {holidays.map((holiday, index) => {
+                const isSpecial = holiday.name.includes('วันหยุดพิเศษ') || holiday.name.includes('ชดเชย');
+                const isEditing = editingIndex === index;
+
+                return (
+                  <tr key={index} className="border-b border-slate-200/50 hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      {isEditing ? (
+                        <input
+                          type="date"
+                          className="w-full p-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none text-slate-700"
+                          value={editingHoliday.date}
+                          onChange={(e) => setEditingHoliday(prev => ({ ...prev, date: e.target.value }))}
+                        />
+                      ) : (
+                        <span className="font-medium text-slate-700">
+                          {new Date(holiday.date).toLocaleDateString('th-TH')}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          className="w-full p-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none text-slate-700"
+                          value={editingHoliday.name}
+                          onChange={(e) => setEditingHoliday(prev => ({ ...prev, name: e.target.value }))}
+                        />
+                      ) : (
+                        <span className="text-slate-700">{holiday.name}</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        isSpecial 
+                          ? 'bg-amber-100 text-amber-800' 
+                          : 'bg-emerald-100 text-emerald-800'
+                      }`}>
+                        {isSpecial ? 'วันหยุดพิเศษ' : 'วันหยุดทั่วไป'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {isEditing ? (
+                          <>
+                            <button
+                              onClick={handleEditSave}
+                              className="w-8 h-8 rounded-lg bg-emerald-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-emerald-600 transition-all duration-200"
+                            >
+                              <Check className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={handleEditCancel}
+                              className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleEditStart(index, holiday)}
+                              className="w-8 h-8 rounded-lg bg-blue-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-blue-600 transition-all duration-200"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => onDeleteHoliday(yearCE, index)}
+                              className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="p-6 bg-slate-50 border-t border-slate-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-slate-800">{workDayCalc.weekdays}</div>
+              <div className="text-sm text-slate-600">วันในสัปดาห์</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-red-600">{workDayCalc.holidaysOnWeekdays}</div>
+              <div className="text-sm text-slate-600">วันหยุดในสัปดาห์</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-emerald-600">{workDayCalc.totalWorkDays}</div>
+              <div className="text-sm text-slate-600">วันทำการสุทธิ</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-blue-600">{Math.round((workDayCalc.totalWorkDays / 365) * 100)}%</div>
+              <div className="text-sm text-slate-600">สัดส่วนวันทำการ</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
