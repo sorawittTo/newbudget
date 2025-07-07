@@ -185,13 +185,50 @@ export const useBudgetData = () => {
     });
   }, [employees]);
 
-  const saveAllData = () => {
-    StorageManager.save('BUDGET', budgetData);
-    StorageManager.save('EMPLOYEES', employees);
-    StorageManager.save('MASTER_RATES', masterRates);
-    StorageManager.save('ASSIST1', specialAssist1DataByYear);
-    StorageManager.save('OVERTIME', overtimeDataByYear);
-    StorageManager.save('HOLIDAYS', holidaysData);
+  const saveAllData = async () => {
+    try {
+      // Save to database via API
+      await Promise.all([
+        // Save budget items
+        fetch('/api/budget-items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(budgetData)
+        }),
+        // Save employees
+        fetch('/api/employees', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(employees)
+        }),
+        // Save master rates
+        fetch('/api/master-rates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(masterRates)
+        })
+      ]);
+      
+      // Also save to localStorage as backup
+      StorageManager.save('BUDGET', budgetData);
+      StorageManager.save('EMPLOYEES', employees);
+      StorageManager.save('MASTER_RATES', masterRates);
+      StorageManager.save('ASSIST1', specialAssist1DataByYear);
+      StorageManager.save('OVERTIME', overtimeDataByYear);
+      StorageManager.save('HOLIDAYS', holidaysData);
+      
+      console.log('Data saved to Neon PostgreSQL successfully');
+    } catch (error) {
+      console.error('Error saving to database:', error);
+      // Fallback to localStorage only
+      StorageManager.save('BUDGET', budgetData);
+      StorageManager.save('EMPLOYEES', employees);
+      StorageManager.save('MASTER_RATES', masterRates);
+      StorageManager.save('ASSIST1', specialAssist1DataByYear);
+      StorageManager.save('OVERTIME', overtimeDataByYear);
+      StorageManager.save('HOLIDAYS', holidaysData);
+      throw error;
+    }
   };
 
   const updateBudgetItem = (index: number, year: number, value: number) => {

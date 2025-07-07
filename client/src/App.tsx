@@ -67,10 +67,10 @@ function App() {
     setToast(prev => ({ ...prev, isVisible: false }));
   }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     try {
-      saveAllData();
-      showToast('บันทึกข้อมูลเรียบร้อยแล้ว');
+      await saveAllData();
+      showToast('บันทึกข้อมูลไปยัง Neon PostgreSQL เรียบร้อยแล้ว');
     } catch (error) {
       showToast('เกิดข้อผิดพลาดในการบันทึก', 'error');
     }

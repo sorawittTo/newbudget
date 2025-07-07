@@ -17,9 +17,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/employees", async (req, res) => {
     try {
-      const validatedData = insertEmployeeSchema.parse(req.body);
-      const employee = await storage.createEmployee(validatedData);
-      res.status(201).json(employee);
+      // Handle both single employee and array of employees
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const employees = [];
+        for (const empData of data) {
+          if (empData.id) {
+            // Update existing employee
+            const existingEmp = await storage.getEmployee(parseInt(empData.id));
+            if (existingEmp) {
+              const validatedData = insertEmployeeSchema.partial().parse(empData);
+              const updated = await storage.updateEmployee(existingEmp.id, validatedData);
+              employees.push(updated);
+            } else {
+              // Create new employee
+              const validatedData = insertEmployeeSchema.parse(empData);
+              const created = await storage.createEmployee(validatedData);
+              employees.push(created);
+            }
+          } else {
+            // Create new employee
+            const validatedData = insertEmployeeSchema.parse(empData);
+            const created = await storage.createEmployee(validatedData);
+            employees.push(created);
+          }
+        }
+        res.status(201).json(employees);
+      } else {
+        // Single employee
+        const validatedData = insertEmployeeSchema.parse(data);
+        const employee = await storage.createEmployee(validatedData);
+        res.status(201).json(employee);
+      }
     } catch (error) {
       console.error("Error creating employee:", error);
       res.status(400).json({ error: "Invalid employee data" });
@@ -62,9 +91,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/master-rates", async (req, res) => {
     try {
-      const validatedData = insertMasterRateSchema.parse(req.body);
-      const rate = await storage.createMasterRate(validatedData);
-      res.status(201).json(rate);
+      // Handle both single rate and array of rates
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const rates = [];
+        for (const rateData of data) {
+          if (rateData.id) {
+            // Update existing rate
+            const existingRates = await storage.getMasterRates();
+            const found = existingRates.find(rate => rate.id === parseInt(rateData.id));
+            if (found) {
+              const validatedData = insertMasterRateSchema.partial().parse(rateData);
+              const updated = await storage.updateMasterRate(found.id, validatedData);
+              rates.push(updated);
+            } else {
+              // Create new rate
+              const validatedData = insertMasterRateSchema.parse(rateData);
+              const created = await storage.createMasterRate(validatedData);
+              rates.push(created);
+            }
+          } else {
+            // Create new rate
+            const validatedData = insertMasterRateSchema.parse(rateData);
+            const created = await storage.createMasterRate(validatedData);
+            rates.push(created);
+          }
+        }
+        res.status(201).json(rates);
+      } else {
+        // Single rate
+        const validatedData = insertMasterRateSchema.parse(data);
+        const rate = await storage.createMasterRate(validatedData);
+        res.status(201).json(rate);
+      }
     } catch (error) {
       console.error("Error creating master rate:", error);
       res.status(400).json({ error: "Invalid master rate data" });
@@ -96,9 +155,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/budget-items", async (req, res) => {
     try {
-      const validatedData = insertBudgetItemSchema.parse(req.body);
-      const item = await storage.createBudgetItem(validatedData);
-      res.status(201).json(item);
+      // Handle both single item and array of items
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const items = [];
+        for (const itemData of data) {
+          if (itemData.id) {
+            // Update existing item
+            const existingItem = await storage.getBudgetItems();
+            const found = existingItem.find(item => item.id === parseInt(itemData.id));
+            if (found) {
+              const validatedData = insertBudgetItemSchema.partial().parse(itemData);
+              const updated = await storage.updateBudgetItem(found.id, validatedData);
+              items.push(updated);
+            } else {
+              // Create new item
+              const validatedData = insertBudgetItemSchema.parse(itemData);
+              const created = await storage.createBudgetItem(validatedData);
+              items.push(created);
+            }
+          } else {
+            // Create new item
+            const validatedData = insertBudgetItemSchema.parse(itemData);
+            const created = await storage.createBudgetItem(validatedData);
+            items.push(created);
+          }
+        }
+        res.status(201).json(items);
+      } else {
+        // Single item
+        const validatedData = insertBudgetItemSchema.parse(data);
+        const item = await storage.createBudgetItem(validatedData);
+        res.status(201).json(item);
+      }
     } catch (error) {
       console.error("Error creating budget item:", error);
       res.status(400).json({ error: "Invalid budget item data" });
