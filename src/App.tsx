@@ -12,7 +12,7 @@ import { Toast } from './components/ui/Toast';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
-import { Save, Download, Upload, RotateCcw, FileSpreadsheet, Settings, FileText } from 'lucide-react';
+import { Save, Download, Upload, RotateCcw, FileSpreadsheet, FileText } from 'lucide-react';
 
 function App() {
   const {
@@ -143,29 +143,106 @@ function App() {
     setSelectedManagerRotationEmployees
   ]);
 
-  // เพิ่มฟังก์ชัน export HTML
+  // ส่วนสำคัญ: Export HTML เหมือนหน้าระบบจริง (ด้วย TailwindCDN)
   const handleExportHtml = () => {
+    const employeeRows = employees.map(
+      (emp, idx) => `<tr class="even:bg-blue-50">
+        <td class="px-4 py-2 border">${idx+1}</td>
+        <td class="px-4 py-2 border">${emp.name}</td>
+        <td class="px-4 py-2 border">${emp.level}</td>
+        <td class="px-4 py-2 border">${emp.status}</td>
+      </tr>`
+    ).join('');
+
+    const budgetRows = (budgetData[currentYear] || []).map(
+      (item, idx) => `<tr class="even:bg-blue-50">
+        <td class="px-4 py-2 border">${idx + 1}</td>
+        <td class="px-4 py-2 border">${item.item}</td>
+        <td class="px-4 py-2 border text-right">${item.amount?.toLocaleString() || ""}</td>
+        <td class="px-4 py-2 border">${item.notes || ''}</td>
+      </tr>`
+    ).join('');
+
     const html = `
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <title>สำรองข้อมูลงบประมาณ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>สำรองข้อมูลระบบงบประมาณ (Exported)</h1>
-  <h2>งบประมาณ</h2>
-  <pre>${JSON.stringify(budgetData, null, 2)}</pre>
-  <h2>พนักงาน</h2>
-  <pre>${JSON.stringify(employees, null, 2)}</pre>
-  <h2>Master Rates</h2>
-  <pre>${JSON.stringify(masterRates, null, 2)}</pre>
-  <h2>Special Assistance</h2>
-  <pre>${JSON.stringify(specialAssist1DataByYear, null, 2)}</pre>
-  <h2>Overtime</h2>
-  <pre>${JSON.stringify(overtimeDataByYear, null, 2)}</pre>
-  <h2>วันหยุด</h2>
-  <pre>${JSON.stringify(holidaysData, null, 2)}</pre>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl shadow-lg p-8 border border-blue-100 mb-8">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3 text-center">ระบบจัดทำงบประมาณประจำปี</h1>
+      <p class="text-gray-600 text-lg text-center">ระบบจัดการและคำนวณงบประมาณอย่างมีประสิทธิภาพ</p>
+      <div class="flex flex-wrap justify-center gap-3 mt-6">
+        <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">💾</span>
+          บันทึกทั้งหมด
+        </button>
+        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">📄</span>
+          ส่งออกงบประมาณ
+        </button>
+        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">⬇️</span>
+          ส่งออกพนักงาน
+        </button>
+        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">⬆️</span>
+          นำเข้าพนักงาน
+        </button>
+        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">♻️</span>
+          รีเซ็ตระบบ
+        </button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded flex items-center text-sm" disabled>
+          <span class="w-4 h-4 mr-2 inline-block">📝</span>
+          ส่งออกข้อมูล HTML
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4">ตารางพนักงาน</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full border border-blue-100">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border bg-blue-50">ลำดับ</th>
+              <th class="px-4 py-2 border bg-blue-50">ชื่อ</th>
+              <th class="px-4 py-2 border bg-blue-50">ระดับ</th>
+              <th class="px-4 py-2 border bg-blue-50">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${employeeRows}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6 mt-8">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4">ตารางงบประมาณ ปี ${currentYear}</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full border border-blue-100">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border bg-blue-50">ลำดับ</th>
+              <th class="px-4 py-2 border bg-blue-50">รายการ</th>
+              <th class="px-4 py-2 border bg-blue-50">จำนวนเงิน</th>
+              <th class="px-4 py-2 border bg-blue-50">หมายเหตุ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${budgetRows}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
     `.trim();
@@ -397,7 +474,7 @@ function App() {
                 รีเซ็ตระบบ
               </Button>
               {/* ปุ่มใหม่: ส่งออกข้อมูล HTML */}
-              <Button onClick={handleExportHtml} variant="info" size="sm">
+              <Button onClick={handleExportHtml} variant="secondary" size="sm">
                 <FileText className="w-4 h-4 mr-2" />
                 ส่งออกข้อมูล HTML
               </Button>
