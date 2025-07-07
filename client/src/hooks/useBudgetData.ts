@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BudgetItem, Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../types';
 import { defaultBudgetItems, defaultEmployees, defaultMasterRates, defaultSpecialAssist1Data, holidaysByYear } from '../data/defaults';
-import { StorageManager } from '../utils/storage';
 
 export const useBudgetData = () => {
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
@@ -87,40 +86,85 @@ export const useBudgetData = () => {
   };
 
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
       try {
-        // Load budget data
-        const savedBudget = StorageManager.load('BUDGET', []);
-        const defaultData = initializeBudgetData(defaultBudgetItems);
+        // Load data from database
+        const [budgetResponse, employeesResponse, masterRatesResponse] = await Promise.all([
+          fetch('/api/budget-items'),
+          fetch('/api/employees'),
+          fetch('/api/master-rates')
+        ]);
         
-        if (savedBudget.length > 0) {
+        const [budgetItems, employees, masterRatesArray] = await Promise.all([
+          budgetResponse.json(),
+          employeesResponse.json(),
+          masterRatesResponse.json()
+        ]);
+        
+        // Transform budget items to match frontend format
+        if (budgetItems.length > 0) {
+          const defaultData = initializeBudgetData(defaultBudgetItems);
           const mergedBudget = defaultData.map(defaultItem => {
             if (defaultItem.type) return defaultItem;
-            const savedItem = savedBudget.find((s: BudgetItem) => s.code === defaultItem.code);
+            const savedItem = budgetItems.find((s: any) => s.code === defaultItem.code);
             if (savedItem) {
-              const mergedValues = { ...defaultItem.values, ...savedItem.values };
-              return { ...defaultItem, ...savedItem, values: mergedValues };
+              const values = savedItem.values || {};
+              return { ...defaultItem, values, notes: savedItem.notes };
             }
             return defaultItem;
           });
           setBudgetData(mergedBudget);
         } else {
-          setBudgetData(defaultData);
+          setBudgetData(initializeBudgetData(defaultBudgetItems));
         }
-
-        // Load other data
-        const loadedEmployees = StorageManager.load('EMPLOYEES', defaultEmployees);
-        setEmployees(loadedEmployees);
-        setMasterRates(StorageManager.load('MASTER_RATES', defaultMasterRates));
-        setSpecialAssist1DataByYear(StorageManager.load('ASSIST1', {}));
-        setOvertimeDataByYear(StorageManager.load('OVERTIME', {}));
         
-        // Load holidays data
-        const savedHolidays = StorageManager.load('HOLIDAYS', holidaysByYear);
-        setHolidaysData(savedHolidays);
+        // Set employees
+        if (employees.length > 0) {
+          const formattedEmployees = employees.map((emp: any) => ({
+            id: emp.employeeId,
+            name: emp.name,
+            gender: emp.gender,
+            startYear: emp.startYear,
+            level: emp.level,
+            status: emp.status,
+            visitProvince: emp.visitProvince,
+            homeVisitBusFare: parseFloat(emp.homeVisitBusFare),
+            customTravelRates: emp.customTravelRates
+          }));
+          setEmployees(formattedEmployees);
+        } else {
+          setEmployees(defaultEmployees);
+        }
+        
+        // Transform master rates to object format
+        const masterRatesObj: MasterRates = {};
+        masterRatesArray.forEach((rate: any) => {
+          masterRatesObj[rate.level] = {
+            position: rate.position,
+            rent: parseFloat(rate.rent),
+            monthlyAssist: parseFloat(rate.monthlyAssist),
+            lumpSum: parseFloat(rate.lumpSum),
+            travel: parseFloat(rate.travel),
+            local: parseFloat(rate.local),
+            perDiem: parseFloat(rate.perDiem),
+            hotel: parseFloat(rate.hotel)
+          };
+        });
+        
+        if (Object.keys(masterRatesObj).length > 0) {
+          setMasterRates(masterRatesObj);
+        } else {
+          setMasterRates(defaultMasterRates);
+        }
+        
+        // Initialize other data with defaults
+        setSpecialAssist1DataByYear({});
+        setOvertimeDataByYear({});
+        setHolidaysData(holidaysByYear);
 
         // Initialize employee selections with all employees
-        const allEmployeeIds = loadedEmployees.map(emp => emp.id);
+        const currentEmployees = employees.length > 0 ? employees : defaultEmployees;
+        const allEmployeeIds = currentEmployees.map(emp => emp.id);
         setSelectedTravelEmployees(allEmployeeIds);
         setSelectedSpecialAssistEmployees(allEmployeeIds);
         setSelectedFamilyVisitEmployees(allEmployeeIds);
@@ -209,24 +253,9 @@ export const useBudgetData = () => {
         })
       ]);
       
-      // Also save to localStorage as backup
-      StorageManager.save('BUDGET', budgetData);
-      StorageManager.save('EMPLOYEES', employees);
-      StorageManager.save('MASTER_RATES', masterRates);
-      StorageManager.save('ASSIST1', specialAssist1DataByYear);
-      StorageManager.save('OVERTIME', overtimeDataByYear);
-      StorageManager.save('HOLIDAYS', holidaysData);
-      
       console.log('Data saved to Neon PostgreSQL successfully');
     } catch (error) {
       console.error('Error saving to database:', error);
-      // Fallback to localStorage only
-      StorageManager.save('BUDGET', budgetData);
-      StorageManager.save('EMPLOYEES', employees);
-      StorageManager.save('MASTER_RATES', masterRates);
-      StorageManager.save('ASSIST1', specialAssist1DataByYear);
-      StorageManager.save('OVERTIME', overtimeDataByYear);
-      StorageManager.save('HOLIDAYS', holidaysData);
       throw error;
     }
   };
@@ -347,7 +376,6 @@ export const useBudgetData = () => {
   };
 
   const resetAllData = () => {
-    StorageManager.clear();
     setBudgetData(initializeBudgetData(defaultBudgetItems));
     setEmployees([...defaultEmployees]);
     setMasterRates({ ...defaultMasterRates });
