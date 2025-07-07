@@ -110,6 +110,9 @@ export const insertEmployeeSchema = createInsertSchema(employees).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  homeVisitBusFare: z.union([z.string(), z.number()]).transform(val => val.toString()),
+  customTravelRates: z.any().optional(),
 });
 
 export const insertMasterRateSchema = createInsertSchema(masterRates).omit({

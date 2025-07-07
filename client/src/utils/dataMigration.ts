@@ -25,15 +25,15 @@ export const migrateLocalStorageToDatabase = async (): Promise<void> => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              employee_id: employee.id,
+              employeeId: employee.id || `EMP${Date.now()}`,
               name: employee.name,
               gender: employee.gender,
-              start_year: employee.startYear,
+              startYear: employee.startYear,
               level: employee.level,
               status: employee.status || 'มีสิทธิ์',
-              visit_province: employee.visitProvince,
-              home_visit_bus_fare: employee.homeVisitBusFare,
-              custom_travel_rates: employee.customTravelRates || {}
+              visitProvince: employee.visitProvince,
+              homeVisitBusFare: employee.homeVisitBusFare.toString(),
+              customTravelRates: employee.customTravelRates || {}
             })
           });
           
@@ -56,14 +56,14 @@ export const migrateLocalStorageToDatabase = async (): Promise<void> => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               level: level,
-              position: rateData.position,
-              rent: rateData.rent,
-              monthly_assist: rateData.monthlyAssist,
-              lump_sum: rateData.lumpSum,
-              travel: rateData.travel,
-              local: rateData.local,
-              per_diem: rateData.perDiem,
-              hotel: rateData.hotel
+              position: rateData.position || 'ตำแหน่งทั่วไป',
+              rent: rateData.rent?.toString() || '0',
+              monthlyAssist: rateData.monthlyAssist?.toString() || '0',
+              lumpSum: rateData.lumpSum?.toString() || '0',
+              travel: rateData.travel?.toString() || '0',
+              local: rateData.local?.toString() || '0',
+              perDiem: rateData.perDiem?.toString() || '0',
+              hotel: rateData.hotel?.toString() || '0'
             })
           });
           
@@ -88,8 +88,8 @@ export const migrateLocalStorageToDatabase = async (): Promise<void> => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              type: item.type,
-              code: item.code,
+              type: item.type || null,
+              code: item.code || null,
               name: item.name,
               values: item.values || {},
               notes: item.notes || ''
