@@ -87,9 +87,102 @@ export const useBudgetData = () => {
   };
 
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
       try {
+        // Load data from Neon PostgreSQL first, fallback to localStorage
+        const [budgetResponse, employeesResponse, masterRatesResponse] = await Promise.all([
+          fetch('/api/budget-items').catch(() => null),
+          fetch('/api/employees').catch(() => null),
+          fetch('/api/master-rates').catch(() => null)
+        ]);
+
         // Load budget data
+        let budgetData = [];
+        if (budgetResponse && budgetResponse.ok) {
+          budgetData = await budgetResponse.json();
+        }
+        
+        if (budgetData.length === 0) {
+          // Fallback to localStorage
+          const savedBudget = StorageManager.load('BUDGET', []);
+          const defaultData = initializeBudgetData(defaultBudgetItems);
+          
+          if (savedBudget.length > 0) {
+            const mergedBudget = defaultData.map(defaultItem => {
+              if (defaultItem.type) return defaultItem;
+              const savedItem = savedBudget.find((s: BudgetItem) => s.code === defaultItem.code);
+              if (savedItem) {
+                const mergedValues = { ...defaultItem.values, ...savedItem.values };
+                return { ...defaultItem, ...savedItem, values: mergedValues };
+              }
+              return defaultItem;
+            });
+            setBudgetData(mergedBudget);
+          } else {
+            setBudgetData(defaultData);
+          }
+        } else {
+          // Transform database data to match frontend format
+          const defaultData = initializeBudgetData(defaultBudgetItems);
+          const mergedBudget = defaultData.map(defaultItem => {
+            if (defaultItem.type) return defaultItem;
+            const dbItem = budgetData.find((item: any) => item.code === defaultItem.code);
+            if (dbItem) {
+              return { ...defaultItem, ...dbItem };
+            }
+            return defaultItem;
+          });
+          setBudgetData(mergedBudget);
+        }
+
+        // Load employees
+        let loadedEmployees = [];
+        if (employeesResponse && employeesResponse.ok) {
+          loadedEmployees = await employeesResponse.json();
+        }
+        
+        if (loadedEmployees.length === 0) {
+          // Fallback to localStorage
+          loadedEmployees = StorageManager.load('EMPLOYEES', defaultEmployees);
+        }
+        setEmployees(loadedEmployees);
+
+        // Load master rates
+        let masterRatesData = [];
+        if (masterRatesResponse && masterRatesResponse.ok) {
+          masterRatesData = await masterRatesResponse.json();
+        }
+        
+        if (masterRatesData.length === 0) {
+          // Fallback to localStorage
+          setMasterRates(StorageManager.load('MASTER_RATES', defaultMasterRates));
+        } else {
+          // Transform array to object format
+          const ratesObj = masterRatesData.reduce((acc: any, rate: any) => {
+            acc[rate.level] = rate;
+            return acc;
+          }, {});
+          setMasterRates(ratesObj);
+        }
+
+        // Load other data (still from localStorage for now)
+        setSpecialAssist1DataByYear(StorageManager.load('ASSIST1', {}));
+        setOvertimeDataByYear(StorageManager.load('OVERTIME', {}));
+        
+        // Load holidays data
+        const savedHolidays = StorageManager.load('HOLIDAYS', holidaysByYear);
+        setHolidaysData(savedHolidays);
+
+        // Initialize employee selections with all employees
+        const allEmployeeIds = loadedEmployees.map((emp: any) => emp.id || emp.employee_id);
+        setSelectedTravelEmployees(allEmployeeIds);
+        setSelectedSpecialAssistEmployees(allEmployeeIds);
+        setSelectedFamilyVisitEmployees(allEmployeeIds);
+        setSelectedCompanyTripEmployees(allEmployeeIds);
+        setSelectedManagerRotationEmployees(allEmployeeIds);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // Fallback to localStorage
         const savedBudget = StorageManager.load('BUDGET', []);
         const defaultData = initializeBudgetData(defaultBudgetItems);
         
@@ -107,35 +200,16 @@ export const useBudgetData = () => {
         } else {
           setBudgetData(defaultData);
         }
-
-        // Load other data
+        
         const loadedEmployees = StorageManager.load('EMPLOYEES', defaultEmployees);
         setEmployees(loadedEmployees);
         setMasterRates(StorageManager.load('MASTER_RATES', defaultMasterRates));
         setSpecialAssist1DataByYear(StorageManager.load('ASSIST1', {}));
         setOvertimeDataByYear(StorageManager.load('OVERTIME', {}));
-        
-        // Load holidays data
-        const savedHolidays = StorageManager.load('HOLIDAYS', holidaysByYear);
-        setHolidaysData(savedHolidays);
-
-        // Initialize employee selections with all employees
-        const allEmployeeIds = loadedEmployees.map(emp => emp.id);
-        setSelectedTravelEmployees(allEmployeeIds);
-        setSelectedSpecialAssistEmployees(allEmployeeIds);
-        setSelectedFamilyVisitEmployees(allEmployeeIds);
-        setSelectedCompanyTripEmployees(allEmployeeIds);
-        setSelectedManagerRotationEmployees(allEmployeeIds);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        // Fallback to defaults
-        setBudgetData(initializeBudgetData(defaultBudgetItems));
-        setEmployees(defaultEmployees);
-        setMasterRates(defaultMasterRates);
         setHolidaysData(holidaysByYear);
         
-        // Initialize with default employees
-        const allEmployeeIds = defaultEmployees.map(emp => emp.id);
+        // Initialize with loaded employees
+        const allEmployeeIds = loadedEmployees.map((emp: any) => emp.id);
         setSelectedTravelEmployees(allEmployeeIds);
         setSelectedSpecialAssistEmployees(allEmployeeIds);
         setSelectedFamilyVisitEmployees(allEmployeeIds);
