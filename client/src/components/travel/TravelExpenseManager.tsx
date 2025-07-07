@@ -24,6 +24,7 @@ import {
   formatCurrency,
   getRatesForEmployee
 } from '../../utils/calculations';
+import { ModernFamilyVisitCalculationTable } from '../calculations/ModernFamilyVisitCalculationTable';
 
 interface TravelExpenseManagerProps {
   employees: Employee[];
@@ -106,48 +107,13 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   };
 
   const renderFamilySection = () => {
-    const total = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
-
     return (
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-3 text-left">รหัสพนักงาน</th>
-                <th className="px-4 py-3 text-left">ชื่อ-สกุล</th>
-                <th className="px-4 py-3 text-left">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-4 py-3 text-right">ค่ารถต่อครั้ง</th>
-                <th className="px-4 py-3 text-right">รวม 4 ครั้ง × 2 เที่ยว</th>
-                <th className="px-4 py-3 text-right font-semibold">ยอดรวม</th>
-              </tr>
-            </thead>
-            <tbody>
-              {familyVisitData.map((emp, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-gray-600">{emp.id}</td>
-                  <td className="px-4 py-3 font-medium">{emp.name}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {emp.visitProvince}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">{formatCurrency(emp.homeVisitBusFare)}</td>
-                  <td className="px-4 py-3 text-right">{formatCurrency(emp.busFareTotal)}</td>
-                  <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(emp.total)}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot className="bg-gray-50 font-bold">
-              <tr>
-                <td colSpan={5} className="px-4 py-3 text-right">ยอดรวมทั้งหมด:</td>
-                <td className="px-4 py-3 text-right text-lg text-blue-600">{formatCurrency(total)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </Card>
+      <ModernFamilyVisitCalculationTable
+        employees={employees}
+        selectedEmployeeIds={selectedEmployees.familyVisit}
+        onSave={onSave}
+        onUpdateEmployee={onUpdateEmployee}
+      />
     );
   };
 
