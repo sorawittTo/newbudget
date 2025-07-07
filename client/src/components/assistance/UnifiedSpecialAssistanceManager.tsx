@@ -102,126 +102,157 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
           <p className="text-sm text-slate-600 mt-1">ตารางแสดงข้อมูลและจำนวนเงินช่วยเหลือสำหรับพนักงาน</p>
         </div>
         
-        <div className="p-6 space-y-4">
-          {eligibleEmployees.map((emp, index) => {
-            const rates = getRatesForEmployee(emp, masterRates);
-            const months = getMonthsForEmployee(emp.id);
-            const lumpSum = getLumpSumForEmployee(emp.id);
-            const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
-            
-            const totalRent = rates.rent * months;
-            const totalMonthlyAssist = rates.monthlyAssist * months;
-            const grandTotal = totalRent + totalMonthlyAssist + lumpSum + purchaseAllowance;
-
-            return (
-              <div key={emp.id} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff] border border-slate-200/30 hover:shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] transition-all duration-300">
-                {/* Employee Header */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] flex items-center justify-center text-white font-bold text-lg">
-                    {emp.id.slice(-2)}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-bold text-slate-800">{emp.name}</h4>
-                    <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
-                      <span>รหัส: {emp.id}</span>
-                      <span>•</span>
-                      <span>ระดับ: {emp.level}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-slate-600">ยอดรวม</div>
-                    <div className="text-2xl font-bold text-purple-900">{formatCurrency(grandTotal)}</div>
-                  </div>
-                </div>
-
-                {/* Data Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Rent */}
-                  <div className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">ค่าเช่าบ้าน/เดือน</label>
-                    <div className="text-xl font-bold text-blue-700">{formatCurrency(rates.rent)}</div>
-                  </div>
-
-                  {/* Monthly Assist */}
-                  <div className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">เงินช่วยเหลือรายเดือน</label>
-                    <div className="text-xl font-bold text-emerald-700">{formatCurrency(rates.monthlyAssist)}</div>
-                  </div>
-
-                  {/* Months */}
-                  <div className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">จำนวนเดือน</label>
-                    {editMode ? (
-                      <input
-                        type="number"
-                        min="1"
-                        max="12"
-                        className="w-full p-3 bg-white/80 border-0 rounded-lg shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-bold text-xl text-center"
-                        value={months}
-                        onChange={(e) => handleMonthsChange(emp.id, parseInt(e.target.value) || 1)}
-                      />
-                    ) : (
-                      <div className="text-xl font-bold text-slate-700">{months}</div>
-                    )}
-                  </div>
-
-                  {/* Purchase Allowance */}
-                  <div className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">เงินซื้อของเหมาจ่าย</label>
-                    {editMode ? (
-                      <input
-                        type="number"
-                        min="0"
-                        step="100"
-                        className="w-full p-3 bg-white/80 border-0 rounded-lg shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-bold text-xl text-right"
-                        value={purchaseAllowance}
-                        onChange={(e) => handlePurchaseAllowanceChange(emp.id, parseFloat(e.target.value) || 0)}
-                      />
-                    ) : (
-                      <div className="text-xl font-bold text-purple-700">{formatCurrency(purchaseAllowance)}</div>
-                    )}
-                  </div>
-
-                  {/* Total Rent */}
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-blue-200/30">
-                    <label className="block text-sm font-medium text-blue-700 mb-2">รวมค่าเช่าบ้าน</label>
-                    <div className="text-xl font-bold text-blue-800">{formatCurrency(totalRent)}</div>
-                  </div>
-
-                  {/* Total Monthly Assist */}
-                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-emerald-200/30">
-                    <label className="block text-sm font-medium text-emerald-700 mb-2">รวมเงินช่วยเหลือ</label>
-                    <div className="text-xl font-bold text-emerald-800">{formatCurrency(totalMonthlyAssist)}</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Summary Footer */}
-        <div className="p-6 border-t border-slate-200/50 bg-gradient-to-r from-slate-100/50 to-purple-100/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Calculator className="w-6 h-6 text-purple-600" />
-              <div>
-                <h3 className="text-lg font-bold text-slate-800">สรุปยอดรวมทั้งหมด</h3>
-                <p className="text-sm text-slate-600">พนักงานที่มีสิทธิ์: {eligibleEmployees.length} คน</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-purple-900">
-                {formatCurrency(
-                  eligibleEmployees.reduce((sum, emp) => {
+        <div className="p-6">
+          {/* Table Container with Neumorphism */}
+          <div className="bg-white/60 backdrop-blur-md rounded-2xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] border border-slate-200/30 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gradient-to-r from-slate-500/80 to-purple-500/80 backdrop-blur-sm">
+                    <th className="px-4 py-4 text-left font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">รหัสพนักงาน</th>
+                    <th className="px-4 py-4 text-left font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">ชื่อ-สกุล</th>
+                    <th className="px-4 py-4 text-left font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">ระดับ</th>
+                    <th className="px-4 py-4 text-right font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">ค่าเช่าบ้าน</th>
+                    <th className="px-4 py-4 text-right font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">เงินช่วยเหลือรายเดือน</th>
+                    <th className="px-4 py-4 text-right font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">จำนวนเดือน</th>
+                    <th className="px-4 py-4 text-right font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">เงินซื้อของเหมาจ่าย</th>
+                    <th className="px-4 py-4 text-right font-bold text-white shadow-[inset_2px_2px_4px_rgba(255,255,255,0.1)]">ยอดรวม</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {eligibleEmployees.map((emp, index) => {
                     const rates = getRatesForEmployee(emp, masterRates);
                     const months = getMonthsForEmployee(emp.id);
                     const lumpSum = getLumpSumForEmployee(emp.id);
                     const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
-                    return sum + (rates.rent * months) + (rates.monthlyAssist * months) + lumpSum + purchaseAllowance;
-                  }, 0)
-                )}
+                    
+                    const totalRent = rates.rent * months;
+                    const totalMonthlyAssist = rates.monthlyAssist * months;
+                    const grandTotal = totalRent + totalMonthlyAssist + lumpSum + purchaseAllowance;
+
+                    return (
+                      <tr key={emp.id} className="border-b border-slate-200/30 hover:bg-slate-50/30 transition-all duration-300">
+                        <td className="px-4 py-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-white font-bold text-sm">
+                              {emp.id.slice(-2)}
+                            </div>
+                            <span className="font-medium text-slate-700">{emp.id}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 font-bold text-slate-800">{emp.name}</td>
+                        <td className="px-4 py-4">
+                          <span className="px-3 py-1 bg-gradient-to-r from-slate-100 to-slate-200 rounded-full shadow-[2px_2px_4px_#d1d5db,-2px_-2px_4px_#ffffff] text-slate-700 font-medium text-sm">
+                            {emp.level}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          <div className="inline-block px-3 py-2 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-blue-200/30">
+                            <span className="font-bold text-blue-700">{formatCurrency(rates.rent)}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          <div className="inline-block px-3 py-2 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                            <span className="font-bold text-emerald-700">{formatCurrency(rates.monthlyAssist)}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          {editMode ? (
+                            <input
+                              type="number"
+                              min="1"
+                              max="12"
+                              className="w-20 p-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-slate-700 font-bold text-center"
+                              value={months}
+                              onChange={(e) => handleMonthsChange(emp.id, parseInt(e.target.value) || 1)}
+                            />
+                          ) : (
+                            <div className="inline-block px-3 py-2 bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                              <span className="font-bold text-slate-700">{months}</span>
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          {editMode ? (
+                            <input
+                              type="number"
+                              min="0"
+                              step="100"
+                              className="w-32 p-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-slate-700 font-bold text-right"
+                              value={purchaseAllowance}
+                              onChange={(e) => handlePurchaseAllowanceChange(emp.id, parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <div className="inline-block px-3 py-2 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-purple-200/30">
+                              <span className="font-bold text-purple-700">{formatCurrency(purchaseAllowance)}</span>
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          <div className="inline-block px-4 py-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-purple-200/50">
+                            <div className="font-bold text-lg text-purple-900">{formatCurrency(grandTotal)}</div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-gradient-to-r from-slate-100/80 to-purple-100/80 backdrop-blur-sm">
+                    <td colSpan={7} className="px-4 py-4 text-right text-lg font-bold text-slate-800">
+                      <div className="flex items-center justify-end gap-2">
+                        <Calculator className="w-5 h-5 text-purple-600" />
+                        ยอดรวมทั้งหมด:
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="inline-block px-6 py-4 bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] border border-purple-300/50">
+                        <div className="font-bold text-2xl text-purple-900">
+                          {formatCurrency(
+                            eligibleEmployees.reduce((sum, emp) => {
+                              const rates = getRatesForEmployee(emp, masterRates);
+                              const months = getMonthsForEmployee(emp.id);
+                              const lumpSum = getLumpSumForEmployee(emp.id);
+                              const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
+                              return sum + (rates.rent * months) + (rates.monthlyAssist * months) + lumpSum + purchaseAllowance;
+                            }, 0)
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          {/* Summary Card */}
+          <div className="mt-6 bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff] border border-slate-200/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] flex items-center justify-center">
+                  <Calculator className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800">สรุปข้อมูลเงินช่วยเหลือ</h3>
+                  <p className="text-sm text-slate-600">พนักงานที่มีสิทธิ์: {eligibleEmployees.length} คน</p>
+                </div>
               </div>
-              <div className="text-sm text-slate-600">บาท</div>
+              <div className="text-right">
+                <div className="text-sm text-slate-600 mb-1">ยอดรวมทั้งหมด</div>
+                <div className="text-3xl font-bold text-purple-900">
+                  {formatCurrency(
+                    eligibleEmployees.reduce((sum, emp) => {
+                      const rates = getRatesForEmployee(emp, masterRates);
+                      const months = getMonthsForEmployee(emp.id);
+                      const lumpSum = getLumpSumForEmployee(emp.id);
+                      const purchaseAllowance = getPurchaseAllowanceForEmployee(emp.id);
+                      return sum + (rates.rent * months) + (rates.monthlyAssist * months) + lumpSum + purchaseAllowance;
+                    }, 0)
+                  )}
+                </div>
+                <div className="text-sm text-slate-600">บาท</div>
+              </div>
             </div>
           </div>
         </div>
