@@ -156,74 +156,88 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card className="overflow-hidden">
-        <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white p-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">จัดการค่าเดินทางทุกประเภท</h2>
-              <p className="text-orange-100">คำนวณและจัดการค่าเดินทางสำหรับกิจกรรมต่างๆ</p>
+      <div className="p-8 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: '16px 16px 32px #d1d5db, -16px -16px 32px #ffffff' }}>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div className="flex items-center gap-4">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' }}>
+              <Car className="w-8 h-8 text-blue-600" />
             </div>
-            
-            <div className="flex items-center gap-4">
-              {/* Year Selection */}
-              <div className="flex items-center gap-3 bg-white/10 rounded-lg p-3">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onYearChange(calcYear - 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                
-                <div className="text-center">
-                  <div className="text-sm text-orange-100">คำนวณสำหรับปี</div>
-                  <div className="font-bold">{calcYear}</div>
-                </div>
-                
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onYearChange(calcYear + 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <Button onClick={onSave} className="bg-green-600 hover:bg-green-700">
-                <Save className="w-4 h-4 mr-2" />
-                บันทึก
-              </Button>
+            <div>
+              <h2 className="text-3xl font-bold text-slate-800 mb-2">จัดการค่าเดินทางทุกประเภท</h2>
+              <p className="text-slate-600">คำนวณและจัดการค่าเดินทางสำหรับกิจกรรมต่างๆ</p>
             </div>
           </div>
-        </div>
-
-        {/* Section Navigation */}
-        <div className="bg-gray-50 border-b border-gray-200">
-          <nav className="flex overflow-x-auto">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id as any)}
-                className={`flex-1 min-w-0 py-4 px-6 text-center font-medium transition-colors ${
-                  activeSection === section.id
-                    ? 'bg-white text-orange-600 border-b-2 border-orange-600'
-                    : 'text-gray-600 hover:text-orange-600 hover:bg-white/50'
-                }`}
+          
+          <div className="flex items-center gap-4">
+            {/* Year Selection */}
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/80" style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onYearChange(calcYear - 1)}
+                className="neumorphism-button w-10 h-10 p-0"
               >
-                <div className="flex items-center justify-center gap-2">
-                  {section.icon}
-                  <span className="hidden sm:inline">{section.label}</span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800">
-                    {section.count}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </nav>
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              
+              <div className="text-center px-4">
+                <div className="text-sm text-slate-500">คำนวณสำหรับปี</div>
+                <div className="font-bold text-lg text-slate-800">{calcYear}</div>
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onYearChange(calcYear + 1)}
+                className="neumorphism-button w-10 h-10 p-0"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <Button 
+              onClick={onSave}
+              className="neumorphism-button px-6 py-3"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              บันทึก
+            </Button>
+          </div>
         </div>
-      </Card>
+      </div>
+
+      
+      {/* Section Navigation */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-white to-slate-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+        <nav className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => setActiveSection(section.id as any)}
+              className={`p-4 rounded-2xl font-medium transition-all duration-300 ${
+                activeSection === section.id
+                  ? 'bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 border-2 border-blue-200'
+                  : 'bg-white/80 text-slate-600 hover:text-blue-600 hover:bg-blue-50/80'
+              }`}
+              style={{ 
+                boxShadow: activeSection === section.id 
+                  ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' 
+                  : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' 
+              }}
+            >
+              <div className="flex items-center justify-center gap-3 flex-col sm:flex-row">
+                <div className="flex items-center gap-2">
+                  {section.icon}
+                  <span className="text-sm font-semibold">{section.label}</span>
+                </div>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700">
+                  {section.count}
+                </span>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
 
       {/* Content */}
       {renderContent()}
