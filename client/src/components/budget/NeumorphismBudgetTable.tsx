@@ -506,21 +506,16 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           className="bg-gradient-to-r from-indigo-100/90 to-purple-100/90 backdrop-blur-sm border-t-2 border-b-2 border-indigo-300/60 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.3)] transition-all duration-300"
                         >
                           <td className="px-6 py-4">
-                            <div className="group relative">
-                              <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-xl blur opacity-25 group-hover:opacity-45 transition-opacity duration-300"></div>
-                              <div className="relative inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-100 to-purple-100 shadow-[8px_8px_16px_#a5b4fc,-8px_-8px_16px_#ffffff] border border-indigo-200/50 text-indigo-800 font-mono text-sm font-bold tracking-wider hover:shadow-[6px_6px_12px_#a5b4fc,-6px_-6px_12px_#ffffff] transition-all duration-300">
-                                <div className="w-2 h-2 rounded-full bg-indigo-500 mr-2 shadow-sm"></div>
-                                หมวด
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[8px_8px_16px_#a5b4fc,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+                                <Layers className="w-5 h-5 text-white" />
                               </div>
+                              <span className="text-sm font-bold text-indigo-700 tracking-wide">หมวด</span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <div className="group relative">
-                              <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-25 group-hover:opacity-45 transition-opacity duration-300"></div>
-                              <div className="relative inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 shadow-[8px_8px_16px_#ddd6fe,-8px_-8px_16px_#ffffff] border border-purple-200/50 text-purple-800 font-mono text-sm font-bold tracking-wider hover:shadow-[6px_6px_12px_#ddd6fe,-6px_-6px_12px_#ffffff] transition-all duration-300">
-                                <div className="w-2 h-2 rounded-full bg-purple-500 mr-2 shadow-sm"></div>
-                                TOTAL
-                              </div>
+                            <div className="inline-flex items-center px-3 py-1 rounded-lg bg-purple-50 shadow-[inset_4px_4px_8px_#ddd6fe,inset_-4px_-4px_8px_#ffffff] text-purple-700 font-mono text-xs font-bold">
+                              TOTAL
                             </div>
                           </td>
                           <td className="px-6 py-4">
@@ -586,7 +581,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3, delay: index * 0.02 }}
-                        className="group border-b border-slate-200/30 hover:bg-gradient-to-r hover:from-white/60 hover:to-blue-50/40 hover:shadow-[0_2px_8px_rgba(59,130,246,0.1)] transition-all duration-300 backdrop-blur-sm"
+                        className="border-b border-slate-200/30 hover:bg-white/40 transition-all duration-300"
                       >
                         {/* Budget Code */}
                         <td className="px-6 py-4">
@@ -611,10 +606,8 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         </td>
 
                         {/* Item Name */}
-                        <td className="px-6 py-4">
-                          <div className="font-medium text-slate-800 text-base leading-relaxed">
-                            {item.name}
-                          </div>
+                        <td className="px-6 py-4 font-medium text-slate-700">
+                          {item.name}
                         </td>
 
                         {/* Current Year Value */}
@@ -623,7 +616,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className="w-full p-3 text-right bg-gradient-to-r from-blue-50/80 to-cyan-50/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#bfdbfe,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#bfdbfe,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-blue-800 font-bold"
+                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700"
                                 value={editingCell === `${actualIndex}-${currentYear}` ? tempValue : currentValue}
                                 onChange={(e) => {
                                   if (globalEditMode) {
@@ -657,10 +650,10 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             </div>
                           ) : (
                             <div
-                              className={`text-right font-mono text-lg p-4 rounded-xl transition-all duration-300 ${
+                              className={`text-right font-mono text-lg p-3 rounded-xl transition-all duration-300 ${
                                 globalEditMode 
-                                  ? 'cursor-pointer bg-gradient-to-r from-blue-50/70 to-cyan-50/70 hover:shadow-[inset_6px_6px_12px_#bfdbfe,inset_-6px_-6px_12px_#ffffff] text-blue-800 font-bold border border-blue-200/30' 
-                                  : 'cursor-not-allowed bg-slate-100/50 text-slate-500 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30'
+                                  ? 'cursor-pointer hover:bg-blue-50/50 hover:shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]' 
+                                  : 'cursor-not-allowed text-slate-400'
                               }`}
                               onClick={() => globalEditMode && handleCellEdit(actualIndex, currentYear, currentValue)}
                             >
@@ -675,7 +668,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className="w-full p-3 text-right bg-gradient-to-r from-emerald-50/80 to-teal-50/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#a7f3d0,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#a7f3d0,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-emerald-800 font-bold"
+                                className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700"
                                 value={editingCell === `${actualIndex}-${nextYear}` ? tempValue : nextValue}
                                 onChange={(e) => {
                                   if (globalEditMode) {
@@ -709,10 +702,10 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             </div>
                           ) : (
                             <div
-                              className={`text-right font-mono text-lg p-4 rounded-xl transition-all duration-300 ${
+                              className={`text-right font-mono text-lg p-3 rounded-xl transition-all duration-300 ${
                                 globalEditMode 
-                                  ? 'cursor-pointer bg-gradient-to-r from-emerald-50/70 to-teal-50/70 hover:shadow-[inset_6px_6px_12px_#a7f3d0,inset_-6px_-6px_12px_#ffffff] text-emerald-800 font-bold border border-emerald-200/30' 
-                                  : 'cursor-not-allowed bg-slate-100/50 text-slate-500 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30'
+                                  ? 'cursor-pointer hover:bg-emerald-50/50 hover:shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]' 
+                                  : 'cursor-not-allowed text-slate-400'
                               }`}
                               onClick={() => globalEditMode && handleCellEdit(actualIndex, nextYear, nextValue)}
                             >
@@ -724,12 +717,8 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         {/* Difference */}
                         <td className="px-6 py-4">
                           <div className="text-center">
-                            <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] border transition-all duration-300 group-hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] ${
-                              diff > 0 
-                                ? 'text-emerald-600 bg-gradient-to-r from-emerald-50/80 to-green-50/80 border-emerald-200/50' 
-                                : diff < 0 
-                                ? 'text-red-600 bg-gradient-to-r from-red-50/80 to-pink-50/80 border-red-200/50' 
-                                : 'text-slate-500 bg-gradient-to-r from-slate-50/80 to-gray-50/80 border-slate-200/50'
+                            <div className={`flex items-center justify-center gap-1 font-medium text-lg ${
+                              diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-red-500' : 'text-slate-400'
                             }`}>
                               {getDiffIcon(diff)}
                               <span>
@@ -737,7 +726,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                               </span>
                             </div>
                             {currentValue > 0 && (
-                              <div className="text-xs mt-2 text-slate-500 font-medium">
+                              <div className="text-xs mt-1 text-slate-500">
                                 ({diff >= 0 ? '+' : ''}{diffPercentage.toFixed(1)}%)
                               </div>
                             )}
@@ -746,25 +735,18 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
 
                         {/* Notes */}
                         <td className="px-6 py-4">
-                          <div className="group relative">
-                            <input
-                              type="text"
-                              className={`w-full p-3 border-0 rounded-xl transition-all duration-300 text-sm ${
-                                globalEditMode 
-                                  ? 'bg-gradient-to-r from-yellow-50/80 to-amber-50/80 shadow-[inset_6px_6px_12px_#fde68a,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#fde68a,inset_-8px_-8px_16px_#ffffff] text-amber-800 font-medium border border-amber-200/50' 
-                                  : 'cursor-not-allowed bg-slate-100/50 text-slate-400 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30'
-                              }`}
-                              placeholder={globalEditMode ? "เพิ่มหมายเหตุ..." : "ไม่สามารถแก้ไขได้"}
-                              value={item.notes || ''}
-                              onChange={(e) => globalEditMode && onUpdateNotes(actualIndex, e.target.value)}
-                              disabled={!globalEditMode}
-                            />
-                            {globalEditMode && (
-                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                <div className="w-2 h-2 rounded-full bg-amber-500 shadow-sm opacity-70"></div>
-                              </div>
-                            )}
-                          </div>
+                          <input
+                            type="text"
+                            className={`w-full p-3 bg-white/80 border-0 rounded-xl transition-all duration-300 text-slate-700 text-sm ${
+                              globalEditMode 
+                                ? 'shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff]' 
+                                : 'cursor-not-allowed bg-slate-100/50 text-slate-400 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff]'
+                            }`}
+                            placeholder="เพิ่มหมายเหตุ..."
+                            value={item.notes || ''}
+                            onChange={(e) => globalEditMode && onUpdateNotes(actualIndex, e.target.value)}
+                            disabled={!globalEditMode}
+                          />
                         </td>
                       </motion.tr>
                     );
