@@ -296,12 +296,17 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                             <input
                               type="number"
                               className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                              value={emp.homeVisitBusFare}
-                              onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
+                              value={emp.roundTripFare}
+                              onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', (parseFloat(e.target.value) || 0) / 2)}
                             />
                           </div>
                         ) : (
-                          renderEditableValue(emp.id, 'homeVisitBusFare', emp.homeVisitBusFare, index, 'ค่ารถทัวร์')
+                          <div className="flex items-center gap-2 group">
+                            <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.roundTripFare)}</span>
+                            <div className="text-xs text-slate-500">
+                              ({formatCurrency(emp.homeVisitBusFare)} × 2)
+                            </div>
+                          </div>
                         )}
                       </div>
                     </td>

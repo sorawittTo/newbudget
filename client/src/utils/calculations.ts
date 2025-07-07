@@ -100,9 +100,11 @@ export const calculateFamilyVisit = (
   employees: Employee[]
 ): FamilyVisitEmployee[] => {
   return employees.map(emp => {
-    const busFareTotal = 4 * (emp.homeVisitBusFare || 0) * 2;
+    const roundTripFare = (emp.homeVisitBusFare || 0) * 2; // One way fare x 2 = round trip
+    const busFareTotal = 4 * roundTripFare; // 4 times per year
     return {
       ...emp,
+      roundTripFare,
       busFareTotal,
       total: busFareTotal
     };

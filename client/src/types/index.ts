@@ -58,6 +58,7 @@ export interface SpecialAssistEmployee extends Employee {
 }
 
 export interface FamilyVisitEmployee extends Employee {
+  roundTripFare: number;
   busFareTotal: number;
   total: number;
 }
