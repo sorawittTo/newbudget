@@ -117,6 +117,12 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Database Integration with Neon PostgreSQL
+  * Migrated from localStorage to Neon PostgreSQL database for persistent data storage
+  * Created comprehensive database schema with 8 tables: users, employees, masterRates, budgetItems, specialAssistItems, overtimeItems, holidays, assistanceData
+  * Implemented full CRUD API endpoints for employees, master rates, and budget items
+  * Updated storage layer to use Drizzle ORM with type-safe database operations
+  * All database tables created and ready for production use
 - July 07, 2025. Complete System Unification with Modern Components
   * Updated Thai banking holidays for 2568 (2025 CE) with official Bank of Thailand data
   * Created ModernWorkdayManager with advanced neumorphism design and holiday management
