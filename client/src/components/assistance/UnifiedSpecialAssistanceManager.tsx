@@ -133,12 +133,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     return (
                       <tr key={emp.id} className="border-b border-slate-200/30 hover:bg-slate-50/30 transition-all duration-300">
                         <td className="px-4 py-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-white font-bold text-sm">
-                              {emp.id.slice(-2)}
-                            </div>
-                            <span className="font-medium text-slate-700">{emp.id}</span>
-                          </div>
+                          <span className="font-medium text-slate-700">{emp.id}</span>
                         </td>
                         <td className="px-4 py-4 font-bold text-slate-800">{emp.name}</td>
                         <td className="px-4 py-4">
