@@ -1,7 +1,13 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema } from "@shared/schema";
+import { storage } from "./storage.js";
+import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema } from "../shared/schema.js";
+
+// Log utility
+function log(message: string, source = "api") {
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`${timestamp} [${source}] ${message}`);
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Employee routes

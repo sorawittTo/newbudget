@@ -1,42 +1,23 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "server/**",
-          "shared/**"
-        ]
-      }
-    }
-  ],
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
   "functions": {
     "api/index.ts": {
-      "maxDuration": 30
+      "runtime": "@vercel/node"
     }
   },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api"
+      "dest": "/api/index"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/$1"
+      "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "buildCommand": "node build.js",
-  "outputDirectory": "dist"
+  ]
 }

@@ -1,15 +1,11 @@
 import { execSync } from 'child_process';
-import fs from 'fs';
 
-console.log('🚀 Building for Vercel deployment...');
+console.log('🚀 Building frontend for Vercel...');
 
 try {
-  // Build frontend only (backend will be handled by Vercel)
-  console.log('📦 Building frontend...');
+  // Build frontend only - backend handled by Vercel functions
   execSync('vite build', { stdio: 'inherit' });
-  
-  console.log('✅ Build completed successfully!');
-  
+  console.log('✅ Frontend build completed!');
 } catch (error) {
   console.error('❌ Build failed:', error);
   process.exit(1);
