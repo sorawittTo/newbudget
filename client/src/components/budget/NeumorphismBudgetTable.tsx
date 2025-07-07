@@ -499,28 +499,28 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, delay: index * 0.02 }}
-                          className="bg-gradient-to-r from-indigo-100/90 to-purple-100/90 backdrop-blur-sm border-t-2 border-b-2 border-indigo-300/60 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.3)] transition-all duration-300"
+                          className="bg-gradient-to-r from-indigo-200/95 to-blue-300/95 backdrop-blur-sm border-t-2 border-b-2 border-indigo-400/70 shadow-[0_6px_20px_rgba(67,56,202,0.4)] hover:shadow-[0_8px_25px_rgba(67,56,202,0.5)] transition-all duration-300"
                         >
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[8px_8px_16px_#a5b4fc,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-                                <Layers className="w-5 h-5 text-white" />
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[6px_6px_12px_#a5b4fc,-6px_-6px_12px_#ffffff] flex items-center justify-center">
+                                <Layers className="w-4 h-4 text-white" />
                               </div>
-                              <span className="text-sm font-bold text-indigo-700 tracking-wide">หมวด</span>
+                              <span className="text-xs font-bold text-indigo-700 tracking-wide">หมวด</span>
                             </div>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="inline-flex items-center px-3 py-1 rounded-lg bg-purple-50 shadow-[inset_4px_4px_8px_#ddd6fe,inset_-4px_-4px_8px_#ffffff] text-purple-700 font-mono text-xs font-bold">
+                          <td className="px-4 py-2">
+                            <div className="inline-flex items-center px-2 py-1 rounded-lg bg-purple-50 shadow-[inset_3px_3px_6px_#ddd6fe,inset_-3px_-3px_6px_#ffffff] text-purple-700 font-mono text-xs font-bold">
                               TOTAL
                             </div>
                           </td>
-                          <td className="px-6 py-4">
-                            <h3 className="text-lg font-bold text-indigo-800 tracking-wide">{item.name}</h3>
+                          <td className="px-4 py-2">
+                            <h3 className="text-base font-bold text-indigo-800 tracking-wide">{item.name}</h3>
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-4 py-2 text-right">
                             {totals ? (
-                              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-100 to-green-100 rounded-xl shadow-[8px_8px_16px_#a7f3d0,-8px_-8px_16px_#ffffff] border border-emerald-200/50">
-                                <div className="text-lg font-bold text-emerald-700">
+                              <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-emerald-100 to-green-100 rounded-lg shadow-[6px_6px_12px_#a7f3d0,-6px_-6px_12px_#ffffff] border border-emerald-200/50">
+                                <div className="text-base font-bold text-emerald-700">
                                   {formatCurrency(totals.current)}
                                 </div>
                               </div>
@@ -528,10 +528,10 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                               <div className="text-slate-400">-</div>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-4 py-2 text-right">
                             {totals ? (
-                              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-xl shadow-[8px_8px_16px_#93c5fd,-8px_-8px_16px_#ffffff] border border-blue-200/50">
-                                <div className="text-lg font-bold text-blue-700">
+                              <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg shadow-[6px_6px_12px_#93c5fd,-6px_-6px_12px_#ffffff] border border-blue-200/50">
+                                <div className="text-base font-bold text-blue-700">
                                   {formatCurrency(totals.next)}
                                 </div>
                               </div>
@@ -539,9 +539,9 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                               <div className="text-slate-400">-</div>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center">
+                          <td className="px-4 py-2 text-center">
                             {totals ? (
-                              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] border font-bold ${
+                              <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] border font-bold ${
                                 totalDiff > 0 
                                   ? 'text-emerald-600 bg-gradient-to-r from-emerald-100 to-green-100 border-emerald-200/50' 
                                   : totalDiff < 0 
@@ -549,7 +549,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                                   : 'text-slate-600 bg-gradient-to-r from-slate-100 to-gray-100 border-slate-200/50'
                               }`}>
                                 {getDiffIcon(totalDiff)}
-                                <span className="text-lg">
+                                <span className="text-base">
                                   {totalDiff >= 0 ? '+' : ''}{formatCurrency(totalDiff)}
                                 </span>
                               </div>
@@ -577,29 +577,29 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3, delay: index * 0.02 }}
-                        className="border-b border-slate-200/30 hover:bg-white/40 transition-all duration-300"
+                        className="border-b border-slate-200/30 hover:bg-white/40 transition-all duration-300 h-12"
                       >
                         {/* Budget Code */}
-                        <td className="px-6 py-4">
-                          <div className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff] text-blue-700 font-mono text-xs">
+                        <td className="px-4 py-2">
+                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-blue-50 shadow-[inset_3px_3px_6px_#bfdbfe,inset_-3px_-3px_6px_#ffffff] text-blue-700 font-mono text-xs">
                             {item.code}
                           </div>
                         </td>
 
                         {/* Account Code */}
-                        <td className="px-6 py-4">
-                          <div className="inline-flex items-center px-3 py-1 rounded-lg bg-emerald-50 shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff] text-emerald-700 font-mono text-xs">
+                        <td className="px-4 py-2">
+                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
                             {item.code}
                           </div>
                         </td>
 
                         {/* Item Name */}
-                        <td className="px-6 py-4 font-medium text-slate-700">
+                        <td className="px-4 py-2 font-medium text-slate-700">
                           {item.name}
                         </td>
 
                         {/* Current Year Value */}
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-2">
                           {globalEditMode || editingCell === `${actualIndex}-${currentYear}` ? (
                             <div className="flex items-center gap-2">
                               <input
@@ -651,7 +651,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         </td>
 
                         {/* Next Year Value */}
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-2">
                           {globalEditMode || editingCell === `${actualIndex}-${nextYear}` ? (
                             <div className="flex items-center gap-2">
                               <input
@@ -703,7 +703,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         </td>
 
                         {/* Difference */}
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-2">
                           <div className="text-center">
                             <div className={`flex items-center justify-center gap-1 font-medium text-lg ${
                               diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-red-500' : 'text-slate-400'
@@ -722,7 +722,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                         </td>
 
                         {/* Notes */}
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-2">
                           <input
                             type="text"
                             className={`w-full p-3 bg-white/80 border-0 rounded-xl transition-all duration-300 text-slate-700 text-sm ${
