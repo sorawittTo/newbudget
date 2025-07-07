@@ -387,34 +387,47 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setGlobalEditMode(!globalEditMode)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
-                  globalEditMode 
-                    ? "bg-orange-100 shadow-[inset_8px_8px_16px_#fed7aa,inset_-8px_-8px_16px_#ffffff] text-orange-700" 
-                    : "bg-purple-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] text-purple-700 hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]"
-                }`}
-              >
-                <Edit3 className="w-4 h-4" />
-                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-              </button>
+            <div className="flex flex-col gap-3">
+              {globalEditMode && (
+                <div className="bg-blue-50/80 border border-blue-200 rounded-xl px-4 py-3 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]">
+                  <div className="flex items-center gap-2 text-blue-700">
+                    <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">!</span>
+                    </div>
+                    <span className="text-sm font-medium">เมื่อเปิดการแก้ไข สามารถแก้ไขได้ทุกช่องในตาราง</span>
+                  </div>
+                </div>
+              )}
               
-              <button 
-                onClick={onSave}
-                className="flex items-center gap-2 px-6 py-3 bg-emerald-100 text-emerald-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
-              >
-                <Save className="w-4 h-4" />
-                บันทึก
-              </button>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setGlobalEditMode(!globalEditMode)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
+                    globalEditMode 
+                      ? "bg-orange-100 shadow-[inset_8px_8px_16px_#fed7aa,inset_-8px_-8px_16px_#ffffff] text-orange-700" 
+                      : "bg-purple-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] text-purple-700 hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]"
+                  }`}
+                >
+                  <Edit3 className="w-4 h-4" />
+                  {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+                </button>
               
-              <button 
-                onClick={onExport}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
-              >
-                <FileSpreadsheet className="w-4 h-4" />
-                ส่งออก
-              </button>
+                <button 
+                  onClick={onSave}
+                  className="flex items-center gap-2 px-6 py-3 bg-emerald-100 text-emerald-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
+                >
+                  <Save className="w-4 h-4" />
+                  บันทึก
+                </button>
+                
+                <button 
+                  onClick={onExport}
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
+                >
+                  <FileSpreadsheet className="w-4 h-4" />
+                  ส่งออก
+                </button>
+              </div>
             </div>
           </div>
         </div>
