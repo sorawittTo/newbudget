@@ -303,9 +303,6 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                         ) : (
                           <div className="flex items-center gap-2 group">
                             <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.roundTripFare)}</span>
-                            <div className="text-xs text-slate-500">
-                              ({formatCurrency(emp.homeVisitBusFare)} × 2)
-                            </div>
                           </div>
                         )}
                       </div>
@@ -324,15 +321,10 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                         ) : (
                           <div className="font-bold text-lg text-blue-700">4</div>
                         )}
-                        <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
-                          <Calculator className="w-3 h-3" />
-                          ครั้ง/ปี
-                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right bg-gradient-to-r from-blue-50 to-purple-50">
                       <div className="font-bold text-xl text-blue-900">{formatCurrency(emp.total)}</div>
-                      <div className="text-sm text-blue-600">บาท</div>
                     </td>
                   </tr>
                 ))
@@ -346,7 +338,6 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="font-bold text-2xl">{formatCurrency(familyVisitTotal)}</div>
-                    <div className="text-sm opacity-90">บาท</div>
                   </td>
                 </tr>
               </tfoot>
