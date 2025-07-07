@@ -150,24 +150,36 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
       );
     }
 
+    if (globalEditMode) {
+      return (
+        <motion.div 
+          className="group/cell flex items-center justify-center p-3 cursor-pointer transition-all duration-300 rounded-2xl"
+          style={{
+            boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+            backgroundColor: '#f9fafb'
+          }}
+          whileHover={{
+            boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff',
+          }}
+          onClick={() => handleEditStart(field, currentValue)}
+        >
+          <span className="font-bold text-blue-600 text-lg mr-2">
+            {field.includes('months') ? currentValue : formatCurrency(currentValue)}
+          </span>
+          {field.includes('months') && <Calendar className="w-4 h-4 text-blue-500" />}
+          <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover/cell:opacity-100 transition-opacity ml-2" />
+        </motion.div>
+      );
+    }
+
+    // Read-only mode
     return (
-      <motion.div 
-        className="group/cell flex items-center justify-center p-3 cursor-pointer transition-all duration-300 rounded-2xl"
-        style={{
-          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-          backgroundColor: '#f9fafb'
-        }}
-        whileHover={{
-          boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff',
-        }}
-        onClick={() => handleEditStart(field, currentValue)}
-      >
-        <span className="font-bold text-blue-600 text-lg mr-2">
+      <div className="flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+        <span className="font-bold text-slate-700 text-lg mr-2">
           {field.includes('months') ? currentValue : formatCurrency(currentValue)}
         </span>
-        {field.includes('months') && <Calendar className="w-4 h-4 text-blue-500" />}
-        <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover/cell:opacity-100 transition-opacity ml-2" />
-      </motion.div>
+        {field.includes('months') && <Calendar className="w-4 h-4 text-slate-500" />}
+      </div>
     );
   };
 
@@ -318,10 +330,12 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
         <Card className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-lg font-semibold">รายการเงินช่วยเหลือพิเศษ</h4>
-            <Button onClick={addNewItem}>
-              <Plus className="w-4 h-4 mr-2" />
-              เพิ่มรายการ
-            </Button>
+            {globalEditMode && (
+              <Button onClick={addNewItem} className="neumorphism-button">
+                <Plus className="w-4 h-4 mr-2" />
+                เพิ่มรายการ
+              </Button>
+            )}
           </div>
           
           <div className="overflow-x-auto">
@@ -344,49 +358,82 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                   return (
                     <tr key={index} className="border-b hover:bg-gray-50">
                       <td className="p-3">
-                        <NeumorphismInput
-                          type="text"
-                          value={item.item}
-                          onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="text"
+                            value={item.item}
+                            onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-medium text-slate-700">{item.item}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <NeumorphismInput
-                          type="number"
-                          value={item.timesPerYear}
-                          onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
-                          className="text-center"
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.timesPerYear}
+                            onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
+                            className="text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.timesPerYear}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <NeumorphismInput
-                          type="number"
-                          value={item.days}
-                          onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
-                          className="text-center"
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.days}
+                            onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
+                            className="text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.days}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <NeumorphismInput
-                          type="number"
-                          value={item.people}
-                          onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
-                          className="text-center"
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.people}
+                            onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
+                            className="text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.people}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <NeumorphismInput
-                          type="number"
-                          value={item.rate}
-                          onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
-                          className="text-right"
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.rate}
+                            onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
+                            className="text-right"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-right" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-green-600">{formatCurrency(item.rate)}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(itemTotal)}</td>
                       <td className="px-4 py-3 text-center">
-                        <Button variant="danger" size="sm" onClick={() => deleteItem(index)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {globalEditMode && (
+                          <Button variant="danger" size="sm" onClick={() => deleteItem(index)} className="neumorphism-button">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -469,12 +516,18 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
               เงินเดือนอ้างอิง
             </h4>
             <div className="flex items-center gap-4">
-              <NeumorphismInput
-                type="number"
-                value={overtimeData.salary}
-                onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
-                className="w-32 text-right"
-              />
+              {globalEditMode ? (
+                <NeumorphismInput
+                  type="number"
+                  value={overtimeData.salary}
+                  onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
+                  className="w-32 text-right"
+                />
+              ) : (
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-right" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                  <span className="font-bold text-blue-600 text-lg">{formatCurrency(overtimeData.salary)}</span>
+                </div>
+              )}
               <span className="text-gray-700 font-medium">บาท</span>
               <motion.div 
                 className="text-sm text-gray-600 p-3 rounded-2xl"
@@ -516,51 +569,83 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                   return (
                     <tr key={index} className="border-b hover:bg-gray-50">
                       <td className="p-3">
-                        <input
-                          type="text"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                          value={item.item}
-                          onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="text"
+                            value={item.item}
+                            onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-medium text-slate-700">{item.item}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <input
-                          type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
-                          value={item.instances}
-                          onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.instances}
+                            onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.instances}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <input
-                          type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
-                          value={item.days}
-                          onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.days}
+                            onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.days}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <input
-                          type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
-                          value={item.hours}
-                          onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.hours}
+                            onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.hours}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="p-3">
-                        <input
-                          type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
-                          value={item.people}
-                          onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
-                        />
+                        {globalEditMode ? (
+                          <NeumorphismInput
+                            type="number"
+                            value={item.people}
+                            onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
+                            className="w-full text-center"
+                          />
+                        ) : (
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                            <span className="font-bold text-blue-600">{item.people}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-right">{formatCurrency(overtimeRate)}</td>
                       <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(itemTotal)}</td>
                       <td className="px-4 py-3 text-center">
-                        <Button variant="danger" size="sm" onClick={() => deleteItem(index)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {globalEditMode && (
+                          <Button variant="danger" size="sm" onClick={() => deleteItem(index)} className="neumorphism-button">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -592,36 +677,40 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card className="overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">จัดการเงินช่วยเหลือและค่าล่วงเวลา</h2>
-              <p className="text-purple-100">คำนวณและจัดการเงินช่วยเหลือทุกประเภท</p>
+        <div className="p-8 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: '16px 16px 32px #d1d5db, -16px -16px 32px #ffffff' }}>
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' }}>
+                <Heart className="w-8 h-8 text-purple-600" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-slate-800 mb-2">จัดการเงินช่วยเหลือและค่าล่วงเวลา</h2>
+                <p className="text-slate-600">คำนวณและจัดการเงินช่วยเหลือทุกประเภท</p>
+              </div>
             </div>
             
             <div className="flex items-center gap-4">
               {/* Year Selection */}
-              <div className="flex items-center gap-3 bg-white/10 rounded-lg p-3">
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/80" style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => onYearChange(calcYear - 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                  className="neumorphism-button w-10 h-10 p-0"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
                 
-                <div className="text-center">
-                  <div className="text-sm text-purple-100">คำนวณสำหรับปี</div>
-                  <div className="font-bold">{calcYear}</div>
+                <div className="text-center px-4">
+                  <div className="text-sm text-slate-500">คำนวณสำหรับปี</div>
+                  <div className="font-bold text-lg text-slate-800">{calcYear}</div>
                 </div>
                 
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => onYearChange(calcYear + 1)}
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                  className="neumorphism-button w-10 h-10 p-0"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -629,16 +718,15 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
 
               <Button 
                 onClick={() => setGlobalEditMode(!globalEditMode)}
-                variant={globalEditMode ? "secondary" : "primary"}
-                className={globalEditMode 
-                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-                }
+                className={`px-6 py-3 ${globalEditMode 
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg hover:from-red-600 hover:to-red-700' 
+                  : 'neumorphism-button'
+                }`}
               >
                 <Edit3 className="w-4 h-4 mr-2" />
                 {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
               </Button>
-              <Button onClick={onSave} className="bg-green-600 hover:bg-green-700">
+              <Button onClick={onSave} className="neumorphism-button px-6 py-3">
                 <Save className="w-4 h-4 mr-2" />
                 บันทึก
               </Button>
@@ -646,31 +734,38 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
           </div>
         </div>
 
-        {/* Section Navigation */}
-        <div className="bg-gray-50 border-b border-gray-200">
-          <nav className="flex overflow-x-auto">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id as any)}
-                className={`flex-1 min-w-0 py-4 px-6 text-center font-medium transition-colors ${
-                  activeSection === section.id
-                    ? 'bg-white text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-purple-600 hover:bg-white/50'
-                }`}
-              >
-                <div className="flex items-center justify-center gap-2">
+      
+      {/* Section Navigation */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-white to-slate-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+        <nav className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => setActiveSection(section.id as any)}
+              className={`p-4 rounded-2xl font-medium transition-all duration-300 ${
+                activeSection === section.id
+                  ? 'bg-gradient-to-br from-purple-100 to-pink-100 text-purple-700 border-2 border-purple-200'
+                  : 'bg-white/80 text-slate-600 hover:text-purple-600 hover:bg-purple-50/80'
+              }`}
+              style={{ 
+                boxShadow: activeSection === section.id 
+                  ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' 
+                  : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' 
+              }}
+            >
+              <div className="flex items-center justify-center gap-3 flex-col sm:flex-row">
+                <div className="flex items-center gap-2">
                   {section.icon}
-                  <span className="hidden sm:inline">{section.label}</span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800">
-                    {section.count}
-                  </span>
+                  <span className="text-sm font-semibold">{section.label}</span>
                 </div>
-              </button>
-            ))}
-          </nav>
-        </div>
-      </Card>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700">
+                  {section.count}
+                </span>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
 
       {/* Content */}
       {renderContent()}
