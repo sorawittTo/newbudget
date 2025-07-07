@@ -16,7 +16,7 @@ import {
   Check,
   X
 } from 'lucide-react';
-import { ModernSpecialAssistCalculationTable } from '../calculations/ModernSpecialAssistCalculationTable';
+import { SimpleSpecialAssistForm } from '../calculations/SimpleSpecialAssistForm';
 import { ModernSpecialAssist1CalculationTable } from '../calculations/ModernSpecialAssist1CalculationTable';
 import { ModernOvertimeCalculationTable } from '../calculations/ModernOvertimeCalculationTable';
 
@@ -68,7 +68,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
 
   const renderAssistanceSection = () => {
     return (
-      <ModernSpecialAssistCalculationTable
+      <SimpleSpecialAssistForm
         employees={employees}
         masterRates={masterRates}
         selectedEmployeeIds={selectedEmployeeIds}
