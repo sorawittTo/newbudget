@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useBudgetData } from './hooks/useBudgetData';
 import { AppLayout } from './components/layout/AppLayout';
 import { ModernDashboard } from './components/dashboard/ModernDashboard';
-import { BudgetTable } from './components/budget/BudgetTable';
+import { ModernBudgetTable } from './components/budget/ModernBudgetTable';
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { SpecialAssistanceManager } from './components/assistance/SpecialAssistanceManager';
-import { WorkdayManager } from './components/workday/WorkdayManager';
+import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
@@ -269,7 +269,7 @@ function App() {
 
       case 'budget':
         return (
-          <BudgetTable
+          <ModernBudgetTable
             budgetData={budgetData}
             currentYear={currentYear}
             nextYear={nextYear}
@@ -341,7 +341,7 @@ function App() {
 
       case 'workdays':
         return (
-          <WorkdayManager
+          <ModernWorkdayManager
             calcYear={calcYear}
             holidaysData={holidaysData}
             onYearChange={setCalcYear}

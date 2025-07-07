@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { NeumorphismInput } from '../ui/NeumorphismInput';
+import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { 
   Heart, 
   Banknote, 
@@ -111,31 +114,51 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
     if (isEditing) {
       return (
         <div className="flex items-center gap-2">
-          <input
+          <NeumorphismInput
             type={isText ? "text" : "number"}
             min={field.includes('months') ? "1" : "0"}
             max={field.includes('months') ? "12" : undefined}
-            className="w-full p-2 border-2 border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 text-center"
             value={editingValues[field] !== undefined ? editingValues[field] : currentValue}
             onChange={(e) => setEditingValues(prev => ({ 
               ...prev, 
               [field]: isText ? e.target.value : (parseFloat(e.target.value) || 0)
             }))}
-            autoFocus
+            className="text-center"
           />
-          <Button size="sm" onClick={() => handleEditSave(field, empId)} className="p-1 h-7 w-7">
-            <Check className="w-3 h-3" />
-          </Button>
-          <Button variant="secondary" size="sm" onClick={() => handleEditCancel(field)} className="p-1 h-7 w-7">
-            <X className="w-3 h-3" />
-          </Button>
+          <button
+            onClick={() => handleEditSave(field, empId)}
+            className="p-2 rounded-xl text-green-600 hover:text-green-700 transition-colors"
+            style={{
+              boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+              backgroundColor: '#f9fafb'
+            }}
+          >
+            <Check className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => handleEditCancel(field)}
+            className="p-2 rounded-xl text-red-600 hover:text-red-700 transition-colors"
+            style={{
+              boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+              backgroundColor: '#f9fafb'
+            }}
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       );
     }
 
     return (
-      <div 
-        className="group/cell flex items-center justify-center p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-all"
+      <motion.div 
+        className="group/cell flex items-center justify-center p-3 cursor-pointer transition-all duration-300 rounded-2xl"
+        style={{
+          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+          backgroundColor: '#f9fafb'
+        }}
+        whileHover={{
+          boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff',
+        }}
         onClick={() => handleEditStart(field, currentValue)}
       >
         <span className="font-bold text-blue-600 text-lg mr-2">
@@ -143,7 +166,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
         </span>
         {field.includes('months') && <Calendar className="w-4 h-4 text-blue-500" />}
         <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover/cell:opacity-100 transition-opacity ml-2" />
-      </div>
+      </motion.div>
     );
   };
 
@@ -320,43 +343,42 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                   return (
                     <tr key={index} className="border-b hover:bg-gray-50">
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="text"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                           value={item.item}
                           onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
                         />
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
                           value={item.timesPerYear}
                           onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
+                          className="text-center"
                         />
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
                           value={item.days}
                           onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
+                          className="text-center"
                         />
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
                           value={item.people}
                           onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
+                          className="text-center"
                         />
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-blue-500"
                           value={item.rate}
                           onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
+                          className="text-right"
                         />
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(itemTotal)}</td>
@@ -382,7 +404,11 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">หมายเหตุ</label>
             <textarea
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 rounded-2xl resize-none transition-all duration-300 focus:outline-none text-gray-900"
+              style={{
+                boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff',
+                backgroundColor: '#f9fafb'
+              }}
               rows={3}
               value={specialAssist1Data.notes || ''}
               onChange={(e) => onUpdateSpecialAssist1Notes(calcYear, e.target.value)}
@@ -435,18 +461,26 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
     return (
       <div className="space-y-6">
         {/* Salary Setting */}
-        <Card className="p-6 bg-yellow-50 border-yellow-200">
-          <h4 className="font-semibold text-yellow-800 mb-4">เงินเดือนอ้างอิง</h4>
-          <div className="flex items-center gap-4">
-            <input
-              type="number"
-              className="w-32 p-3 border border-yellow-300 rounded-lg text-right focus:ring-2 focus:ring-yellow-500"
-              value={overtimeData.salary}
-              onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
-            />
-            <span className="text-yellow-700">บาท</span>
-            <div className="text-sm text-yellow-600">
-              อัตราล่วงเวลา: {formatCurrency(overtimeRate)}/ชั่วโมง
+        <Card className="bg-gray-100" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' }}>
+          <div className="p-6">
+            <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <Calculator className="w-5 h-5 text-orange-600" />
+              เงินเดือนอ้างอิง
+            </h4>
+            <div className="flex items-center gap-4">
+              <NeumorphismInput
+                type="number"
+                value={overtimeData.salary}
+                onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
+                className="w-32 text-right"
+              />
+              <span className="text-gray-700 font-medium">บาท</span>
+              <motion.div 
+                className="text-sm text-gray-600 p-3 rounded-2xl"
+                style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff', backgroundColor: '#f9fafb' }}
+              >
+                อัตราล่วงเวลา: <span className="font-bold text-orange-600">{formatCurrency(overtimeRate)}/ชั่วโมง</span>
+              </motion.div>
             </div>
           </div>
         </Card>
