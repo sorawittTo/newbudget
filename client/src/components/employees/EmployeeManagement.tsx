@@ -82,38 +82,63 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
     const cellKey = `${level}-${field}`;
     const isEditing = editingCell === cellKey;
 
-    if (isEditing) {
+    if (globalEditMode || isEditing) {
       return (
         <div className="flex items-center gap-2">
           <input
             type={isText ? "text" : "number"}
-            className="w-full p-2 border-2 border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500"
-            value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
-            onBlur={() => handleRateSave(level, field)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleRateSave(level, field);
-              if (e.key === 'Escape') handleRateCancel();
+            className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
+            value={globalEditMode ? value : tempValue}
+            onChange={(e) => {
+              if (globalEditMode) {
+                onUpdateMasterRate(level, field, isText ? e.target.value : parseFloat(e.target.value) || 0);
+              } else {
+                setTempValue(e.target.value);
+              }
             }}
-            autoFocus
+            onBlur={() => !globalEditMode && handleRateSave(level, field)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !globalEditMode) handleRateSave(level, field);
+              if (e.key === 'Escape' && !globalEditMode) handleRateCancel();
+            }}
+            autoFocus={isEditing}
           />
-          <Button size="sm" onClick={() => handleRateSave(level, field)} className="p-1 h-8 w-8">
-            <Check className="w-3 h-3" />
-          </Button>
-          <Button variant="secondary" size="sm" onClick={handleRateCancel} className="p-1 h-8 w-8">
-            <X className="w-3 h-3" />
-          </Button>
+          {!globalEditMode && (
+            <div className="flex gap-1">
+              <button
+                onClick={() => handleRateSave(level, field)}
+                className="w-8 h-8 rounded-lg bg-emerald-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-emerald-600 transition-all duration-200"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleRateCancel}
+                className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       );
     }
 
     return (
       <div
-        className="group/cell flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-all"
-        onClick={() => handleRateEdit(level, field, value.toString())}
+        className={`p-3 rounded-xl transition-all duration-300 ${
+          isText ? 'text-left' : 'text-right font-mono text-lg font-bold'
+        } ${
+          globalEditMode 
+            ? 'cursor-pointer hover:bg-blue-50/50 hover:shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]' 
+            : 'cursor-pointer hover:bg-slate-50 hover:shadow-[inset_2px_2px_4px_#e2e8f0,inset_-2px_-2px_4px_#ffffff]'
+        }`}
+        onClick={() => globalEditMode ? null : handleRateEdit(level, field, value.toString())}
       >
-        <span className="flex-1 text-right">{isText ? value : value.toLocaleString()}</span>
-        <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover/cell:opacity-100 transition-opacity ml-2" />
+        {isText ? value : (
+          <span className="text-slate-700">
+            {typeof value === 'number' ? value.toLocaleString() : value}
+          </span>
+        )}
       </div>
     );
   };
@@ -397,58 +422,106 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         </Card>
       )}
 
-      {/* Rates Section */}
+      {/* Modern Neumorphism Rates Section */}
       {activeSection === 'rates' && (
-        <Card>
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-900">ตารางอัตราค่าใช้จ่ายมาตรฐาน</h3>
-            <p className="text-gray-600 mt-1">คลิกที่ช่องเพื่อแก้ไขค่า</p>
+        <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-3xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] p-8">
+          {/* Header Section */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+            <div className="mb-6 lg:mb-0">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                ตารางอัตราค่าใช้จ่ายมาตรฐาน
+              </h2>
+              <p className="text-slate-600 mt-2">จัดการอัตราค่าใช้จ่ายสำหรับแต่ละระดับตำแหน่ง</p>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              {globalEditMode && (
+                <div className="bg-blue-50/80 border border-blue-200 rounded-xl px-4 py-3 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]">
+                  <div className="flex items-center gap-2 text-blue-700">
+                    <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">!</span>
+                    </div>
+                    <span className="text-sm font-medium">เมื่อเปิดการแก้ไข สามารถแก้ไขได้ทุกช่องในตาราง</span>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setGlobalEditMode(!globalEditMode)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
+                    globalEditMode 
+                      ? "bg-orange-100 shadow-[inset_8px_8px_16px_#fed7aa,inset_-8px_-8px_16px_#ffffff] text-orange-700" 
+                      : "bg-purple-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] text-purple-700 hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]"
+                  }`}
+                >
+                  <Edit3 className="w-4 h-4" />
+                  {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+                </button>
+                
+                <button 
+                  onClick={onSave}
+                  className="flex items-center gap-2 px-6 py-3 bg-emerald-100 text-emerald-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
+                >
+                  <Save className="w-4 h-4" />
+                  บันทึก
+                </button>
+              </div>
+            </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1200px] text-sm">
-              <thead className="bg-gray-100 border-b border-gray-200">
-                <tr>
-                  <th className="px-4 py-3 text-left font-semibold">ตำแหน่ง</th>
-                  <th className="px-4 py-3 text-center font-semibold">ระดับ</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าเช่าบ้าน</th>
-                  <th className="px-4 py-3 text-right font-semibold">เงินช่วยเหลือรายเดือน</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าซื้อของเหมาจ่าย</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่ารถประจำทาง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่ารถรับจ้าง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าเบี้ยเลี้ยง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าที่พัก</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(masterRates)
-                  .sort((a, b) => parseFloat(b) - parseFloat(a))
-                  .map(level => {
-                    const data = masterRates[level];
-                    return (
-                      <tr key={level} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="p-3">
-                          {renderEditableCell(level, 'position', data.position, true)}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                            {level}
-                          </span>
-                        </td>
-                        <td className="p-3">{renderEditableCell(level, 'rent', data.rent)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'monthlyAssist', data.monthlyAssist)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'lumpSum', data.lumpSum)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'travel', data.travel)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'local', data.local)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'perDiem', data.perDiem)}</td>
-                        <td className="p-3">{renderEditableCell(level, 'hotel', data.hotel)}</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
+          {/* Modern Rates Table */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-[inset_10px_10px_20px_#e2e8f0,inset_-10px_-10px_20px_#ffffff] overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1200px]">
+                {/* Enhanced Table Header */}
+                <thead>
+                  <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]">
+                    <th className="px-6 py-4 text-left font-bold text-white">ตำแหน่ง</th>
+                    <th className="px-6 py-4 text-center font-bold text-white">ระดับ</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่าเช่าบ้าน</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">เงินช่วยเหลือรายเดือน</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่าซื้อของเหมาจ่าย</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่ารถประจำทาง</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่ารถรับจ้าง</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่าเบี้ยเลี้ยง</th>
+                    <th className="px-6 py-4 text-right font-bold text-white">ค่าที่พัก</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(masterRates)
+                    .sort((a, b) => parseFloat(b) - parseFloat(a))
+                    .map((level, index) => {
+                      const data = masterRates[level];
+                      return (
+                        <tr 
+                          key={level} 
+                          className="border-b border-slate-200/30 hover:bg-white/60 transition-all duration-300"
+                          style={{ animationDelay: `${index * 50}ms` }}
+                        >
+                          <td className="px-6 py-4">
+                            {renderEditableCell(level, 'position', data.position, true)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <div className="inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] border border-blue-200/50">
+                              <span className="text-blue-700 font-bold">ระดับ {level}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'rent', data.rent)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'monthlyAssist', data.monthlyAssist)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'lumpSum', data.lumpSum)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'travel', data.travel)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'local', data.local)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'perDiem', data.perDiem)}</td>
+                          <td className="px-6 py-4">{renderEditableCell(level, 'hotel', data.hotel)}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );
