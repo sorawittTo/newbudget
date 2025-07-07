@@ -25,6 +25,7 @@ import {
   getRatesForEmployee
 } from '../../utils/calculations';
 import { ModernFamilyVisitCalculationTable } from '../calculations/ModernFamilyVisitCalculationTable';
+import { ModernCompanyTripCalculationTable } from '../calculations/ModernCompanyTripCalculationTable';
 
 interface TravelExpenseManagerProps {
   employees: Employee[];
@@ -118,57 +119,14 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   };
 
   const renderCompanySection = () => {
-    const total = companyTripData.reduce((sum, emp) => sum + customSettings.busFare + emp.accommodationCost, 0);
-
     return (
-      <div className="space-y-6">
-        {/* Settings */}
-        <Card className="p-6 bg-yellow-50 border-yellow-200">
-          <h4 className="font-semibold text-yellow-800 mb-4">ตั้งค่าการคำนวณ</h4>
-          <div>
-            <label className="text-sm font-medium text-yellow-700 mb-2 block">ค่ารถทัวร์ (ทุกคน)</label>
-            {renderEditableValue('busFare', customSettings.busFare, 'ค่ารถทัวร์')}
-          </div>
-        </Card>
-
-        <Card>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-4 py-3 text-left">รหัสพนักงาน</th>
-                  <th className="px-4 py-3 text-left">ชื่อ-สกุล</th>
-                  <th className="px-4 py-3 text-right">ค่ารถทัวร์</th>
-                  <th className="px-4 py-3 text-right">ค่าที่พัก</th>
-                  <th className="px-4 py-3 text-left">หมายเหตุ</th>
-                  <th className="px-4 py-3 text-right font-semibold">รวม</th>
-                </tr>
-              </thead>
-              <tbody>
-                {companyTripData.map((emp, index) => {
-                  const total = customSettings.busFare + emp.accommodationCost;
-                  return (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3 font-mono text-gray-600">{emp.id}</td>
-                      <td className="px-4 py-3 font-medium">{emp.name}</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(customSettings.busFare)}</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(emp.accommodationCost)}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{emp.note}</td>
-                      <td className="px-4 py-3 text-right font-bold text-blue-600">{formatCurrency(total)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-              <tfoot className="bg-gray-50 font-bold">
-                <tr>
-                  <td colSpan={5} className="px-4 py-3 text-right">ยอดรวมทั้งหมด:</td>
-                  <td className="px-4 py-3 text-right text-lg text-blue-600">{formatCurrency(total)}</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </Card>
-      </div>
+      <ModernCompanyTripCalculationTable
+        employees={employees}
+        masterRates={masterRates}
+        selectedEmployeeIds={selectedEmployees.companyTrip}
+        onSave={onSave}
+        onUpdateEmployee={onUpdateEmployee}
+      />
     );
   };
 
