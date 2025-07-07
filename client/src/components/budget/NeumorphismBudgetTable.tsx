@@ -20,7 +20,9 @@ import {
   Filter,
   Layers,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Check,
+  X
 } from 'lucide-react';
 
 interface BudgetTableProps {
@@ -104,22 +106,48 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
     };
   }, [budgetData, currentYear, nextYear]);
 
-  // Filter data
+  // Filter data with category headers
   const filteredData = useMemo(() => {
-    let result = budgetData.filter(item => !item.type);
+    let result: BudgetItem[] = [];
 
-    // Category filter (based on code prefixes)
-    if (selectedCategory !== 'all') {
-      result = result.filter(item => item.code?.startsWith(selectedCategory));
-    }
-
-    // Changes filter
-    if (showOnlyChanges) {
-      result = result.filter(item => {
+    if (selectedCategory === 'all') {
+      // Show all data with category headers
+      result = budgetData.filter(item => {
+        if (!showOnlyChanges) return true;
+        if (item.type) return true; // Always include headers
+        
         const current = item.values?.[currentYear] || 0;
         const next = item.values?.[nextYear] || 0;
         return current !== next;
       });
+    } else {
+      // Show specific category with its header
+      const categoryHeader = budgetData.find(item => 
+        item.type === 'header' && 
+        budgetData.some(dataItem => 
+          !dataItem.type && 
+          dataItem.code?.startsWith(selectedCategory)
+        )
+      );
+      
+      if (categoryHeader) {
+        result.push(categoryHeader);
+      }
+      
+      const categoryItems = budgetData.filter(item => 
+        !item.type && item.code?.startsWith(selectedCategory)
+      );
+      
+      if (showOnlyChanges) {
+        const filteredItems = categoryItems.filter(item => {
+          const current = item.values?.[currentYear] || 0;
+          const next = item.values?.[nextYear] || 0;
+          return current !== next;
+        });
+        result.push(...filteredItems);
+      } else {
+        result.push(...categoryItems);
+      }
     }
 
     return result;
@@ -409,6 +437,53 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                 <AnimatePresence>
                   {filteredData.map((item, index) => {
                     const actualIndex = budgetData.findIndex(budgetItem => budgetItem === item);
+                    
+                    // Render category headers
+                    if (item.type === 'main_header') {
+                      return (
+                        <motion.tr
+                          key={actualIndex}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3, delay: index * 0.02 }}
+                          className="bg-gradient-to-r from-blue-100/80 to-indigo-100/80 backdrop-blur-sm border-b-2 border-blue-200/50"
+                        >
+                          <td colSpan={7} className="px-6 py-6">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+                                <DollarSign className="w-5 h-5 text-white" />
+                              </div>
+                              <h2 className="text-xl font-semibold text-blue-800">{item.name}</h2>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      );
+                    }
+
+                    if (item.type === 'header') {
+                      return (
+                        <motion.tr
+                          key={actualIndex}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3, delay: index * 0.02 }}
+                          className="bg-gradient-to-r from-slate-100/80 to-slate-200/80 backdrop-blur-sm border-b border-slate-300/50"
+                        >
+                          <td colSpan={7} className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-6 h-6 rounded-lg bg-slate-500 shadow-[6px_6px_12px_#cbd5e1,-6px_-6px_12px_#ffffff] flex items-center justify-center">
+                                <Layers className="w-4 h-4 text-white" />
+                              </div>
+                              <h3 className="text-lg font-medium text-slate-700">{item.name}</h3>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      );
+                    }
+
+                    // Render data rows
                     const currentValue = item.values?.[currentYear] || 0;
                     const nextValue = item.values?.[nextYear] || 0;
                     const diff = nextValue - currentValue;
