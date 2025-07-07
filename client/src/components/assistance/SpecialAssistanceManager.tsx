@@ -64,6 +64,7 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
   const [customMonths, setCustomMonths] = useState<Record<string, number>>({});
   const [customLumpSum, setCustomLumpSum] = useState<Record<string, number>>({});
+  const [globalEditMode, setGlobalEditMode] = useState(false);
 
   // Calculate assistance data
   const assistanceData = calculateSpecialAssist(
@@ -626,6 +627,17 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                 </Button>
               </div>
 
+              <Button 
+                onClick={() => setGlobalEditMode(!globalEditMode)}
+                variant={globalEditMode ? "secondary" : "primary"}
+                className={globalEditMode 
+                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                }
+              >
+                <Edit3 className="w-4 h-4 mr-2" />
+                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+              </Button>
               <Button onClick={onSave} className="bg-green-600 hover:bg-green-700">
                 <Save className="w-4 h-4 mr-2" />
                 บันทึก

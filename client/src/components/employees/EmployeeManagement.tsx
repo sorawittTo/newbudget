@@ -51,6 +51,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   const [activeSection, setActiveSection] = useState<'employees' | 'rates'>('employees');
   const [editingCell, setEditingCell] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>('');
+  const [globalEditMode, setGlobalEditMode] = useState(false);
 
   const updateEmployeeField = (index: number, field: keyof Employee, value: any) => {
     const employee = employees[index];
@@ -129,6 +130,17 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
             </div>
             
             <div className="flex flex-wrap gap-3">
+              <Button 
+                onClick={() => setGlobalEditMode(!globalEditMode)}
+                variant={globalEditMode ? "secondary" : "primary"}
+                className={globalEditMode 
+                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                }
+              >
+                <Edit3 className="w-4 h-4 mr-2" />
+                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+              </Button>
               <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
                 <Save className="w-4 h-4 mr-2" />
                 บันทึก

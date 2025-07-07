@@ -65,6 +65,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
   const [editingCell, setEditingCell] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [globalEditMode, setGlobalEditMode] = useState(false);
 
   // Calculate comprehensive metrics
   const metrics = useMemo((): BudgetMetrics => {
@@ -332,6 +333,17 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
           {/* Action Buttons */}
           <div className="flex gap-2">
+            <Button 
+              onClick={() => setGlobalEditMode(!globalEditMode)}
+              variant={globalEditMode ? "secondary" : "primary"}
+              className={globalEditMode 
+                ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                : "bg-purple-600 hover:bg-purple-700 text-white"
+              }
+            >
+              <Edit3 className="w-4 h-4 mr-2" />
+              {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+            </Button>
             <Button onClick={onSave} className="bg-green-600 hover:bg-green-700">
               <Save className="w-4 h-4 mr-2" />
               บันทึก
@@ -408,37 +420,45 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
                       {/* Current Year Value */}
                       <td className="px-6 py-4">
-                        {editingCell === `${actualIndex}-${currentYear}` ? (
+                        {editingCell === `${actualIndex}-${currentYear}` || globalEditMode ? (
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
                               className="w-full p-2 text-right bg-blue-50 border-2 border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                              value={tempValue}
-                              onChange={(e) => setTempValue(e.target.value)}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') handleCellSave(actualIndex, currentYear);
-                                if (e.key === 'Escape') handleCellCancel();
+                              value={editingCell === `${actualIndex}-${currentYear}` ? tempValue : currentValue}
+                              onChange={(e) => {
+                                if (globalEditMode) {
+                                  onUpdateBudget(actualIndex, currentYear, parseFloat(e.target.value) || 0);
+                                } else {
+                                  setTempValue(e.target.value);
+                                }
                               }}
-                              autoFocus
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter' && !globalEditMode) handleCellSave(actualIndex, currentYear);
+                                if (e.key === 'Escape' && !globalEditMode) handleCellCancel();
+                              }}
+                              autoFocus={editingCell === `${actualIndex}-${currentYear}`}
                             />
-                            <div className="flex gap-1">
-                              <Button
-                                variant="success"
-                                size="sm"
-                                onClick={() => handleCellSave(actualIndex, currentYear)}
-                                className="p-1"
-                              >
-                                <Check className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={handleCellCancel}
-                                className="p-1"
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
+                            {!globalEditMode && (
+                              <div className="flex gap-1">
+                                <Button
+                                  variant="success"
+                                  size="sm"
+                                  onClick={() => handleCellSave(actualIndex, currentYear)}
+                                  className="p-1"
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={handleCellCancel}
+                                  className="p-1"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         ) : (
                           <div
@@ -452,37 +472,45 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
                       {/* Next Year Value */}
                       <td className="px-6 py-4">
-                        {editingCell === `${actualIndex}-${nextYear}` ? (
+                        {editingCell === `${actualIndex}-${nextYear}` || globalEditMode ? (
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
                               className="w-full p-2 text-right bg-green-50 border-2 border-green-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                              value={tempValue}
-                              onChange={(e) => setTempValue(e.target.value)}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') handleCellSave(actualIndex, nextYear);
-                                if (e.key === 'Escape') handleCellCancel();
+                              value={editingCell === `${actualIndex}-${nextYear}` ? tempValue : nextValue}
+                              onChange={(e) => {
+                                if (globalEditMode) {
+                                  onUpdateBudget(actualIndex, nextYear, parseFloat(e.target.value) || 0);
+                                } else {
+                                  setTempValue(e.target.value);
+                                }
                               }}
-                              autoFocus
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter' && !globalEditMode) handleCellSave(actualIndex, nextYear);
+                                if (e.key === 'Escape' && !globalEditMode) handleCellCancel();
+                              }}
+                              autoFocus={editingCell === `${actualIndex}-${nextYear}`}
                             />
-                            <div className="flex gap-1">
-                              <Button
-                                variant="success"
-                                size="sm"
-                                onClick={() => handleCellSave(actualIndex, nextYear)}
-                                className="p-1"
-                              >
-                                <Check className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={handleCellCancel}
-                                className="p-1"
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
+                            {!globalEditMode && (
+                              <div className="flex gap-1">
+                                <Button
+                                  variant="success"
+                                  size="sm"
+                                  onClick={() => handleCellSave(actualIndex, nextYear)}
+                                  className="p-1"
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={handleCellCancel}
+                                  className="p-1"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         ) : (
                           <div

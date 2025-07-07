@@ -17,7 +17,8 @@ import {
   Target,
   TrendingUp,
   Sun,
-  Moon
+  Moon,
+  Edit3
 } from 'lucide-react';
 
 interface ModernWorkdayManagerProps {
@@ -39,6 +40,7 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
 }) => {
   const [newHoliday, setNewHoliday] = useState({ date: '', name: '' });
   const [showAddForm, setShowAddForm] = useState(false);
+  const [globalEditMode, setGlobalEditMode] = useState(false);
 
   const currentYearHolidays = holidaysData[calcYear] || [];
   const workDayCalc = calculateWorkDays(calcYear, currentYearHolidays);
@@ -120,6 +122,17 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
+              <Button 
+                onClick={() => setGlobalEditMode(!globalEditMode)}
+                variant={globalEditMode ? "secondary" : "primary"}
+                className={globalEditMode 
+                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                }
+              >
+                <Edit3 className="w-4 h-4 mr-2" />
+                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+              </Button>
               <Button onClick={onSave} className="flex items-center gap-2">
                 <Save className="w-4 h-4" />
                 บันทึก
