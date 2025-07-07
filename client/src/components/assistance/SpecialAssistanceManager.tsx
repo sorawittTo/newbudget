@@ -258,7 +258,21 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          {renderEditableValue(`${emp.id}_months`, months, emp.id)}
+                          {globalEditMode ? (
+                            <NeumorphismInput
+                              type="number"
+                              min="1"
+                              max="12"
+                              value={months}
+                              onChange={(e) => setCustomMonths(prev => ({ ...prev, [emp.id]: parseInt(e.target.value) || 12 }))}
+                              className="w-24 text-center"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                              <span className="font-bold text-blue-600 text-lg mr-2">{months}</span>
+                              <Calendar className="w-4 h-4 text-blue-500" />
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="font-bold text-green-600 text-lg">{formatCurrency(totalRent)}</div>
@@ -267,7 +281,19 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                           <div className="font-bold text-purple-600 text-lg">{formatCurrency(totalMonthlyAssist)}</div>
                         </td>
                         <td className="px-6 py-4">
-                          {renderEditableValue(`${emp.id}_lumpSum`, lumpSum, emp.id)}
+                          {globalEditMode ? (
+                            <NeumorphismInput
+                              type="number"
+                              min="0"
+                              value={lumpSum}
+                              onChange={(e) => setCustomLumpSum(prev => ({ ...prev, [emp.id]: parseFloat(e.target.value) || 0 }))}
+                              className="w-32 text-center"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                              <span className="font-bold text-blue-600 text-lg">{formatCurrency(lumpSum)}</span>
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-right bg-blue-50">
                           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-lg text-center shadow-sm">
