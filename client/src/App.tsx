@@ -11,7 +11,7 @@ import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager'
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
-import { migrateLocalStorageToDatabase, verifyMigration } from './utils/dataMigration';
+
 
 function App() {
   const {
@@ -116,32 +116,7 @@ function App() {
     }
   }, [resetAllData, showToast]);
 
-  const handleMigrateData = useCallback(async () => {
-    try {
-      showToast('กำลังย้ายข้อมูลจาก localStorage ไปยัง PostgreSQL...', 'info');
-      await migrateLocalStorageToDatabase();
-      await verifyMigration();
-      showToast('ย้ายข้อมูลสำเร็จ! ข้อมูลทั้งหมดอยู่ในฐานข้อมูลแล้ว');
-    } catch (error) {
-      console.error('Migration error:', error);
-      showToast('เกิดข้อผิดพลาดในการย้ายข้อมูล', 'error');
-    }
-  }, [showToast]);
 
-  const handleClearLocalStorage = useCallback(() => {
-    if (window.confirm('คุณต้องการลบข้อมูลทั้งหมดใน localStorage ใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
-      // Clear all localStorage data with budget system prefix
-      const keys = Object.keys(localStorage).filter(key => key.startsWith('budgetSystem_'));
-      keys.forEach(key => localStorage.removeItem(key));
-      
-      showToast(`ลบข้อมูล localStorage เรียบร้อยแล้ว (${keys.length} รายการ)`);
-      
-      // Reload the page to reset the state
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    }
-  }, [showToast]);
 
   const handleUpdateSelection = useCallback((type: string, employeeIds: string[]) => {
     switch (type) {
@@ -292,8 +267,6 @@ function App() {
             currentYear={currentYear}
             nextYear={nextYear}
             onNavigate={setActiveTab}
-            onMigrateData={handleMigrateData}
-            onClearLocalStorage={handleClearLocalStorage}
           />
         );
 
