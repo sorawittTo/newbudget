@@ -423,40 +423,63 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-[20px_20px_60px_#d1d5db,-20px_-20px_60px_#ffffff] border border-white/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200/50">
-                  <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
+              <thead className="bg-gradient-to-r from-indigo-700 to-purple-800 border-b-4 border-indigo-900 shadow-[0_10px_40px_rgba(67,56,202,0.8)]">
+                <tr className="h-20">
+                  <th className="px-4 py-4 text-left font-bold text-white tracking-wider">
                     <div className="flex items-center gap-2">
-                      <Layers className="w-4 h-4" />
-                      รหัสงบประมาณ
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <Layers className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">รหัสงบประมาณ</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
+                  <th className="px-4 py-4 text-left font-bold text-white tracking-wider">
                     <div className="flex items-center gap-2">
-                      <Layers className="w-4 h-4" />
-                      รหัสบัญชี
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <Layers className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">รหัสบัญชี</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left font-medium text-slate-600 bg-slate-50/50">
-                    รายการ
+                  <th className="px-4 py-4 text-left font-bold text-white tracking-wider">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <FileSpreadsheet className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">รายการ</span>
+                    </div>
                   </th>
-                  <th className="px-6 py-4 text-center font-medium text-slate-600 bg-slate-50/50">
+                  <th className="px-4 py-4 text-center font-bold text-white tracking-wider">
                     <div className="flex items-center justify-center gap-2">
-                      <Calculator className="w-4 h-4" />
-                      ปี {currentYear}
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <Calculator className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">ปี {currentYear}</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-center font-medium text-slate-600 bg-slate-50/50">
+                  <th className="px-4 py-4 text-center font-bold text-white tracking-wider">
                     <div className="flex items-center justify-center gap-2">
-                      <Target className="w-4 h-4" />
-                      ปี {nextYear}
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <Target className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">ปี {nextYear}</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-center font-medium text-slate-600 bg-slate-50/50">
-                    ผลต่าง
+                  <th className="px-4 py-4 text-center font-bold text-white tracking-wider">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <TrendingUp className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">ผลต่าง</span>
+                    </div>
                   </th>
-                  <th className="px-6 py-4 text-center font-medium text-slate-600 bg-slate-50/50">
-                    หมายเหตุ
+                  <th className="px-4 py-4 text-center font-bold text-white tracking-wider">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-white/25 shadow-[inset_6px_6px_12px_rgba(255,255,255,0.15),inset_-6px_-6px_12px_rgba(0,0,0,0.4)] flex items-center justify-center backdrop-blur-sm">
+                        <FileSpreadsheet className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                      <span className="text-white text-base font-extrabold drop-shadow-lg">หมายเหตุ</span>
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -474,14 +497,14 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, delay: index * 0.02 }}
-                          className="bg-gradient-to-r from-blue-200/90 to-indigo-200/90 backdrop-blur-sm border-y-4 border-blue-400/70 shadow-[0_8px_25px_rgba(59,130,246,0.3)] hover:shadow-[0_10px_30px_rgba(59,130,246,0.4)] transition-all duration-300"
+                          className="bg-gradient-to-r from-blue-200/90 to-indigo-200/90 backdrop-blur-sm border-y-2 border-blue-400/60 shadow-[0_6px_20px_rgba(59,130,246,0.25)] hover:shadow-[0_8px_25px_rgba(59,130,246,0.35)] transition-all duration-300"
                         >
-                          <td colSpan={7} className="px-8 py-8">
-                            <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[12px_12px_24px_#93c5fd,-12px_-12px_24px_#ffffff] flex items-center justify-center">
-                                <Banknote className="w-7 h-7 text-white" />
+                          <td colSpan={7} className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[8px_8px_16px_#93c5fd,-8px_-8px_16px_#ffffff] flex items-center justify-center">
+                                <Banknote className="w-5 h-5 text-white" />
                               </div>
-                              <h2 className="text-2xl font-bold text-blue-900 tracking-wide drop-shadow-sm">{item.name}</h2>
+                              <h2 className="text-lg font-bold text-blue-900 tracking-wide drop-shadow-sm">{item.name}</h2>
                             </div>
                           </td>
                         </motion.tr>
