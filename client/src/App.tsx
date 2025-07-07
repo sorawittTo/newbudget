@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBudgetData } from './hooks/useBudgetData';
-import { TabNavigation } from './components/tabs/TabNavigation';
+import { AppLayout } from './components/layout/AppLayout';
+import { ModernDashboard } from './components/dashboard/ModernDashboard';
 import { BudgetTable } from './components/budget/BudgetTable';
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
@@ -9,10 +10,7 @@ import { SpecialAssistanceManager } from './components/assistance/SpecialAssista
 import { WorkdayManager } from './components/workday/WorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
-import { Button } from './components/ui/Button';
-import { Card } from './components/ui/Card';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
-import { Save, Download, Upload, RotateCcw, FileSpreadsheet, FileText } from 'lucide-react';
 
 function App() {
   const {
@@ -51,7 +49,7 @@ function App() {
     resetAllData
   } = useBudgetData();
 
-  const [activeTab, setActiveTab] = useState('budget');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [currentYear, setCurrentYear] = useState(2568);
   const [nextYear, setNextYear] = useState(2569);
   const [calcYear, setCalcYear] = useState(2569);
@@ -256,240 +254,153 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
-  const yearOptions = Array.from({ length: 13 }, (_, i) => 2568 + i);
-
   const renderTabContent = () => {
-    const contentVariants = {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: -20 }
-    };
-
     switch (activeTab) {
+      case 'dashboard':
+        return (
+          <ModernDashboard
+            budgetData={budgetData}
+            employees={employees}
+            currentYear={currentYear}
+            nextYear={nextYear}
+            onNavigate={setActiveTab}
+          />
+        );
+
       case 'budget':
         return (
-          <motion.div
-            key="budget"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <BudgetTable
-              budgetData={budgetData}
-              currentYear={currentYear}
-              nextYear={nextYear}
-              onUpdateBudget={updateBudgetItem}
-              onUpdateNotes={updateBudgetNotes}
-              onYearChange={(current, next) => {
-                setCurrentYear(current);
-                setNextYear(next);
-              }}
-              onSave={handleSave}
-              onExport={handleExportBudget}
-            />
-          </motion.div>
+          <BudgetTable
+            budgetData={budgetData}
+            currentYear={currentYear}
+            nextYear={nextYear}
+            onUpdateBudget={updateBudgetItem}
+            onUpdateNotes={updateBudgetNotes}
+            onYearChange={(current, next) => {
+              setCurrentYear(current);
+              setNextYear(next);
+            }}
+            onSave={handleSave}
+            onExport={handleExportBudget}
+          />
         );
 
       case 'employees':
         return (
-          <motion.div
-            key="employees"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <EmployeeManagement
-              employees={employees}
-              masterRates={masterRates}
-              onUpdateEmployee={updateEmployee}
-              onAddEmployee={addEmployee}
-              onDeleteEmployee={deleteEmployee}
-              onUpdateMasterRate={updateMasterRate}
-              onSave={handleSave}
-              onExport={handleExportEmployees}
-              onImport={handleImportEmployees}
-              onReset={handleReset}
-            />
-          </motion.div>
+          <EmployeeManagement
+            employees={employees}
+            masterRates={masterRates}
+            onUpdateEmployee={updateEmployee}
+            onAddEmployee={addEmployee}
+            onDeleteEmployee={deleteEmployee}
+            onUpdateMasterRate={updateMasterRate}
+            onSave={handleSave}
+            onExport={handleExportEmployees}
+            onImport={handleImportEmployees}
+            onReset={handleReset}
+          />
         );
 
       case 'travel':
         return (
-          <motion.div
-            key="travel"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <TravelExpenseManager
-              employees={employees}
-              masterRates={masterRates}
-              calcYear={calcYear}
-              selectedEmployees={{
-                travel: selectedTravelEmployees,
-                familyVisit: selectedFamilyVisitEmployees,
-                companyTrip: selectedCompanyTripEmployees,
-                managerRotation: selectedManagerRotationEmployees
-              }}
-              onYearChange={setCalcYear}
-              onUpdateEmployee={updateEmployee}
-              onUpdateSelection={handleUpdateSelection}
-              onSave={handleSave}
-            />
-          </motion.div>
+          <TravelExpenseManager
+            employees={employees}
+            masterRates={masterRates}
+            calcYear={calcYear}
+            selectedEmployees={{
+              travel: selectedTravelEmployees,
+              familyVisit: selectedFamilyVisitEmployees,
+              companyTrip: selectedCompanyTripEmployees,
+              managerRotation: selectedManagerRotationEmployees
+            }}
+            onYearChange={setCalcYear}
+            onUpdateEmployee={updateEmployee}
+            onUpdateSelection={handleUpdateSelection}
+            onSave={handleSave}
+          />
         );
 
       case 'assistance':
         return (
-          <motion.div
-            key="assistance"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <SpecialAssistanceManager
-              employees={employees}
-              masterRates={masterRates}
-              calcYear={calcYear}
-              selectedEmployeeIds={selectedSpecialAssistEmployees}
-              specialAssist1Data={getSpecialAssist1DataForYear(calcYear)}
-              overtimeData={getOvertimeDataForYear(calcYear)}
-              holidaysData={holidaysData}
-              onYearChange={setCalcYear}
-              onUpdateEmployee={updateEmployee}
-              onUpdateSelection={(ids) => handleUpdateSelection('special-assist', ids)}
-              onUpdateSpecialAssist1Item={updateSpecialAssist1Item}
-              onUpdateSpecialAssist1Notes={updateSpecialAssist1Notes}
-              onUpdateOvertimeData={updateOvertimeData}
-              onSave={handleSave}
-            />
-          </motion.div>
+          <SpecialAssistanceManager
+            employees={employees}
+            masterRates={masterRates}
+            calcYear={calcYear}
+            selectedEmployeeIds={selectedSpecialAssistEmployees}
+            specialAssist1Data={getSpecialAssist1DataForYear(calcYear)}
+            overtimeData={getOvertimeDataForYear(calcYear)}
+            holidaysData={holidaysData}
+            onYearChange={setCalcYear}
+            onUpdateEmployee={updateEmployee}
+            onUpdateSelection={(ids) => handleUpdateSelection('special-assist', ids)}
+            onUpdateSpecialAssist1Item={updateSpecialAssist1Item}
+            onUpdateSpecialAssist1Notes={updateSpecialAssist1Notes}
+            onUpdateOvertimeData={updateOvertimeData}
+            onSave={handleSave}
+          />
         );
 
-      case 'workday':
+      case 'workdays':
         return (
-          <motion.div
-            key="workday"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <WorkdayManager
-              calcYear={calcYear}
-              holidaysData={holidaysData}
-              onYearChange={setCalcYear}
-              onAddHoliday={addHoliday}
-              onDeleteHoliday={deleteHoliday}
-              onSave={handleSave}
-            />
-          </motion.div>
+          <WorkdayManager
+            calcYear={calcYear}
+            holidaysData={holidaysData}
+            onYearChange={setCalcYear}
+            onAddHoliday={addHoliday}
+            onDeleteHoliday={deleteHoliday}
+            onSave={handleSave}
+          />
+        );
+
+      case 'reports':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">รายงานสรุป</h2>
+            <p className="text-gray-600">ระบบรายงานจะพัฒนาต่อไป</p>
+          </div>
         );
 
       default:
         return (
-          <motion.div
-            key="placeholder"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <Card>
-              <div className="p-12 text-center">
-                <p className="text-gray-500 text-lg">ฟีเจอร์นี้อยู่ระหว่างการพัฒนา</p>
-                <p className="text-gray-400 mt-2">กรุณาเลือกแท็บอื่นเพื่อใช้งาน</p>
-              </div>
-            </Card>
-          </motion.div>
+          <ModernDashboard
+            budgetData={budgetData}
+            employees={employees}
+            currentYear={currentYear}
+            nextYear={nextYear}
+            onNavigate={setActiveTab}
+          />
         );
     }
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8"
-        >
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-blue-100">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3">
-              ระบบจัดทำงบประมาณประจำปี
-            </h1>
-            <p className="text-gray-600 text-lg">
-              ระบบจัดการและคำนวณงบประมาณอย่างมีประสิทธิภาพ
-            </p>
-            
-            {/* Quick Actions */}
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
-              <Button onClick={handleSave} size="sm" className="bg-green-600 hover:bg-green-700">
-                <Save className="w-4 h-4 mr-2" />
-                บันทึกทั้งหมด
-              </Button>
-              <Button onClick={handleExportBudget} variant="secondary" size="sm">
-                <FileSpreadsheet className="w-4 h-4 mr-2" />
-                ส่งออกงบประมาณ
-              </Button>
-              <Button onClick={handleExportEmployees} variant="secondary" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                ส่งออกพนักงาน
-              </Button>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleImportEmployees}
-                  className="hidden"
-                  id="import-file"
-                />
-                <Button
-                  onClick={() => document.getElementById('import-file')?.click()}
-                  variant="secondary"
-                  size="sm"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  นำเข้าพนักงาน
-                </Button>
-              </div>
-              <Button onClick={handleReset} variant="danger" size="sm">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                รีเซ็ตระบบ
-              </Button>
-              {/* ปุ่มใหม่: ส่งออกข้อมูล HTML */}
-              <Button onClick={handleExportHtml} variant="secondary" size="sm">
-                <FileText className="w-4 h-4 mr-2" />
-                ส่งออกข้อมูล HTML
-              </Button>
-            </div>
-          </div>
-        </motion.header>
+    <>
+      <AppLayout
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onSave={handleSave}
+        onExport={handleExportBudget}
+        onImport={() => document.getElementById('import-file')?.click()}
+        onRefresh={() => window.location.reload()}
+      >
+        {renderTabContent()}
+      </AppLayout>
 
-        {/* Tab Navigation */}
-        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {/* Tab Content */}
-        <AnimatePresence mode="wait">
-          {renderTabContent()}
-        </AnimatePresence>
-      </div>
+      {/* Hidden file input for employee import */}
+      <input
+        type="file"
+        accept=".xlsx,.xls"
+        onChange={handleImportEmployees}
+        className="hidden"
+        id="import-file"
+      />
 
       {/* Toast Notifications */}
       <Toast
@@ -498,7 +409,7 @@ function App() {
         type={toast.type}
         onClose={hideToast}
       />
-    </div>
+    </>
   );
 }
 
