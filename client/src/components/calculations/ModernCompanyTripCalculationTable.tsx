@@ -104,20 +104,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
             <p className="text-gray-600">คำนวณค่าใช้จ่ายการเดินทางร่วมงานและที่พัก</p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button
-            onClick={() => setGlobalEditMode(!globalEditMode)}
-            variant={globalEditMode ? "default" : "outline"}
-            className="neumorphism-button"
-          >
-            <Edit3 className="w-4 h-4 mr-2" />
-            {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-          </Button>
-          <Button onClick={onSave} className="neumorphism-button">
-            <Save className="w-4 h-4 mr-2" />
-            บันทึกข้อมูล
-          </Button>
-        </div>
+
       </div>
 
       {/* Statistics Cards */}

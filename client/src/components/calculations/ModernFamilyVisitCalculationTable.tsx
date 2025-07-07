@@ -151,25 +151,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
           </div>
           
           <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setGlobalEditMode(!globalEditMode)}
-              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                globalEditMode 
-                  ? 'bg-orange-500 text-white shadow-[inset_8px_8px_16px_#d97706,inset_-8px_-8px_16px_#fbbf24] hover:shadow-[inset_6px_6px_12px_#d97706,inset_-6px_-6px_12px_#fbbf24]' 
-                  : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
-              }`}
-            >
-              <Edit3 className="w-4 h-4 mr-2 inline" />
-              {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-            </button>
-            
-            <button
-              onClick={onSave}
-              className="px-6 py-3 rounded-xl font-medium bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300"
-            >
-              <Save className="w-4 h-4 mr-2 inline" />
-              บันทึก
-            </button>
+
           </div>
         </div>
         

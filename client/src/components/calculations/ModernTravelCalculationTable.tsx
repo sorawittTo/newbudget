@@ -244,20 +244,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                 <p className="text-gray-600">คำนวณค่าใช้จ่ายในการเดินทางรับของที่ระลึก</p>
               </div>
             </div>
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                onClick={() => setGlobalEditMode(!globalEditMode)}
-                className="flex items-center gap-2"
-              >
-                {globalEditMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-              </Button>
-              <Button onClick={onSave} className="flex items-center gap-2">
-                <Save className="w-4 h-4" />
-                บันทึก
-              </Button>
-            </div>
+
           </div>
 
           {/* Statistics Grid */}
