@@ -370,13 +370,13 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
             <table className="w-full text-sm">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-3 text-left">รายการ</th>
-                  <th className="px-4 py-3 text-center">ครั้งต่อปี</th>
-                  <th className="px-4 py-3 text-center">จำนวนวัน</th>
-                  <th className="px-4 py-3 text-center">จำนวนคน</th>
-                  <th className="px-4 py-3 text-right">อัตราต่อวัน</th>
-                  <th className="px-4 py-3 text-right">รวม</th>
-                  <th className="px-4 py-3 text-center">จัดการ</th>
+                  <th className="px-4 py-3 text-left w-80">รายการ</th>
+                  <th className="px-4 py-3 text-center w-24">ครั้งต่อปี</th>
+                  <th className="px-4 py-3 text-center w-24">จำนวนวัน</th>
+                  <th className="px-4 py-3 text-center w-24">จำนวนคน</th>
+                  <th className="px-4 py-3 text-right w-32">อัตราต่อวัน</th>
+                  <th className="px-4 py-3 text-right w-32">รวม</th>
+                  <th className="px-4 py-3 text-center w-20">จัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -391,10 +391,11 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                             type="text"
                             value={item.item}
                             onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
-                            className="w-full text-center"
+                            className="w-full text-left px-4"
+                            placeholder="ระบุรายการ..."
                           />
                         ) : (
-                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
+                          <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-left" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
                             <span className="font-medium text-slate-700">{item.item}</span>
                           </div>
                         )}
@@ -403,9 +404,10 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                         {globalEditMode ? (
                           <NeumorphismInput
                             type="number"
+                            min="0"
                             value={item.timesPerYear}
                             onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
-                            className="text-center"
+                            className="w-20 text-center"
                           />
                         ) : (
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
@@ -417,9 +419,10 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                         {globalEditMode ? (
                           <NeumorphismInput
                             type="number"
+                            min="0"
                             value={item.days}
                             onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
-                            className="text-center"
+                            className="w-20 text-center"
                           />
                         ) : (
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
@@ -431,9 +434,10 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                         {globalEditMode ? (
                           <NeumorphismInput
                             type="number"
+                            min="0"
                             value={item.people}
                             onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
-                            className="text-center"
+                            className="w-20 text-center"
                           />
                         ) : (
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-center" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
@@ -445,9 +449,11 @@ export const SpecialAssistanceManager: React.FC<SpecialAssistanceManagerProps> =
                         {globalEditMode ? (
                           <NeumorphismInput
                             type="number"
+                            min="0"
+                            step="0.01"
                             value={item.rate}
                             onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
-                            className="text-right"
+                            className="w-28 text-right"
                           />
                         ) : (
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 text-right" style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
