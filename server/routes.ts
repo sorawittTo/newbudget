@@ -22,12 +22,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (Array.isArray(data)) {
         const employees = [];
         for (const empData of data) {
-          if (empData.id) {
-            // Update existing employee
-            const existingEmp = await storage.getEmployee(parseInt(empData.id));
-            if (existingEmp) {
+          try {
+            // Check if employeeId already exists
+            const allEmployees = await storage.getEmployees();
+            const existing = allEmployees.find(emp => emp.employeeId === empData.employeeId);
+            
+            if (existing) {
+              // Update existing employee
               const validatedData = insertEmployeeSchema.partial().parse(empData);
-              const updated = await storage.updateEmployee(existingEmp.id, validatedData);
+              const updated = await storage.updateEmployee(existing.id, validatedData);
               employees.push(updated);
             } else {
               // Create new employee
@@ -35,11 +38,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               const created = await storage.createEmployee(validatedData);
               employees.push(created);
             }
-          } else {
-            // Create new employee
-            const validatedData = insertEmployeeSchema.parse(empData);
-            const created = await storage.createEmployee(validatedData);
-            employees.push(created);
+          } catch (singleError) {
+            console.error(`Error processing employee ${empData.name}:`, singleError);
+            // Continue with other employees
           }
         }
         res.status(201).json(employees);
@@ -96,13 +97,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (Array.isArray(data)) {
         const rates = [];
         for (const rateData of data) {
-          if (rateData.id) {
-            // Update existing rate
+          try {
+            // Check if level already exists
             const existingRates = await storage.getMasterRates();
-            const found = existingRates.find(rate => rate.id === parseInt(rateData.id));
-            if (found) {
+            const existing = existingRates.find(rate => rate.level === rateData.level);
+            
+            if (existing) {
+              // Update existing rate
               const validatedData = insertMasterRateSchema.partial().parse(rateData);
-              const updated = await storage.updateMasterRate(found.id, validatedData);
+              const updated = await storage.updateMasterRate(existing.id, validatedData);
               rates.push(updated);
             } else {
               // Create new rate
@@ -110,11 +113,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               const created = await storage.createMasterRate(validatedData);
               rates.push(created);
             }
-          } else {
-            // Create new rate
-            const validatedData = insertMasterRateSchema.parse(rateData);
-            const created = await storage.createMasterRate(validatedData);
-            rates.push(created);
+          } catch (singleError) {
+            console.error(`Error processing rate for level ${rateData.level}:`, singleError);
+            // Continue with other rates
           }
         }
         res.status(201).json(rates);
