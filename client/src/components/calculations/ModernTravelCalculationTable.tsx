@@ -58,7 +58,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   const [customSettings, setCustomSettings] = useState({
     hotelNights: 2,
     perDiemDays: 3,
-    showDetails: true,
+    showDetails: false,
     autoCalculate: true
   });
   const [selectedEmployeeForEdit, setSelectedEmployeeForEdit] = useState<string | null>(null);
@@ -275,7 +275,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
           </div>
 
           {/* Settings Panel */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">ปีคำนวณ</label>
               <NeumorphismSelect
@@ -308,23 +308,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                 onChange={(e) => handleSettingChange('perDiemDays', parseInt(e.target.value) || 1)}
                 className="text-center"
               />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">แสดงรายละเอียด</label>
-              <button
-                onClick={() => handleSettingChange('showDetails', !customSettings.showDetails)}
-                className={`w-full p-3 rounded-2xl transition-all duration-300 ${
-                  customSettings.showDetails ? 'text-blue-600' : 'text-gray-600'
-                }`}
-                style={{
-                  boxShadow: customSettings.showDetails
-                    ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff'
-                    : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-                  backgroundColor: '#f9fafb'
-                }}
-              >
-                {customSettings.showDetails ? 'เปิด' : 'ปิด'}
-              </button>
             </div>
           </div>
         </div>
