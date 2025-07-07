@@ -261,11 +261,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'ชาย')}
-                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
+                            className={`p-3 rounded-2xl transition-all duration-300 ${
                               emp.gender === 'ชาย' 
-                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 shadow-md' 
-                                : 'border-gray-300 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50'
+                                ? 'bg-gray-100 text-blue-600 shadow-inner' 
+                                : 'bg-gray-100 text-gray-400 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:text-blue-500'
                             }`}
+                            style={{
+                              boxShadow: emp.gender === 'ชาย' 
+                                ? 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+                                : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff'
+                            }}
                             title="ชาย"
                           >
                             <User className="w-5 h-5" />
@@ -273,11 +278,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'หญิง')}
-                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
+                            className={`p-3 rounded-2xl transition-all duration-300 ${
                               emp.gender === 'หญิง' 
-                                ? 'border-pink-500 bg-gradient-to-r from-pink-50 to-pink-100 text-pink-700 shadow-md' 
-                                : 'border-gray-300 bg-white text-gray-500 hover:border-pink-300 hover:bg-pink-50'
+                                ? 'bg-gray-100 text-pink-600 shadow-inner' 
+                                : 'bg-gray-100 text-gray-400 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:text-pink-500'
                             }`}
+                            style={{
+                              boxShadow: emp.gender === 'หญิง' 
+                                ? 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+                                : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff'
+                            }}
                             title="หญิง"
                           >
                             <Crown className="w-5 h-5" />
@@ -308,11 +318,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'มีสิทธิ์')}
-                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
+                            className={`p-3 rounded-2xl transition-all duration-300 ${
                               (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
-                                ? 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 text-green-700 shadow-md' 
-                                : 'border-gray-300 bg-white text-gray-500 hover:border-green-300 hover:bg-green-50'
+                                ? 'bg-gray-100 text-green-600 shadow-inner' 
+                                : 'bg-gray-100 text-gray-400 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:text-green-500'
                             }`}
+                            style={{
+                              boxShadow: (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
+                                ? 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+                                : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff'
+                            }}
                             title="มีสิทธิ์"
                           >
                             <ShieldCheck className="w-5 h-5" />
@@ -320,11 +335,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'หมดสิทธิ์')}
-                            className={`p-2 rounded-lg border-2 transition-all duration-200 ${
+                            className={`p-3 rounded-2xl transition-all duration-300 ${
                               (emp as any).status === 'หมดสิทธิ์'
-                                ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-md' 
-                                : 'border-gray-300 bg-white text-gray-500 hover:border-red-300 hover:bg-red-50'
+                                ? 'bg-gray-100 text-red-600 shadow-inner' 
+                                : 'bg-gray-100 text-gray-400 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:text-red-500'
                             }`}
+                            style={{
+                              boxShadow: (emp as any).status === 'หมดสิทธิ์'
+                                ? 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+                                : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff'
+                            }}
                             title="หมดสิทธิ์"
                           >
                             <XCircle className="w-5 h-5" />
