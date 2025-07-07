@@ -239,8 +239,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                 <Car className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">คำนวณค่าเดินทาง</h2>
-                <p className="text-gray-600">ระบบคำนวณค่าใช้จ่ายในการเดินทางแบบครบวงจร</p>
+                <h2 className="text-2xl font-bold text-gray-900">ค่าเดินทางรับของที่ระลึก</h2>
+                <p className="text-gray-600">คำนวณค่าใช้จ่ายในการเดินทางรับของที่ระลึก</p>
               </div>
             </div>
             <div className="flex gap-3">
