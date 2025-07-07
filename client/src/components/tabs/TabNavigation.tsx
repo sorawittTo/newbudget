@@ -56,26 +56,50 @@ const tabs: Tab[] = [
 export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
   return (
     <div className="mb-8">
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-        <nav className="flex flex-wrap" aria-label="Tabs">
+      <div className="bg-gray-100 rounded-3xl p-4" style={{
+        boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff'
+      }}>
+        <nav className="flex flex-wrap gap-3" aria-label="Tabs">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`relative flex-1 min-w-0 py-6 px-4 text-center transition-all duration-300 group ${
+              className={`relative flex-1 min-w-0 py-6 px-4 text-center transition-all duration-300 group rounded-2xl ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  ? 'text-blue-600'
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
+              style={{
+                boxShadow: activeTab === tab.id
+                  ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff'
+                  : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+                backgroundColor: '#f9fafb'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab.id) {
+                  e.currentTarget.style.boxShadow = '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab.id) {
+                  e.currentTarget.style.boxShadow = '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff';
+                }
+              }}
             >
               <div className="flex flex-col items-center space-y-2">
-                <div className={`p-2 rounded-lg transition-colors ${
+                <div className={`p-3 rounded-2xl transition-all duration-300 ${
                   activeTab === tab.id 
-                    ? 'bg-white/20' 
-                    : 'bg-gray-100 group-hover:bg-blue-100'
-                }`}>
+                    ? 'text-blue-600' 
+                    : 'text-gray-500 group-hover:text-blue-500'
+                }`}
+                style={{
+                  boxShadow: activeTab === tab.id
+                    ? 'inset 4px 4px 8px #d1d5db, inset -4px -4px 8px #ffffff'
+                    : '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff',
+                  backgroundColor: '#f9fafb'
+                }}>
                   {React.cloneElement(tab.icon, {
-                    className: `w-5 h-5 ${activeTab === tab.id ? 'text-white' : 'text-gray-600 group-hover:text-blue-600'}`
+                    className: `w-5 h-5 ${activeTab === tab.id ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`
                   })}
                 </div>
                 <div>

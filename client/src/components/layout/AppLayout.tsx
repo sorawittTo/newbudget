@@ -170,11 +170,17 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             <motion.button
               key={item.id}
               onClick={() => onTabChange(item.id)}
-              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group relative overflow-hidden ${
+              className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
                 activeTab === item.id 
-                  ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg` 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? `text-blue-600` 
+                  : 'text-gray-700 hover:text-blue-600'
               }`}
+              style={{
+                boxShadow: activeTab === item.id 
+                  ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff'
+                  : '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+                backgroundColor: '#f9fafb'
+              }}
               whileHover={{ scale: sidebarCollapsed ? 1 : 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -188,7 +194,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 />
               )}
               
-              <div className={`${activeTab === item.id ? 'text-white' : item.color} transition-colors`}>
+              <div className={`${activeTab === item.id ? 'text-blue-600' : item.color} transition-colors`}>
                 {item.icon}
               </div>
               
@@ -200,7 +206,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   transition={{ duration: 0.2 }}
                 >
                   <div className="font-medium">{item.label}</div>
-                  <div className={`text-xs ${activeTab === item.id ? 'text-white/80' : 'text-gray-500'}`}>
+                  <div className={`text-xs ${activeTab === item.id ? 'text-blue-500' : 'text-gray-500'}`}>
                     {item.description}
                   </div>
                 </motion.div>
@@ -271,7 +277,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   placeholder="ค้นหา..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
+                  className="pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-2xl focus:outline-none transition-all duration-300 w-64 text-gray-900"
+                  style={{
+                    boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+                  }}
                 />
               </div>
 

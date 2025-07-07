@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { NeumorphismInput } from '../ui/NeumorphismInput';
+import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { 
   Plus, 
   Trash2, 
@@ -239,18 +241,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   employees.map((emp, index) => (
                     <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="text"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={emp.id}
                           onChange={(e) => updateEmployeeField(index, 'id', e.target.value)}
                           placeholder="รหัสพนักงาน"
                         />
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="text"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={emp.name}
                           onChange={(e) => updateEmployeeField(index, 'name', e.target.value)}
                           placeholder="ชื่อ-สกุล"
@@ -295,23 +295,22 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </div>
                       </td>
                       <td className="p-3">
-                        <input
+                        <NeumorphismInput
                           type="number"
-                          className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={emp.startYear}
                           onChange={(e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)}
+                          className="text-center"
                         />
                       </td>
                       <td className="p-3">
-                        <select
-                          className="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        <NeumorphismSelect
                           value={emp.level}
                           onChange={(e) => updateEmployeeField(index, 'level', e.target.value)}
                         >
                           {levelOptions.map(level => (
                             <option key={level} value={level}>ระดับ {level}</option>
                           ))}
-                        </select>
+                        </NeumorphismSelect>
                       </td>
                       <td className="p-3">
                         <div className="flex justify-center gap-2">
