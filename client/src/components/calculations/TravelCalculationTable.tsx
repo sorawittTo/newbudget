@@ -25,7 +25,7 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
   const [editingValues, setEditingValues] = useState<Record<string, any>>({});
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
   const [currentCalcYear, setCurrentCalcYear] = useState(calcYear);
-  const [customDays, setCustomDays] = useState({ hotelNights: 2, perDiemDays: 3 });
+  const [customDays, setCustomDays] = useState({ hotelNights: 2, perDiemDays: 3, workDays: 245 });
 
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
   const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, currentCalcYear);
@@ -69,6 +69,9 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
 
   const renderEditableDays = (field: string, currentValue: number, label: string) => {
     const isEditing = editMode[field];
+    const isWorkDays = field === 'workDays';
+    const inputWidth = isWorkDays ? 'w-20' : 'w-16';
+    const maxValue = isWorkDays ? 365 : 10;
     
     if (isEditing) {
       return (
@@ -76,8 +79,8 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
           <input
             type="number"
             min="1"
-            max="10"
-            className="w-16 p-2 text-center border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+            max={maxValue}
+            className={`${inputWidth} p-2 text-center border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500`}
             value={editingValues[field] || currentValue}
             onChange={(e) => setEditingValues(prev => ({ ...prev, [field]: parseInt(e.target.value) || 0 }))}
             autoFocus
@@ -122,7 +125,7 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
       <div className="p-6 border-b border-gray-200">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-gray-900">
-            สรุปค่าใช้จ่ายเดินทางเพื่อรับของที่ระลึก
+            สรุปค่าใช้จ่ายการเดินทาง
           </h3>
           <div className="flex items-center gap-4">
             <Button
@@ -237,9 +240,9 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
         <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
           <h5 className="font-semibold text-yellow-800 mb-4 flex items-center">
             <Edit3 className="w-4 h-4 mr-2" />
-            จำนวนวัน/คืน (ใช้สำหรับทุกคน - แก้ไขได้)
+            ตั้งค่าการคำนวณ (แก้ไขได้)
           </h5>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-4 rounded-lg border border-yellow-300">
               <label className="text-sm font-medium text-yellow-700 mb-2 block">จำนวนคืนที่พัก</label>
               <div className="flex items-center gap-3">
@@ -255,6 +258,17 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
               <label className="text-sm font-medium text-yellow-700 mb-2 block">จำนวนวันเบี้ยเลี้ยง</label>
               <div className="flex items-center gap-3">
                 {renderEditableDays('perDiemDays', customDays.perDiemDays, 'จำนวนวัน')}
+                <span className="text-sm text-yellow-700 font-medium">วัน</span>
+              </div>
+              <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
+                <Edit3 className="w-3 h-3" />
+                คลิกเพื่อแก้ไข
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-yellow-300">
+              <label className="text-sm font-medium text-yellow-700 mb-2 block">วันทำการ/ปี</label>
+              <div className="flex items-center gap-3">
+                {renderEditableDays('workDays', customDays.workDays, 'วันทำการ')}
                 <span className="text-sm text-yellow-700 font-medium">วัน</span>
               </div>
               <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
