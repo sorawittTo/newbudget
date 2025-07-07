@@ -12,7 +12,7 @@ import { Toast } from './components/ui/Toast';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
-import { Save, Download, Upload, RotateCcw, FileSpreadsheet, Settings } from 'lucide-react';
+import { Save, Download, Upload, RotateCcw, FileSpreadsheet, Settings, FileText } from 'lucide-react';
 
 function App() {
   const {
@@ -142,6 +142,42 @@ function App() {
     setSelectedCompanyTripEmployees,
     setSelectedManagerRotationEmployees
   ]);
+
+  // เพิ่มฟังก์ชัน export HTML
+  const handleExportHtml = () => {
+    const html = `
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>สำรองข้อมูลงบประมาณ</title>
+</head>
+<body>
+  <h1>สำรองข้อมูลระบบงบประมาณ (Exported)</h1>
+  <h2>งบประมาณ</h2>
+  <pre>${JSON.stringify(budgetData, null, 2)}</pre>
+  <h2>พนักงาน</h2>
+  <pre>${JSON.stringify(employees, null, 2)}</pre>
+  <h2>Master Rates</h2>
+  <pre>${JSON.stringify(masterRates, null, 2)}</pre>
+  <h2>Special Assistance</h2>
+  <pre>${JSON.stringify(specialAssist1DataByYear, null, 2)}</pre>
+  <h2>Overtime</h2>
+  <pre>${JSON.stringify(overtimeDataByYear, null, 2)}</pre>
+  <h2>วันหยุด</h2>
+  <pre>${JSON.stringify(holidaysData, null, 2)}</pre>
+</body>
+</html>
+    `.trim();
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'budget-export.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const yearOptions = Array.from({ length: 13 }, (_, i) => 2568 + i);
 
@@ -359,6 +395,11 @@ function App() {
               <Button onClick={handleReset} variant="danger" size="sm">
                 <RotateCcw className="w-4 h-4 mr-2" />
                 รีเซ็ตระบบ
+              </Button>
+              {/* ปุ่มใหม่: ส่งออกข้อมูล HTML */}
+              <Button onClick={handleExportHtml} variant="info" size="sm">
+                <FileText className="w-4 h-4 mr-2" />
+                ส่งออกข้อมูล HTML
               </Button>
             </div>
           </div>
