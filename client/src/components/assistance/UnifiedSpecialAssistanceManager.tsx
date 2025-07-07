@@ -1,0 +1,630 @@
+import React, { useState } from 'react';
+import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../../types';
+import { NeumorphismInput } from '../ui/NeumorphismInput';
+import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
+import { 
+  Heart, 
+  Banknote, 
+  Clock, 
+  Save, 
+  Edit3, 
+  Check, 
+  ChevronLeft, 
+  ChevronRight, 
+  Plus, 
+  Trash2, 
+  Calculator,
+  FileText,
+  Info
+} from 'lucide-react';
+
+interface UnifiedSpecialAssistanceManagerProps {
+  employees: Employee[];
+  masterRates: MasterRates;
+  calcYear: number;
+  selectedEmployeeIds: string[];
+  specialAssist1Data: SpecialAssistData;
+  overtimeData: OvertimeData;
+  holidaysData: Record<number, Holiday[]>;
+  onYearChange: (year: number) => void;
+  onUpdateEmployee: (index: number, employee: Employee) => void;
+  onUpdateSelection: (employeeIds: string[]) => void;
+  onUpdateSpecialAssist1Item: (year: number, index: number, key: string, value: any) => void;
+  onUpdateSpecialAssist1Notes: (year: number, notes: string) => void;
+  onUpdateOvertimeData: (year: number, field: string, indexOrValue: any, key?: string, value?: any) => void;
+  onSave: () => void;
+}
+
+export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceManagerProps> = ({
+  employees,
+  masterRates,
+  calcYear,
+  selectedEmployeeIds,
+  specialAssist1Data,
+  overtimeData,
+  holidaysData,
+  onYearChange,
+  onUpdateEmployee,
+  onUpdateSelection,
+  onUpdateSpecialAssist1Item,
+  onUpdateSpecialAssist1Notes,
+  onUpdateOvertimeData,
+  onSave
+}) => {
+  const [activeTab, setActiveTab] = useState<'assistance' | 'special' | 'overtime'>('assistance');
+  const [editMode, setEditMode] = useState(false);
+  const [customMonths, setCustomMonths] = useState<Record<string, number>>({});
+  const [customLumpSum, setCustomLumpSum] = useState<Record<string, number>>({});
+
+  const yearCE = calcYear - 543;
+  const holidays = holidaysData[yearCE] || [];
+
+  // Helper functions for assistance tab
+  const getMonthsForEmployee = (empId: string) => customMonths[empId] || 12;
+  const getLumpSumForEmployee = (empId: string) => customLumpSum[empId] || 0;
+  const handleMonthsChange = (empId: string, months: number) => {
+    setCustomMonths(prev => ({ ...prev, [empId]: months }));
+  };
+  const handleLumpSumChange = (empId: string, amount: number) => {
+    setCustomLumpSum(prev => ({ ...prev, [empId]: amount }));
+  };
+
+  // Filter eligible employees
+  const eligibleEmployees = employees.filter(emp => 
+    selectedEmployeeIds.includes(emp.id) && (emp as any).status === 'มีสิทธิ์'
+  );
+
+  const tabs = [
+    { id: 'assistance', label: 'เงินช่วยเหลืออื่นๆ', icon: <Heart className="w-5 h-5" />, count: eligibleEmployees.length },
+    { id: 'special', label: 'เงินช่วยเหลือพิเศษ', icon: <Banknote className="w-5 h-5" />, count: specialAssist1Data.items.length },
+    { id: 'overtime', label: 'ค่าล่วงเวลาวันหยุด', icon: <Clock className="w-5 h-5" />, count: overtimeData.items.length }
+  ];
+
+  const handleSave = () => {
+    setEditMode(false);
+    onSave();
+  };
+
+  const toggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const renderAssistanceTab = () => (
+    <div className="space-y-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <h3 className="text-lg font-bold text-slate-800">รายชื่อพนักงานที่มีสิทธิ์</h3>
+          <p className="text-sm text-slate-600 mt-1">ข้อมูลพนักงานสำหรับเงินช่วยเหลืออื่นๆ</p>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          {eligibleEmployees.map((emp) => {
+            const rates = getRatesForEmployee(emp, masterRates);
+            const months = getMonthsForEmployee(emp.id);
+            const lumpSum = getLumpSumForEmployee(emp.id) || rates.lumpSum;
+
+            return (
+              <div key={emp.id} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="col-span-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold">
+                        {emp.id.slice(-2)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-800">{emp.name}</p>
+                        <p className="text-sm text-slate-600">รหัส: {emp.id} | ระดับ: {emp.level}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">จำนวนเดือน</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="number"
+                        min="1"
+                        max="12"
+                        value={months}
+                        onChange={(e) => handleMonthsChange(emp.id, parseInt(e.target.value) || 1)}
+                        className="w-full text-center"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                        <span className="font-medium text-slate-700">{months}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">เงินก้อน (บาท)</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="number"
+                        min="0"
+                        step="100"
+                        value={lumpSum}
+                        onChange={(e) => handleLumpSumChange(emp.id, parseFloat(e.target.value) || 0)}
+                        className="w-full text-right"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                        <span className="font-medium text-slate-700">{formatCurrency(lumpSum)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-slate-200/50">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-slate-600">ค่าเช่าบ้าน: {formatCurrency(rates.rent)}/เดือน</span>
+                    <span className="text-slate-600">เงินช่วยเหลือ: {formatCurrency(rates.monthlyAssist)}/เดือน</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSpecialTab = () => (
+    <div className="space-y-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-slate-800">รายการเงินช่วยเหลือพิเศษ</h3>
+            {editMode && (
+              <button
+                onClick={() => {
+                  const newIndex = specialAssist1Data.items.length;
+                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'item', 'รายการใหม่');
+                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'timesPerYear', 1);
+                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'days', 1);
+                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'people', 1);
+                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'rate', 0);
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                เพิ่มรายการ
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="p-6 space-y-4">
+          {specialAssist1Data.items.map((item, index) => (
+            <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="text"
+                      value={item.item}
+                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.item}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง/ปี</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.timesPerYear}
+                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.timesPerYear}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.days}
+                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.days}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.people}
+                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.people}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา (บาท)</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.rate}
+                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{formatCurrency(item.rate)}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
+                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                      <span className="font-bold text-emerald-700">{formatCurrency(item.timesPerYear * item.days * item.people * item.rate)}</span>
+                    </div>
+                  </div>
+                  {editMode && (
+                    <button
+                      onClick={() => {
+                        if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
+                          const items = specialAssist1Data.items.filter((_, i) => i !== index);
+                          items.forEach((item, i) => {
+                            Object.entries(item).forEach(([key, value]) => {
+                              onUpdateSpecialAssist1Item(calcYear, i, key, value);
+                            });
+                          });
+                        }
+                      }}
+                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <div className="flex items-center gap-3">
+            <FileText className="w-5 h-5 text-slate-600" />
+            <h3 className="text-lg font-bold text-slate-800">หมายเหตุ</h3>
+          </div>
+        </div>
+        <div className="p-6">
+          {editMode ? (
+            <textarea
+              value={specialAssist1Data.notes}
+              onChange={(e) => onUpdateSpecialAssist1Notes(calcYear, e.target.value)}
+              className="w-full h-32 p-4 bg-slate-50/80 border-0 rounded-xl shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:ring-0 text-slate-700 placeholder-slate-500 resize-none"
+              placeholder="เพิ่มหมายเหตุเพิ่มเติม..."
+            />
+          ) : (
+            <div className="min-h-32 p-4 bg-slate-50/80 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+              <span className="text-slate-700">{specialAssist1Data.notes || 'ไม่มีหมายเหตุ'}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderOvertimeTab = () => (
+    <div className="space-y-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 mb-2">เงินเดือนอ้างอิง</h3>
+            <p className="text-sm text-slate-600">เงินเดือนที่ใช้ในการคำนวณค่าล่วงเวลา</p>
+          </div>
+          <div className="w-64">
+            {editMode ? (
+              <NeumorphismInput
+                type="number"
+                value={overtimeData.salary}
+                onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
+                className="w-full text-lg font-bold text-right"
+                placeholder="0"
+              />
+            ) : (
+              <div className="h-12 flex items-center justify-center bg-slate-100 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                <span className="text-lg font-bold text-slate-700">{formatCurrency(overtimeData.salary)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-slate-800">รายการค่าล่วงเวลา</h3>
+            {editMode && (
+              <button
+                onClick={() => {
+                  const newIndex = (overtimeData.items || []).length;
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', 'รายการใหม่');
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'instances', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 30 / 8 * 2);
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                เพิ่มรายการ
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="p-6 space-y-4">
+          {(overtimeData.items || []).map((item, index) => (
+            <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
+              <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="text"
+                      value={item.item}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.item}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.instances}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.instances}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.days}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.days}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ชั่วโมง</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.hours}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.hours}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.people}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.people}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา/ชม.</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="number"
+                      value={item.rate || (overtimeData.salary / 30 / 8 * 2)}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{formatCurrency(item.rate || (overtimeData.salary / 30 / 8 * 2))}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
+                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                      <span className="font-bold text-emerald-700">{formatCurrency(item.instances * item.days * item.hours * item.people * (item.rate || (overtimeData.salary / 30 / 8 * 2)))}</span>
+                    </div>
+                  </div>
+                  {editMode && (
+                    <button
+                      onClick={() => {
+                        if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
+                          const items = overtimeData.items.filter((_, i) => i !== index);
+                          items.forEach((item, i) => {
+                            Object.entries(item).forEach(([key, value]) => {
+                              onUpdateOvertimeData(calcYear, 'items', i, key, value);
+                            });
+                          });
+                        }
+                      }}
+                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-amber-50/80 backdrop-blur-sm rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-amber-200/50">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-amber-600 mt-0.5" />
+          <div>
+            <h3 className="text-lg font-bold text-amber-800 mb-2">วันหยุดประจำปี {calcYear}</h3>
+            <p className="text-sm text-amber-700 mb-3">วันหยุดที่ใช้ในการคำนวณค่าล่วงเวลา: {holidays.length} วัน</p>
+            <div className="flex flex-wrap gap-2">
+              {holidays.slice(0, 6).map((holiday, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-amber-100 text-amber-800 text-xs rounded-full border border-amber-200"
+                >
+                  {holiday.name}
+                </span>
+              ))}
+              {holidays.length > 6 && (
+                <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs rounded-full border border-amber-200">
+                  และอีก {holidays.length - 6} วัน...
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
+              <Heart className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">เงินช่วยเหลือต่างๆ</h2>
+              <p className="text-slate-600">จัดการข้อมูลเงินช่วยเหลือทุกประเภทในปี {calcYear}</p>
+            </div>
+          </div>
+
+          {/* Year Navigation and Controls */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-white/80 p-2 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
+              <button
+                onClick={() => onYearChange(calcYear - 1)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5 text-slate-600" />
+              </button>
+              <div className="px-4 py-2 font-bold text-lg text-slate-800">
+                ปี {calcYear}
+              </div>
+              <button
+                onClick={() => onYearChange(calcYear + 1)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <ChevronRight className="w-5 h-5 text-slate-600" />
+              </button>
+            </div>
+
+            <button
+              onClick={toggleEditMode}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                editMode
+                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
+                  : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
+              }`}
+            >
+              {editMode ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+              {editMode ? 'เสร็จสิ้น' : 'แก้ไข'}
+            </button>
+            
+            <button
+              onClick={handleSave}
+              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
+            >
+              <Save className="w-4 h-4" />
+              บันทึก
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="flex gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-medium transition-all duration-300 ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]'
+                  : 'text-slate-600 hover:bg-slate-50/50 hover:shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff]'
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+              <span className="bg-white/20 text-xs px-2 py-1 rounded-full">{tab.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'assistance' && renderAssistanceTab()}
+      {activeTab === 'special' && renderSpecialTab()}
+      {activeTab === 'overtime' && renderOvertimeTab()}
+    </div>
+  );
+};
