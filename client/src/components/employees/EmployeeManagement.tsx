@@ -128,11 +128,11 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         className={`p-3 rounded-xl transition-all duration-300 ${
           isText ? 'text-left' : 'text-right font-mono text-lg font-bold'
         } ${
-          globalEditMode 
+          !globalEditMode 
             ? 'cursor-pointer hover:bg-blue-50/50 hover:shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]' 
-            : 'cursor-pointer hover:bg-slate-50 hover:shadow-[inset_2px_2px_4px_#e2e8f0,inset_-2px_-2px_4px_#ffffff]'
+            : 'cursor-not-allowed opacity-60'
         }`}
-        onClick={() => globalEditMode ? null : handleRateEdit(level, field, value.toString())}
+        onClick={() => !globalEditMode ? handleRateEdit(level, field, value.toString()) : null}
       >
         {isText ? value : (
           <span className="text-slate-700">
@@ -441,7 +441,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
                       <span className="text-white text-xs font-bold">!</span>
                     </div>
-                    <span className="text-sm font-medium">เมื่อเปิดการแก้ไข สามารถแก้ไขได้ทุกช่องในตาราง</span>
+                    <span className="text-sm font-medium">โหมดแก้ไขเปิดอยู่ - แก้ไขได้ทุกช่องในตาราง</span>
                   </div>
                 </div>
               )}
