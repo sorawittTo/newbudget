@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Plus, Trash2, FileText, Upload, User, UserCheck, UserX, Scale as Male, Scale as Female } from 'lucide-react';
+import { Plus, Trash2, FileText, Upload, User, UserCheck, UserX, Users, User as MaleIcon, Crown, CheckCircle, XCircle, Shield, ShieldCheck } from 'lucide-react';
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -246,26 +246,26 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'gender', 'ชาย')}
-                          className={`p-2 rounded-lg border-2 transition-colors ${
+                          className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                             emp.gender === 'ชาย' 
-                              ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                              : 'border-gray-300 bg-white text-gray-500 hover:border-blue-300'
+                              ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 shadow-md' 
+                              : 'border-gray-300 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50'
                           }`}
                           title="ชาย"
                         >
-                          <Male className="w-4 h-4" />
+                          <MaleIcon className="w-5 h-5" />
                         </button>
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'gender', 'หญิง')}
-                          className={`p-2 rounded-lg border-2 transition-colors ${
+                          className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                             emp.gender === 'หญิง' 
-                              ? 'border-pink-500 bg-pink-50 text-pink-700' 
-                              : 'border-gray-300 bg-white text-gray-500 hover:border-pink-300'
+                              ? 'border-pink-500 bg-gradient-to-r from-pink-50 to-pink-100 text-pink-700 shadow-md' 
+                              : 'border-gray-300 bg-white text-gray-500 hover:border-pink-300 hover:bg-pink-50'
                           }`}
                           title="หญิง"
                         >
-                          <Female className="w-4 h-4" />
+                          <Crown className="w-5 h-5" />
                         </button>
                       </div>
                     </td>
@@ -293,24 +293,26 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'status', 'มีสิทธิ์')}
-                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                             (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
-                              ? 'bg-green-100 text-green-800 border border-green-300' 
-                              : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-green-50'
+                              ? 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 text-green-700 shadow-md' 
+                              : 'border-gray-300 bg-white text-gray-500 hover:border-green-300 hover:bg-green-50'
                           }`}
+                          title="มีสิทธิ์"
                         >
-                          มีสิทธิ์
+                          <ShieldCheck className="w-5 h-5" />
                         </button>
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'status', 'หมดสิทธิ์')}
-                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                             (emp as any).status === 'หมดสิทธิ์'
-                              ? 'bg-red-100 text-red-800 border border-red-300' 
-                              : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-red-50'
+                              ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-md' 
+                              : 'border-gray-300 bg-white text-gray-500 hover:border-red-300 hover:bg-red-50'
                           }`}
+                          title="หมดสิทธิ์"
                         >
-                          หมดสิทธิ์
+                          <XCircle className="w-5 h-5" />
                         </button>
                       </div>
                     </td>
