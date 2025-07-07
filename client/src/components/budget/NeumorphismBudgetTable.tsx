@@ -580,8 +580,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                               <div className="text-slate-400">-</div>
                             )}
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="text-xs text-slate-500 italic">ไม่แก้ไขได้</div>
+                          <td className="px-4 py-2">
                           </td>
                         </motion.tr>
                       );
