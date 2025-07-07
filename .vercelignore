@@ -1,0 +1,11 @@
+node_modules
+.git
+.env
+.env.local
+.env.production
+.env.development
+dist
+build
+.replit
+attached_assets
+README.md

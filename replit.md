@@ -117,6 +117,12 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Vercel Deployment Configuration
+  * Created vercel.json configuration for Node.js serverless functions
+  * Added build script and deployment configuration
+  * Set up .vercelignore to exclude unnecessary files
+  * Created comprehensive README.md with deployment instructions
+  * Prepared system for production deployment on Vercel platform
 - July 07, 2025. Database Integration with Neon PostgreSQL
   * Migrated from localStorage to Neon PostgreSQL database for persistent data storage
   * Created comprehensive database schema with 8 tables: users, employees, masterRates, budgetItems, specialAssistItems, overtimeItems, holidays, assistanceData
