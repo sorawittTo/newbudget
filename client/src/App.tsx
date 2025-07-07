@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useBudgetData } from './hooks/useBudgetData';
 import { AppLayout } from './components/layout/AppLayout';
 import { ModernDashboard } from './components/dashboard/ModernDashboard';
-import { ModernBudgetTable } from './components/budget/ModernBudgetTable';
+import { NeumorphismBudgetTable } from './components/budget/NeumorphismBudgetTable';
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { SpecialAssistanceManager } from './components/assistance/SpecialAssistanceManager';
@@ -269,7 +269,7 @@ function App() {
 
       case 'budget':
         return (
-          <ModernBudgetTable
+          <NeumorphismBudgetTable
             budgetData={budgetData}
             currentYear={currentYear}
             nextYear={nextYear}
