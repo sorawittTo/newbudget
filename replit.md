@@ -117,6 +117,16 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Advanced Budget Table Redesign and Customization
+  * Created NeumorphismBudgetTable with clean, soothing UI design using slate, blue, emerald color tones
+  * Changed title from "ตารางงบประมาณขั้นสูง" to "ตารางงบประมาณ" per user request
+  * Replaced DollarSign icon with Banknote icon (Thai Baht symbol) throughout the budget interface
+  * Removed "เงินช่วยเหลืออื่นๆ" (Other assistance funds) budget item from table
+  * Added category header rows with visual distinction (main headers in blue, sub headers in gray)
+  * Implemented category totals display showing sum for each budget category in both years
+  * Enhanced filtering system to show relevant headers when filtering by category
+  * Added gradient backgrounds, backdrop blur effects, and neumorphism shadows for modern appearance
+  * Maintained global edit mode functionality and comprehensive budget analytics
 - July 07, 2025. Complete Neumorphism Design Implementation - System-wide redesign
   * Completed comprehensive neumorphism conversion for all components
   * Created ModernTravelCalculationTable with advanced neumorphism styling and global edit mode

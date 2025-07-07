@@ -33,7 +33,7 @@ export const defaultBudgetItems: BudgetItem[] = [
   { code: '53109900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
   { type: 'header', name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค' },
   { code: '55080300', name: 'เงินบริจาค', notes: '' },
-  { code: '55080400', name: 'เงินช่วยเหลืออื่นๆ', notes: '' },
+
   { type: 'header', name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต' },
   { code: '53110700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
   { type: 'main_header', name: 'รวมงบประมาณรายจ่ายสินทรัพย์' },

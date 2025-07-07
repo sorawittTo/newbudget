@@ -15,7 +15,7 @@ import {
   Eye,
   EyeOff,
   Edit3,
-  DollarSign,
+  Banknote,
   BarChart3,
   Filter,
   Layers,
@@ -106,12 +106,39 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
     };
   }, [budgetData, currentYear, nextYear]);
 
-  // Filter data with category headers
+  // Calculate category totals
+  const categoryTotals = useMemo(() => {
+    const totals = new Map<string, { current: number; next: number }>();
+    
+    budgetData.forEach(item => {
+      if (item.type === 'header' && !item.type.includes('main_header')) {
+        const headerName = item.name;
+        const categoryItems = budgetData.filter(dataItem => {
+          if (dataItem.type) return false;
+          const itemIndex = budgetData.findIndex(i => i === dataItem);
+          const headerIndex = budgetData.findIndex(i => i === item);
+          const nextHeaderIndex = budgetData.findIndex((i, idx) => 
+            idx > headerIndex && (i.type === 'header' || i.type === 'main_header')
+          );
+          return itemIndex > headerIndex && (nextHeaderIndex === -1 || itemIndex < nextHeaderIndex);
+        });
+        
+        const currentTotal = categoryItems.reduce((sum, item) => sum + (item.values?.[currentYear] || 0), 0);
+        const nextTotal = categoryItems.reduce((sum, item) => sum + (item.values?.[nextYear] || 0), 0);
+        
+        totals.set(headerName, { current: currentTotal, next: nextTotal });
+      }
+    });
+    
+    return totals;
+  }, [budgetData, currentYear, nextYear]);
+
+  // Filter data with category headers and totals
   const filteredData = useMemo(() => {
     let result: BudgetItem[] = [];
 
     if (selectedCategory === 'all') {
-      // Show all data with category headers
+      // Show all data with category headers and totals
       result = budgetData.filter(item => {
         if (!showOnlyChanges) return true;
         if (item.type) return true; // Always include headers
@@ -221,7 +248,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
             <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
               <div>
                 <h1 className="text-4xl font-light text-slate-800 mb-3">
-                  ตารางงบประมาณขั้นสูง
+                  ตารางงบประมาณ
                 </h1>
                 <p className="text-slate-600 text-lg font-light">
                   จัดการและวิเคราะห์งบประมาณ ปี {currentYear} และ {nextYear}
@@ -263,7 +290,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
           <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-[15px_15px_30px_#d1d5db,-15px_-15px_30px_#ffffff] border border-white/30">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-blue-100 shadow-[inset_6px_6px_12px_#bfdbfe,inset_-6px_-6px_12px_#ffffff] flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-blue-600" />
+                <Banknote className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-slate-500 font-light">งบประมาณปี {currentYear}</p>
@@ -452,7 +479,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           <td colSpan={7} className="px-6 py-6">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-                                <DollarSign className="w-5 h-5 text-white" />
+                                <Banknote className="w-5 h-5 text-white" />
                               </div>
                               <h2 className="text-xl font-semibold text-blue-800">{item.name}</h2>
                             </div>
@@ -462,24 +489,69 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                     }
 
                     if (item.type === 'header') {
+                      const totals = categoryTotals.get(item.name);
+                      const totalDiff = totals ? totals.next - totals.current : 0;
+                      
                       return (
-                        <motion.tr
-                          key={actualIndex}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                          transition={{ duration: 0.3, delay: index * 0.02 }}
-                          className="bg-gradient-to-r from-slate-100/80 to-slate-200/80 backdrop-blur-sm border-b border-slate-300/50"
-                        >
-                          <td colSpan={7} className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-6 h-6 rounded-lg bg-slate-500 shadow-[6px_6px_12px_#cbd5e1,-6px_-6px_12px_#ffffff] flex items-center justify-center">
-                                <Layers className="w-4 h-4 text-white" />
+                        <React.Fragment key={actualIndex}>
+                          <motion.tr
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3, delay: index * 0.02 }}
+                            className="bg-gradient-to-r from-slate-100/80 to-slate-200/80 backdrop-blur-sm border-b border-slate-300/50"
+                          >
+                            <td colSpan={7} className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 rounded-lg bg-slate-500 shadow-[6px_6px_12px_#cbd5e1,-6px_-6px_12px_#ffffff] flex items-center justify-center">
+                                  <Layers className="w-4 h-4 text-white" />
+                                </div>
+                                <h3 className="text-lg font-medium text-slate-700">{item.name}</h3>
                               </div>
-                              <h3 className="text-lg font-medium text-slate-700">{item.name}</h3>
-                            </div>
-                          </td>
-                        </motion.tr>
+                            </td>
+                          </motion.tr>
+                          {totals && (
+                            <motion.tr
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                              transition={{ duration: 0.3, delay: index * 0.02 + 0.1 }}
+                              className="bg-gradient-to-r from-emerald-50/80 to-blue-50/80 backdrop-blur-sm border-b border-emerald-200/50 font-medium"
+                            >
+                              <td className="px-6 py-3 text-emerald-700">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-4 h-4 rounded bg-emerald-500 shadow-[4px_4px_8px_#a7f3d0,-4px_-4px_8px_#ffffff]" />
+                                  <span className="text-sm font-medium">รวม</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-3"></td>
+                              <td className="px-6 py-3 text-emerald-700 font-medium">ยอดรวม{item.name}</td>
+                              <td className="px-6 py-3 text-right">
+                                <div className="text-lg font-semibold text-emerald-700 bg-emerald-50/50 px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]">
+                                  {formatCurrency(totals.current)}
+                                </div>
+                              </td>
+                              <td className="px-6 py-3 text-right">
+                                <div className="text-lg font-semibold text-emerald-700 bg-emerald-50/50 px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff]">
+                                  {formatCurrency(totals.next)}
+                                </div>
+                              </td>
+                              <td className="px-6 py-3 text-center">
+                                <div className={`text-lg font-semibold px-3 py-1 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] ${
+                                  totalDiff > 0 ? 'text-emerald-600 bg-emerald-50/50' : 
+                                  totalDiff < 0 ? 'text-red-500 bg-red-50/50' : 
+                                  'text-slate-500 bg-slate-50/50'
+                                }`}>
+                                  {getDiffIcon(totalDiff)}
+                                  <span className="ml-1">
+                                    {totalDiff >= 0 ? '+' : ''}{formatCurrency(totalDiff)}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-3"></td>
+                            </motion.tr>
+                          )}
+                        </React.Fragment>
                       );
                     }
 
