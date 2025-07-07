@@ -14,7 +14,8 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Info
+  Info,
+  Trash2
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -29,6 +30,7 @@ interface ModernDashboardProps {
   nextYear: number;
   onNavigate: (tab: string) => void;
   onMigrateData?: () => void;
+  onClearLocalStorage?: () => void;
 }
 
 interface MetricCardProps {
@@ -75,7 +77,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   currentYear,
   nextYear,
   onNavigate,
-  onMigrateData
+  onMigrateData,
+  onClearLocalStorage
 }) => {
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
@@ -138,6 +141,16 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               size="sm"
             >
               Copy ข้อมูลลงฐานข้อมูล
+            </Button>
+          )}
+          {onClearLocalStorage && (
+            <Button
+              onClick={onClearLocalStorage}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              size="sm"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              ลบข้อมูล localStorage
             </Button>
           )}
           {(['7d', '30d', '90d', '1y'] as const).map((range) => (

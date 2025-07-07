@@ -128,6 +128,21 @@ function App() {
     }
   }, [showToast]);
 
+  const handleClearLocalStorage = useCallback(() => {
+    if (window.confirm('คุณต้องการลบข้อมูลทั้งหมดใน localStorage ใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+      // Clear all localStorage data with budget system prefix
+      const keys = Object.keys(localStorage).filter(key => key.startsWith('budgetSystem_'));
+      keys.forEach(key => localStorage.removeItem(key));
+      
+      showToast(`ลบข้อมูล localStorage เรียบร้อยแล้ว (${keys.length} รายการ)`);
+      
+      // Reload the page to reset the state
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  }, [showToast]);
+
   const handleUpdateSelection = useCallback((type: string, employeeIds: string[]) => {
     switch (type) {
       case 'travel':
@@ -278,6 +293,7 @@ function App() {
             nextYear={nextYear}
             onNavigate={setActiveTab}
             onMigrateData={handleMigrateData}
+            onClearLocalStorage={handleClearLocalStorage}
           />
         );
 
