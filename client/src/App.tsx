@@ -11,6 +11,7 @@ import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager'
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
 import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
+import { migrateLocalStorageToDatabase, verifyMigration } from './utils/dataMigration';
 
 function App() {
   const {
@@ -114,6 +115,18 @@ function App() {
       showToast('ล้างข้อมูลเรียบร้อยแล้ว');
     }
   }, [resetAllData, showToast]);
+
+  const handleMigrateData = useCallback(async () => {
+    try {
+      showToast('กำลังย้ายข้อมูลจาก localStorage ไปยัง PostgreSQL...', 'info');
+      await migrateLocalStorageToDatabase();
+      await verifyMigration();
+      showToast('ย้ายข้อมูลสำเร็จ! ข้อมูลทั้งหมดอยู่ในฐานข้อมูลแล้ว');
+    } catch (error) {
+      console.error('Migration error:', error);
+      showToast('เกิดข้อผิดพลาดในการย้ายข้อมูล', 'error');
+    }
+  }, [showToast]);
 
   const handleUpdateSelection = useCallback((type: string, employeeIds: string[]) => {
     switch (type) {
@@ -264,6 +277,7 @@ function App() {
             currentYear={currentYear}
             nextYear={nextYear}
             onNavigate={setActiveTab}
+            onMigrateData={handleMigrateData}
           />
         );
 

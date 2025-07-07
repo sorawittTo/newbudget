@@ -28,6 +28,7 @@ interface ModernDashboardProps {
   currentYear: number;
   nextYear: number;
   onNavigate: (tab: string) => void;
+  onMigrateData?: () => void;
 }
 
 interface MetricCardProps {
@@ -73,7 +74,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   employees,
   currentYear,
   nextYear,
-  onNavigate
+  onNavigate,
+  onMigrateData
 }) => {
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
@@ -129,6 +131,15 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           <p className="text-gray-600 mt-1">ภาพรวมระบบงบประมาณ ณ วันที่ {new Date().toLocaleDateString('th-TH')}</p>
         </div>
         <div className="flex gap-2">
+          {onMigrateData && (
+            <Button
+              onClick={onMigrateData}
+              className="bg-purple-600 hover:bg-purple-700 text-white"
+              size="sm"
+            >
+              Copy ข้อมูลลงฐานข้อมูล
+            </Button>
+          )}
           {(['7d', '30d', '90d', '1y'] as const).map((range) => (
             <Button
               key={range}
