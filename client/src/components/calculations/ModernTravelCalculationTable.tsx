@@ -34,6 +34,7 @@ interface ModernTravelCalculationTableProps {
   calcYear: number;
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
+  globalEditMode?: boolean;
 }
 
 interface EditingState {
@@ -49,10 +50,10 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   selectedEmployeeIds,
   calcYear,
   onSave,
-  onUpdateEmployee
+  onUpdateEmployee,
+  globalEditMode = false
 }) => {
   const [editingState, setEditingState] = useState<EditingState>({});
-  const [globalEditMode, setGlobalEditMode] = useState(false);
   const [currentCalcYear, setCurrentCalcYear] = useState(calcYear);
   const [customSettings, setCustomSettings] = useState({
     hotelNights: 2,

@@ -10,6 +10,7 @@ interface ModernCompanyTripCalculationTableProps {
   selectedEmployeeIds: string[];
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
+  globalEditMode?: boolean;
 }
 
 interface TripSettings {
@@ -22,13 +23,13 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
   masterRates,
   selectedEmployeeIds,
   onSave,
-  onUpdateEmployee
+  onUpdateEmployee,
+  globalEditMode = false
 }) => {
   const [tripSettings, setTripSettings] = useState<TripSettings>({
     destination: '',
     busFare: 600
   });
-  const [globalEditMode, setGlobalEditMode] = useState(false);
   const [editingValues, setEditingValues] = useState<Record<string, any>>({});
 
   // Calculate company trip data

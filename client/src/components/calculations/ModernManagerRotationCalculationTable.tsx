@@ -10,6 +10,7 @@ interface ModernManagerRotationCalculationTableProps {
   selectedEmployeeIds: string[];
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
+  globalEditMode?: boolean;
 }
 
 interface RotationSettings {
@@ -33,7 +34,8 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   masterRates,
   selectedEmployeeIds,
   onSave,
-  onUpdateEmployee
+  onUpdateEmployee,
+  globalEditMode = false
 }) => {
   const [rotationSettings, setRotationSettings] = useState<RotationSettings>({
     destination: '',
@@ -43,7 +45,6 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
     flightCost: 3000,
     taxiCost: 200
   });
-  const [globalEditMode, setGlobalEditMode] = useState(false);
   const [editingState, setEditingState] = useState<EditingState>({});
 
   // Filter for level 7 employees only

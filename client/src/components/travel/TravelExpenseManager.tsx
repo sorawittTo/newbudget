@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -14,7 +15,10 @@ import {
   Calculator,
   Award,
   MapPin,
-  Calendar
+  Calendar,
+  Edit3,
+  Check,
+  X
 } from 'lucide-react';
 import { 
   calculateTravelEmployees, 
@@ -55,6 +59,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   onSave
 }) => {
   const [activeSection, setActiveSection] = useState<'travel' | 'family' | 'company' | 'manager'>('travel');
+  const [globalEditMode, setGlobalEditMode] = useState(false);
 
 
   // Calculate data for each section
@@ -104,6 +109,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         calcYear={calcYear}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
+        globalEditMode={globalEditMode}
       />
     );
   };
@@ -115,6 +121,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         selectedEmployeeIds={selectedEmployees.familyVisit}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
+        globalEditMode={globalEditMode}
       />
     );
   };
@@ -127,6 +134,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         selectedEmployeeIds={selectedEmployees.companyTrip}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
+        globalEditMode={globalEditMode}
       />
     );
   };
@@ -139,6 +147,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         selectedEmployeeIds={selectedEmployees.managerRotation}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
+        globalEditMode={globalEditMode}
       />
     );
   };
@@ -159,12 +168,12 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
       <div className="p-8 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50" style={{ boxShadow: '16px 16px 32px #d1d5db, -16px -16px 32px #ffffff' }}>
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
           <div className="flex items-center gap-4">
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' }}>
-              <Car className="w-8 h-8 text-blue-600" />
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' }}>
+              <Car className="w-8 h-8 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-2">จัดการค่าเดินทางทุกประเภท</h2>
-              <p className="text-slate-600">คำนวณและจัดการค่าเดินทางสำหรับกิจกรรมต่างๆ</p>
+              <h2 className="text-3xl font-bold text-slate-800 mb-2">เงินช่วยเหลือต่างๆ</h2>
+              <p className="text-slate-600">จัดการค่าใช้จ่ายในการเดินทาง</p>
             </div>
           </div>
           
@@ -195,6 +204,23 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
               </Button>
             </div>
             
+            <Button
+              variant={globalEditMode ? "danger" : "default"}
+              onClick={() => setGlobalEditMode(!globalEditMode)}
+              className="neumorphism-button px-6 py-3"
+            >
+              {globalEditMode ? (
+                <>
+                  <X className="w-4 h-4 mr-2" />
+                  ปิดการแก้ไข
+                </>
+              ) : (
+                <>
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  เปิดการแก้ไข
+                </>
+              )}
+            </Button>
             <Button 
               onClick={onSave}
               className="neumorphism-button px-6 py-3"

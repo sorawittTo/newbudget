@@ -8,17 +8,18 @@ interface ModernFamilyVisitCalculationTableProps {
   selectedEmployeeIds: string[];
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
+  globalEditMode?: boolean;
 }
 
 export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalculationTableProps> = ({
   employees,
   selectedEmployeeIds,
   onSave,
-  onUpdateEmployee
+  onUpdateEmployee,
+  globalEditMode = false
 }) => {
   const [editingValues, setEditingValues] = useState<Record<string, any>>({});
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
-  const [globalEditMode, setGlobalEditMode] = useState(false);
 
   // Filter employees: only those with eligible status
   const eligibleEmployees = employees.filter(emp => 
