@@ -117,6 +117,13 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 07, 2025. Family Visit Travel Tab Simplification
+  * Removed filtering criteria information panel from ModernFamilyVisitCalculationTable
+  * Simplified employee filtering to show only employees with status "มีสิทธิ์" (eligible)
+  * Updated statistics cards to show: total employees, eligible employees, total amount, and ineligible count
+  * Removed complex filtering conditions (local employees, Khon Kaen location, province requirements)
+  * Streamlined interface to focus on eligible employees only
+  * Maintained modern neumorphism design and global edit functionality
 - July 07, 2025. Advanced Budget Table Redesign and Customization
   * Created NeumorphismBudgetTable with clean, soothing UI design using slate, blue, emerald color tones
   * Changed title from "ตารางงบประมาณขั้นสูง" to "ตารางงบประมาณ" per user request

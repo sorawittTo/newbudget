@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Employee, FamilyVisitEmployee } from '../../types';
 import { formatCurrency, calculateFamilyVisit } from '../../utils/calculations';
-import { Save, Info, Edit3, Check, X, Users, MapPin, Calculator, AlertCircle, TrendingUp, Target, Filter } from 'lucide-react';
+import { Save, Info, Edit3, Check, X, Users, MapPin, Calculator, AlertCircle, TrendingUp, Target } from 'lucide-react';
 
 interface ModernFamilyVisitCalculationTableProps {
   employees: Employee[];
@@ -20,13 +20,10 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
   const [globalEditMode, setGlobalEditMode] = useState(false);
 
-  // Filter employees: not local, has visit province, and not Khon Kaen
+  // Filter employees: only those with eligible status
   const eligibleEmployees = employees.filter(emp => 
     selectedEmployeeIds.includes(emp.id) &&
-    emp.level !== 'ท้องถิ่น' && 
-    emp.visitProvince && 
-    emp.visitProvince.trim() !== '' &&
-    emp.visitProvince !== 'ขอนแก่น'
+    emp.status === 'มีสิทธิ์'
   );
   
   const familyVisitData = calculateFamilyVisit(eligibleEmployees);
@@ -36,10 +33,10 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
   const stats = {
     totalEmployees: employees.length,
     selectedEmployees: selectedEmployeeIds.length,
-    localEmployees: employees.filter(emp => emp.level === 'ท้องถิ่น').length,
-    khonKaenEmployees: employees.filter(emp => emp.visitProvince === 'ขอนแก่น').length,
     eligibleEmployees: eligibleEmployees.length,
-    noProvinceEmployees: employees.filter(emp => !emp.visitProvince || emp.visitProvince.trim() === '').length,
+    ineligibleEmployees: employees.filter(emp => 
+      selectedEmployeeIds.includes(emp.id) && emp.status !== 'มีสิทธิ์'
+    ).length,
     averagePerEmployee: familyVisitData.length > 0 ? familyVisitTotal / familyVisitData.length : 0
   };
 
@@ -148,7 +145,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
             <h2 className="text-2xl font-bold text-slate-800 mb-2">ค่าเดินทางเยี่ยมครอบครัว</h2>
-            <p className="text-slate-600">คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสิทธิ์</p>
+            <p className="text-slate-600">คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสถานะ "มีสิทธิ์"</p>
           </div>
           
           <div className="flex flex-wrap gap-3">
@@ -227,92 +224,17 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
         <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-amber-200/50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-amber-600 text-sm font-medium">เฉลี่ยต่อคน</p>
-              <p className="text-2xl font-bold text-amber-900">{formatCurrency(stats.averagePerEmployee)}</p>
+              <p className="text-amber-600 text-sm font-medium">ไม่มีสิทธิ์</p>
+              <p className="text-3xl font-bold text-amber-900">{stats.ineligibleEmployees}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-amber-500 shadow-[8px_8px_16px_#fde68a,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+              <AlertCircle className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Information Panel */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-            <Info className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-semibold text-slate-800 mb-3">เกณฑ์การคำนวณและการกรอง</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <h5 className="font-medium text-slate-700 flex items-center gap-2">
-                  <Filter className="w-4 h-4" />
-                  เงื่อนไขการกรอง
-                </h5>
-                <ul className="space-y-1 text-sm text-slate-600">
-                  <li>• <strong>ไม่ใช่พนักงานท้องถิ่น:</strong> ระดับไม่ใช่ "ท้องถิ่น"</li>
-                  <li>• <strong>มีจังหวัดเยี่ยมบ้าน:</strong> ระบุจังหวัดแล้ว</li>
-                  <li>• <strong>ไม่ใช่ขอนแก่น:</strong> จังหวัดเยี่ยมบ้านไม่ใช่ "ขอนแก่น"</li>
-                  <li>• <strong>ถูกเลือก:</strong> อยู่ในรายการที่เลือกไว้</li>
-                </ul>
-              </div>
-              <div className="space-y-2">
-                <h5 className="font-medium text-slate-700 flex items-center gap-2">
-                  <Calculator className="w-4 h-4" />
-                  วิธีการคำนวณ
-                </h5>
-                <ul className="space-y-1 text-sm text-slate-600">
-                  <li>• <strong>ค่ารถทัวร์:</strong> สามารถแก้ไขได้ในตาราง</li>
-                  <li>• <strong>การคำนวณ:</strong> ค่ารถ × 4 ครั้ง × 2 เที่ยว (ไป-กลับ)</li>
-                  <li>• <strong>ที่มาข้อมูล:</strong> จากตารางข้อมูลพนักงาน</li>
-                  <li>• <strong>การอัปเดต:</strong> คำนวณใหม่ทันทีเมื่อแก้ไข</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Excluded Employees Summary */}
-      {(stats.localEmployees > 0 || stats.khonKaenEmployees > 0 || stats.noProvinceEmployees > 0) && (
-        <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-yellow-200/50">
-          <h4 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-amber-500" />
-            พนักงานที่ไม่มีสิทธิ์เดินทางเยี่ยมครอบครัว
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {stats.localEmployees > 0 && (
-              <div className="bg-yellow-100/80 backdrop-blur-sm rounded-xl p-4 border border-yellow-200/50">
-                <div className="text-yellow-800">
-                  <strong className="text-lg">{stats.localEmployees}</strong> คน
-                  <div className="text-sm text-yellow-700">พนักงานท้องถิ่น</div>
-                  <div className="text-xs text-yellow-600">ไม่มีสิทธิ์เดินทางเยี่ยมครอบครัว</div>
-                </div>
-              </div>
-            )}
-            {stats.khonKaenEmployees > 0 && (
-              <div className="bg-purple-100/80 backdrop-blur-sm rounded-xl p-4 border border-purple-200/50">
-                <div className="text-purple-800">
-                  <strong className="text-lg">{stats.khonKaenEmployees}</strong> คน
-                  <div className="text-sm text-purple-700">อยู่ขอนแก่น</div>
-                  <div className="text-xs text-purple-600">ไม่ต้องเดินทางเยี่ยมครอบครัว</div>
-                </div>
-              </div>
-            )}
-            {stats.noProvinceEmployees > 0 && (
-              <div className="bg-red-100/80 backdrop-blur-sm rounded-xl p-4 border border-red-200/50">
-                <div className="text-red-800">
-                  <strong className="text-lg">{stats.noProvinceEmployees}</strong> คน
-                  <div className="text-sm text-red-700">ไม่ระบุจังหวัด</div>
-                  <div className="text-xs text-red-600">ยังไม่ได้ระบุจังหวัดเยี่ยมบ้าน</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Main Table */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50 overflow-hidden">
@@ -338,9 +260,9 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                         <AlertCircle className="w-8 h-8 text-gray-400" />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-600">ไม่พบพนักงานที่เข้าเกณฑ์</p>
+                        <p className="font-medium text-gray-600">ไม่พบพนักงานที่มีสิทธิ์</p>
                         <p className="text-sm text-gray-500 mt-1">
-                          พนักงานต้องไม่ใช่ "ท้องถิ่น" และมีจังหวัดเยี่ยมบ้านที่ไม่ใช่ "ขอนแก่น"
+                          พนักงานต้องมีสถานะ "มีสิทธิ์" เท่านั้น
                         </p>
                       </div>
                     </div>
