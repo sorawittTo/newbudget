@@ -66,7 +66,7 @@ const navigationItems: NavigationItem[] = [
   },
   {
     id: 'travel',
-    label: 'ค่าเดินทาง',
+    label: 'ค่าใช้จ่ายในการเดินทาง',
     icon: <PlaneTakeoff className="w-5 h-5" />,
     description: 'คำนวณค่าเดินทาง',
     color: 'text-orange-600',
