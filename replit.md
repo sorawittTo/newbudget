@@ -120,13 +120,13 @@ Changelog:
 - July 08, 2025. Complete Arrow Controls Removal from Employee Table
   * Fixed remaining arrow controls in EmployeeTable.tsx for startYear and homeVisitBusFare fields  
   * Added global CSS in index.css to force remove all browser arrows with !important
-  * Applied appearance: none to all select elements with custom dropdown icon
+  * Applied appearance: none to all select elements with NO dropdown icon
   * Added browser-specific CSS to remove dropdown arrows: ::-webkit-dropdown-arrow, ::-moz-dropdown-arrow, ::-ms-expand
-  * Fixed double arrow issue where custom icon overlapped with browser default arrow
+  * Removed all dropdown icons including custom chevron-down per user request
   * Added inputMode="numeric" and pattern="[0-9]*" for numeric fields
   * Applied CSS styles to hide spinners: MozAppearance: 'textfield', WebkitAppearance: 'none'
   * Added onWheel preventDefault to prevent accidental value changes
-  * All input fields and dropdowns now completely free of arrow controls as requested
+  * All input fields and dropdowns now completely free of arrow controls and icons as requested
 - July 08, 2025. Complete Removal of Default Employee Data - Database Only System
   * Removed all defaultEmployees references from useBudgetData.ts hook
   * Deleted defaultEmployees export from defaults.ts file
