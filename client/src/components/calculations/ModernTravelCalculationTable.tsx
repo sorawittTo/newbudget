@@ -156,48 +156,155 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   return (
     <div className="space-y-6">
       {/* Header with Statistics */}
-      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+      <Card className="bg-white shadow-sm border border-gray-200">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
-                <Car className="w-6 h-6 text-blue-600" />
+              <div className="p-3 rounded-xl bg-purple-100">
+                <Car className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">ค่าเดินทางรับของที่ระลึก</h2>
-                <p className="text-gray-600">คำนวณค่าใช้จ่ายในการเดินทางรับของที่ระลึก</p>
+                <h2 className="text-2xl font-bold text-gray-900">ค่าใช้จ่ายในการเดินทาง</h2>
+                <p className="text-gray-600">จัดการค่าใช้จ่ายในการเดินทางรับของที่ระลึก</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <span className="text-gray-500">‹</span>
+                </button>
+                <span className="text-sm text-gray-600">ค่าใช้จ่ายประจำปี</span>
+                <span className="text-xl font-bold text-gray-900">{currentCalcYear}</span>
+                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <span className="text-gray-500">›</span>
+                </button>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  แก้ไข
+                </Button>
+                <Button variant="default" size="sm">
+                  บันทึก
+                </Button>
+                <Button variant="default" size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                  ส่งออก Excel
+                </Button>
               </div>
             </div>
 
           </div>
 
           {/* Statistics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            {[
-              { label: 'พนักงานทั้งหมด', value: statistics.totalEmployees, icon: Users, color: 'text-blue-600' },
-              { label: 'มีสิทธิ์เดินทาง', value: statistics.eligibleEmployees, icon: Award, color: 'text-green-600' },
-              { label: 'ค่าใช้จ่ายรวม', value: formatCurrency(statistics.totalCost), icon: Calculator, color: 'text-purple-600' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                className="p-4 rounded-2xl bg-gray-100"
-                style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-xl ${stat.color}`} style={{ boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff', backgroundColor: '#f9fafb' }}>
-                    <stat.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">{stat.label}</p>
-                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Users className="w-5 h-5 text-blue-600" />
                 </div>
-              </motion.div>
-            ))}
+                <div>
+                  <p className="text-sm text-blue-600">พนักงานทั้งหมด</p>
+                  <p className="text-2xl font-bold text-blue-900">{statistics.totalEmployees}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 rounded-xl p-4 border border-green-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Award className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-green-600">มีสิทธิ์เดินทาง</p>
+                  <p className="text-2xl font-bold text-green-900">{statistics.eligibleEmployees}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Calculator className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-purple-600">ยอดรวมทั้งหมด</p>
+                  <p className="text-xl font-bold text-purple-900">{formatCurrency(statistics.totalCost)}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-orange-50 rounded-xl p-4 border border-orange-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-100 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-orange-600">ไม่มีสิทธิ์</p>
+                  <p className="text-2xl font-bold text-orange-900">{statistics.totalEmployees - statistics.eligibleEmployees}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
 
+        </div>
+      </Card>
+
+      {/* Travel Calculation Summary */}
+      <Card className="bg-white shadow-sm border border-gray-200">
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-blue-100">
+              <Car className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">ค่าเดินทางรับของที่ระลึก</h3>
+              <p className="text-sm text-gray-600">คำนวณค่าเดินทางรับของที่ระลึกสำหรับพนักงานที่มีสิทธิ์</p>
+            </div>
+          </div>
+
+          {/* Summary Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Users className="w-4 h-4 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-blue-600">พนักงานทั้งหมด</p>
+                  <p className="text-xl font-bold text-blue-900">{statistics.totalEmployees}</p>
+                  <p className="text-xs text-blue-500">คน</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Award className="w-4 h-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-green-600">มีสิทธิ์เดินทาง</p>
+                  <p className="text-xl font-bold text-green-900">{statistics.eligibleEmployees}</p>
+                  <p className="text-xs text-green-500">คน</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Calculator className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-purple-600">ค่าใช้จ่ายรวม</p>
+                  <p className="text-lg font-bold text-purple-900">{formatCurrency(statistics.totalCost)}</p>
+                  <p className="text-xs text-purple-500">บาท</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </Card>
 
