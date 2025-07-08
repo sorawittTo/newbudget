@@ -92,7 +92,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
       return (
         <div className="flex items-center gap-2">
           <input
-            type={isText ? "text" : "number"}
+            type="text"
             className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
             value={value}
             onChange={(e) => {
