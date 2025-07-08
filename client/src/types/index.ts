@@ -109,6 +109,7 @@ export interface OvertimeItem {
 export interface OvertimeData {
   salary: number;
   items: OvertimeItem[];
+  notes?: string;
 }
 
 export interface Holiday {

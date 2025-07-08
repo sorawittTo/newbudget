@@ -26,12 +26,12 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
 
   const handleAddItem = () => {
     const newItem: OvertimeItem = {
-      item: 'รายการใหม่',
+      item: '',
       instances: 1,
       days: 1,
       hours: 8,
       people: 1,
-      rate: overtimeData.salary / 30 / 8 * 2 // OT rate = daily rate * 2
+      rate: overtimeData.salary / 210 // OT rate = salary / 210
     };
     const currentItems = overtimeData.items || [];
     const newIndex = currentItems.length;
@@ -43,23 +43,28 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
 
   const handleDeleteItem = (index: number) => {
     if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
-      const items = overtimeData.items.filter((_, i) => i !== index);
-      // Clear all items first
-      onUpdateData(calcYear, 'items', []);
-      // Re-add remaining items
-      items.forEach((item, i) => {
+      const currentItems = overtimeData.items || [];
+      const newItems = currentItems.filter((_, i) => i !== index);
+      
+      // Update the items array
+      newItems.forEach((item, i) => {
         Object.entries(item).forEach(([key, value]) => {
           onUpdateData(calcYear, 'items', i, key, value);
         });
       });
+      
+      // Remove extra items if any
+      for (let i = newItems.length; i < currentItems.length; i++) {
+        Object.keys(currentItems[i]).forEach(key => {
+          onUpdateData(calcYear, 'items', i, key, undefined);
+        });
+      }
     }
   };
 
   const calculateItemTotal = (item: OvertimeItem, salary: number): number => {
-    const dailyRate = salary / 30;
-    const hourlyRate = dailyRate / 8;
-    const otRate = item.rate || (hourlyRate * 2);
-    return item.instances * item.days * item.hours * item.people * otRate;
+    const otRate = item.rate || (salary / 210);
+    return item.days * item.hours * item.people * otRate;
   };
 
   const totalAmount = (overtimeData.items || []).reduce((sum, item) => sum + calculateItemTotal(item, overtimeData.salary), 0);
@@ -168,27 +173,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                 key={index}
                 className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30"
               >
-                <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
-                    <NeumorphismInput
-                      type="text"
-                      value={item.item}
-                      onChange={(e) => onUpdateData(calcYear, 'items', index, 'item', e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
-                    <NeumorphismInput
-                      type="text"
-                      value={item.instances}
-                      onChange={(e) => onUpdateData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  </div>
-                  
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                     <NeumorphismInput
@@ -223,22 +208,24 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                     <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา/ชม.</label>
                     <NeumorphismInput
                       type="text"
-                      value={item.rate || (overtimeData.salary / 30 / 8 * 2)}
+                      value={item.rate || (overtimeData.salary / 210)}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"
                     />
                   </div>
                   
-                  <div className="flex flex-col justify-between">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
-                      <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                        <span className="font-bold text-emerald-700">{formatCurrency(calculateItemTotal(item, overtimeData.salary))}</span>
-                      </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
+                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                      <span className="font-bold text-emerald-700">{formatCurrency(calculateItemTotal(item, overtimeData.salary))}</span>
                     </div>
+                  </div>
+                  
+                  <div className="flex items-end justify-center">
                     <button
                       onClick={() => handleDeleteItem(index)}
-                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                      className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                      disabled={(overtimeData.items || []).length <= 1}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -246,6 +233,20 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+        
+        {/* Notes Section */}
+        <div className="p-6 border-t border-slate-200/50">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">หมายเหตุ</label>
+            <NeumorphismInput
+              type="text"
+              value={overtimeData.notes || ''}
+              onChange={(e) => onUpdateData(calcYear, 'notes', e.target.value)}
+              className="w-full"
+              placeholder="ระบุหมายเหตุเพิ่มเติม..."
+            />
           </div>
         </div>
       </div>
