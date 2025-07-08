@@ -323,6 +323,8 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                 <tr>
                   <th className="px-4 py-3 text-left font-semibold">รหัสพนักงาน</th>
                   <th className="px-4 py-3 text-left font-semibold">ชื่อ-นามสกุล</th>
+                  <th className="px-4 py-3 text-center font-semibold">อายุงาน</th>
+                  <th className="px-4 py-3 text-center font-semibold">วันทำการ</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเดินทาง</th>
@@ -347,6 +349,14 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                       <p className="font-semibold text-gray-900">{emp.name}</p>
                       <p className="text-sm text-gray-600">ระดับ {emp.level}</p>
                     </div>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <span className="font-medium text-gray-900">{new Date().getFullYear() - emp.startYear} ปี</span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {globalEditMode ? renderEditableCell(emp.id, 'workingDays', emp.workingDays || 1, 'number') : (
+                      <span className="font-medium text-gray-900">{emp.workingDays || 1} วัน</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right">
                     {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost / rotationSettings.hotelNights, 'number') : (
