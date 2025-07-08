@@ -66,6 +66,33 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
   const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, currentCalcYear);
 
+  // Calculate employee cost function
+  const calculateEmployeeCost = (employee: TravelEmployee) => {
+    const rates = getRatesForEmployee(employee, masterRates);
+    const workingDays = employee.workingDays || 1;
+    
+    // Calculate hotel nights and per diem days based on working days
+    // 1 working day = 2 hotel nights + 3 per diem days
+    // Each additional day adds 1 hotel night + 1 per diem day
+    const hotelNights = workingDays === 1 ? 2 : 2 + (workingDays - 1);
+    const perDiemDays = workingDays === 1 ? 3 : 3 + (workingDays - 1);
+    
+    const hotel = hotelNights * (rates.hotel || 0);
+    const perDiem = perDiemDays * (rates.perDiem || 0);
+    const travelRoundTrip = 2 * (rates.travel || 0);
+    const localRoundTrip = 2 * (rates.local || 0);
+    
+    return {
+      hotel,
+      perDiem,
+      travel: travelRoundTrip,
+      local: localRoundTrip,
+      total: hotel + perDiem + travelRoundTrip + localRoundTrip,
+      hotelNights,
+      perDiemDays
+    };
+  };
+
   // Enhanced statistics calculation
   const statistics = useMemo(() => {
     const totalCost = travelEmployees.reduce((sum, emp) => {
@@ -198,32 +225,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
         <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
     );
-  };
-
-  const calculateEmployeeCost = (employee: TravelEmployee) => {
-    const rates = getRatesForEmployee(employee, masterRates);
-    const workingDays = employee.workingDays || 1;
-    
-    // Calculate hotel nights and per diem days based on working days
-    // 1 working day = 2 hotel nights + 3 per diem days
-    // Each additional day adds 1 hotel night + 1 per diem day
-    const hotelNights = workingDays === 1 ? 2 : 2 + (workingDays - 1);
-    const perDiemDays = workingDays === 1 ? 3 : 3 + (workingDays - 1);
-    
-    const hotel = hotelNights * (rates.hotel || 0);
-    const perDiem = perDiemDays * (rates.perDiem || 0);
-    const travelRoundTrip = 2 * (rates.travel || 0);
-    const localRoundTrip = 2 * (rates.local || 0);
-    
-    return {
-      hotel,
-      perDiem,
-      travel: travelRoundTrip,
-      local: localRoundTrip,
-      total: hotel + perDiem + travelRoundTrip + localRoundTrip,
-      hotelNights,
-      perDiemDays
-    };
   };
 
   return (
