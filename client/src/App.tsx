@@ -11,7 +11,7 @@ import { BudgetManager } from './components/budget/BudgetManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
-import { exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
+import { exportEmployeesToExcel } from './utils/excel';
 
 
 function App() {
@@ -94,26 +94,7 @@ function App() {
     }
   }, [employees, showToast]);
 
-  const handleImportEmployees = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
 
-    try {
-      const importedEmployees = await importEmployeesFromExcel(file);
-      setEmployees(importedEmployees);
-      showToast(`นำเข้าข้อมูลพนักงาน ${importedEmployees.length} รายการเรียบร้อยแล้ว`);
-    } catch (error) {
-      showToast(error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการนำเข้าข้อมูล', 'error');
-    }
-    event.target.value = '';
-  }, [setEmployees, showToast]);
-
-  const handleReset = useCallback(() => {
-    if (window.confirm('คุณต้องการลบข้อมูลที่บันทึกไว้ทั้งหมดและกลับไปใช้ค่าเริ่มต้นใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
-      resetAllData();
-      showToast('ล้างข้อมูลเรียบร้อยแล้ว');
-    }
-  }, [resetAllData, showToast]);
 
 
 
@@ -169,8 +150,6 @@ function App() {
             onUpdateMasterRate={updateMasterRate}
             onSave={handleSave}
             onExport={handleExportEmployees}
-            onImport={handleImportEmployees}
-            onReset={handleReset}
           />
         );
 
@@ -273,14 +252,8 @@ function App() {
         {renderTabContent()}
       </AppLayout>
 
-      {/* Hidden file input for employee import */}
-      <input
-        type="file"
-        accept=".xlsx,.xls"
-        onChange={handleImportEmployees}
-        className="hidden"
-        id="import-file"
-      />
+
+
 
       {/* Toast Notifications */}
       <Toast

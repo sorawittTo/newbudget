@@ -33,8 +33,6 @@ interface EmployeeManagementProps {
   onUpdateMasterRate: (level: string, key: string, value: any) => void;
   onSave: () => void;
   onExport: () => void;
-  onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onReset: () => void;
 }
 
 export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
@@ -45,9 +43,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   onDeleteEmployee,
   onUpdateMasterRate,
   onSave,
-  onExport,
-  onImport,
-  onReset
+  onExport
 }) => {
   const [activeSection, setActiveSection] = useState<'employees' | 'rates'>('employees');
   const [editingCell, setEditingCell] = useState<string | null>(null);
@@ -146,27 +142,6 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <Button onClick={onExport} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
                 <FileText className="w-4 h-4 mr-2" />
                 ส่งออก Excel
-              </Button>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={onImport}
-                  className="hidden"
-                  id="import-employees"
-                />
-                <Button
-                  onClick={() => document.getElementById('import-employees')?.click()}
-                  variant="secondary"
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  นำเข้า
-                </Button>
-              </div>
-              <Button onClick={onReset} variant="danger">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                รีเซ็ต
               </Button>
             </div>
           </div>
