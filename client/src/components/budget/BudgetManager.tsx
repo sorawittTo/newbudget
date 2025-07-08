@@ -10,7 +10,9 @@ import {
   FileText,
   Plus,
   Minus,
-  Calculator
+  Calculator,
+  Trash2,
+  X
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/calculations';
 
@@ -79,6 +81,8 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
     }))
   );
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [newAssetItem, setNewAssetItem] = useState<{ code: string; name: string }>({ code: '', name: '' });
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
   const budgetSummary = useMemo(() => {
     const operatingItems = budgetItems.filter(item => 
@@ -128,6 +132,47 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
     ));
   };
 
+  const addAssetItem = () => {
+    if (newAssetItem.code && newAssetItem.name) {
+      const newItem: BudgetItem = {
+        code: newAssetItem.code,
+        name: newAssetItem.name,
+        values: {
+          [currentYear]: 0,
+          [compareYear]: 0
+        },
+        notes: ''
+      };
+      
+      // Find the index of the last asset item to insert before the end
+      const lastAssetIndex = budgetItems.findIndex(item => item.code === '5');
+      if (lastAssetIndex !== -1) {
+        setBudgetItems(prev => [
+          ...prev.slice(0, lastAssetIndex + 1),
+          newItem,
+          ...prev.slice(lastAssetIndex + 1)
+        ]);
+      } else {
+        setBudgetItems(prev => [...prev, newItem]);
+      }
+      
+      setNewAssetItem({ code: '', name: '' });
+      setShowAddForm(false);
+    }
+  };
+
+  const deleteAssetItem = (index: number) => {
+    const item = budgetItems[index];
+    // Only allow deletion of asset items (codes: 10, 16, 25, 5, or custom codes)
+    if (item.code && (item.code === '10' || item.code === '16' || item.code === '25' || item.code === '5' || !['52', '53', '55'].some(prefix => item.code!.startsWith(prefix)))) {
+      setBudgetItems(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const isAssetItem = (item: BudgetItem): boolean => {
+    return item.code && (item.code === '10' || item.code === '16' || item.code === '25' || item.code === '5' || !['52', '53', '55'].some(prefix => item.code!.startsWith(prefix)));
+  };
+
   const renderBudgetItem = (item: BudgetItem, index: number) => {
     if (item.type === 'main_header') {
       return (
@@ -139,11 +184,26 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
           className="bg-gradient-to-r from-blue-50 to-blue-100"
         >
           <td colSpan={6} className="px-6 py-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 rounded-xl bg-blue-600 text-white">
-                <Calculator className="w-5 h-5" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-xl bg-blue-600 text-white">
+                  <Calculator className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-blue-900">{item.name}</h3>
               </div>
-              <h3 className="text-lg font-bold text-blue-900">{item.name}</h3>
+              {item.name === 'รวมงบประมาณรายจ่ายสินทรัพย์' && editMode && (
+                <div className="flex items-center space-x-2">
+                  {!showAddForm && (
+                    <button
+                      onClick={() => setShowAddForm(true)}
+                      className="flex items-center space-x-1 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span className="text-sm">เพิ่มรายการ</span>
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </td>
         </motion.tr>
@@ -183,11 +243,22 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
         className="hover:bg-slate-50 transition-colors"
       >
         <td className="px-6 py-4 border-b">
-          <div className="flex items-center space-x-3">
-            <span className="text-sm font-mono text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
-              {item.code}
-            </span>
-            <span className="text-sm text-slate-800">{item.name}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <span className="text-sm font-mono text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
+                {item.code}
+              </span>
+              <span className="text-sm text-slate-800">{item.name}</span>
+            </div>
+            {editMode && isAssetItem(item) && (
+              <button
+                onClick={() => deleteAssetItem(index)}
+                className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                title="ลบรายการ"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </td>
         <td className="px-6 py-4 border-b">
@@ -446,6 +517,73 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
               </thead>
               <tbody>
                 {budgetItems.map((item, index) => renderBudgetItem(item, index))}
+                {showAddForm && (
+                  <motion.tr
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-green-50 border-2 border-green-200"
+                  >
+                    <td className="px-6 py-4 border-b">
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="text"
+                          value={newAssetItem.code}
+                          onChange={(e) => setNewAssetItem(prev => ({ ...prev, code: e.target.value }))}
+                          placeholder="รหัสรายการ"
+                          className="w-20 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={newAssetItem.name}
+                          onChange={(e) => setNewAssetItem(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="ชื่อรายการ"
+                          className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        />
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={addAssetItem}
+                            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                            title="เพิ่ม"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowAddForm(false);
+                              setNewAssetItem({ code: '', name: '' });
+                            }}
+                            className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                            title="ยกเลิก"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 border-b">
+                      <input
+                        type="number"
+                        value={0}
+                        disabled
+                        className="w-full px-3 py-2 border rounded-lg bg-gray-100"
+                      />
+                    </td>
+                    <td className="px-6 py-4 border-b">
+                      <input
+                        type="number"
+                        value={0}
+                        disabled
+                        className="w-full px-3 py-2 border rounded-lg bg-gray-100"
+                      />
+                    </td>
+                    <td className="px-6 py-4 border-b">
+                      <span className="text-gray-400">0</span>
+                    </td>
+                    <td className="px-6 py-4 border-b">
+                      <span className="text-gray-400">-</span>
+                    </td>
+                  </motion.tr>
+                )}
               </tbody>
             </table>
           </div>
