@@ -117,7 +117,7 @@ export const useBudgetData = () => {
           });
           setBudgetData(transformed);
         } else {
-          setBudgetData(initializeBudgetData(defaultBudgetItems));
+          setBudgetData([]);
         }
         
         // Set employees
@@ -135,7 +135,7 @@ export const useBudgetData = () => {
           }));
           setEmployees(formattedEmployees);
         } else {
-          setEmployees(defaultEmployees);
+          setEmployees([]);
         }
         
         // Transform master rates to object format
@@ -156,7 +156,7 @@ export const useBudgetData = () => {
         if (Object.keys(masterRatesObj).length > 0) {
           setMasterRates(masterRatesObj);
         } else {
-          setMasterRates(defaultMasterRates);
+          setMasterRates({});
         }
         
         // Initialize other data with defaults
