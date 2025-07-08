@@ -131,7 +131,18 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
             <NeumorphismInput
               type="text"
               value={overtimeData.salary}
-              onChange={(e) => onUpdateData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
+              onChange={(e) => {
+                const newSalary = parseFloat(e.target.value) || 0;
+                onUpdateData(calcYear, 'salary', newSalary);
+                
+                // Update all item rates that are using default calculation
+                const newRate = newSalary / 210;
+                (overtimeData.items || []).forEach((item, index) => {
+                  if (!item.rate || item.rate === (overtimeData.salary / 210)) {
+                    onUpdateData(calcYear, 'items', index, 'rate', newRate);
+                  }
+                });
+              }}
               className="w-full text-lg font-bold text-right"
               placeholder="0"
             />

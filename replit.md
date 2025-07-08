@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 08, 2025. Auto-Update Overtime Rates When Salary Changes
+  * Enhanced overtime calculation system to automatically recalculate all item rates when salary changes
+  * When salary is modified, all overtime items using default rate (salary ÷ 210) are updated automatically
+  * Prevents manual recalculation errors and ensures consistency across all overtime items
+  * Applied to both ModernOvertimeCalculationTable and UnifiedSpecialAssistanceManager
+  * Maintains custom rates that users have manually set while updating default rates
 - July 08, 2025. Complete Travel Expense Tables UI Standardization
   * Updated all 4 travel expense tables to match system's consistent UI design
   * Standardized headers across all tables: bg-gray-100 with gray-700 text

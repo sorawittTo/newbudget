@@ -415,7 +415,18 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <NeumorphismInput
                 type="text"
                 value={overtimeData.salary}
-                onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
+                onChange={(e) => {
+                  const newSalary = parseFloat(e.target.value) || 0;
+                  onUpdateOvertimeData(calcYear, 'salary', newSalary);
+                  
+                  // Update all item rates that are using default calculation
+                  const newRate = newSalary / 210;
+                  (overtimeData.items || []).forEach((item, index) => {
+                    if (!item.rate || item.rate === (overtimeData.salary / 210)) {
+                      onUpdateOvertimeData(calcYear, 'items', index, 'rate', newRate);
+                    }
+                  });
+                }}
                 className="w-full text-lg font-bold text-right"
                 placeholder="0"
               />
