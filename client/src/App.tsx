@@ -29,6 +29,7 @@ function App() {
     isLoading,
     updateBudgetItem,
     updateBudgetNotes,
+    updateBudgetField,
     updateEmployee,
     addEmployee,
     deleteEmployee,
@@ -283,6 +284,7 @@ function App() {
             nextYear={nextYear}
             onUpdateBudget={updateBudgetItem}
             onUpdateNotes={updateBudgetNotes}
+            onUpdateBudgetField={updateBudgetField}
             onYearChange={(current, next) => {
               setCurrentYear(current);
               setNextYear(next);

@@ -334,6 +334,18 @@ export const useBudgetData = () => {
     });
   };
 
+  const updateBudgetField = (index: number, field: string, value: string) => {
+    console.log('Updating budget field:', { index, field, value });
+    setBudgetData(prev => {
+      const updated = [...prev];
+      if (updated[index]) {
+        updated[index] = { ...updated[index], [field]: value };
+        console.log('Updated field:', updated[index]);
+      }
+      return updated;
+    });
+  };
+
   const updateEmployee = (index: number, employee: Employee) => {
     setEmployees(prev => {
       const updated = [...prev];
@@ -463,6 +475,7 @@ export const useBudgetData = () => {
     isLoading,
     updateBudgetItem,
     updateBudgetNotes,
+    updateBudgetField,
     updateEmployee,
     addEmployee,
     deleteEmployee,

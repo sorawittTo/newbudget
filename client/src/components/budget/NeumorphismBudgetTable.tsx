@@ -31,6 +31,7 @@ interface BudgetTableProps {
   nextYear: number;
   onUpdateBudget: (index: number, year: number, value: number) => void;
   onUpdateNotes: (index: number, notes: string) => void;
+  onUpdateBudgetField: (index: number, field: string, value: string) => void;
   onYearChange: (currentYear: number, nextYear: number) => void;
   onSave: () => void;
   onExport: () => void;
@@ -52,6 +53,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
   nextYear,
   onUpdateBudget,
   onUpdateNotes,
+  onUpdateBudgetField,
   onYearChange,
   onSave,
   onExport
@@ -616,9 +618,19 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                       >
                         {/* Budget Code */}
                         <td className="px-4 py-2">
-                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-blue-50 shadow-[inset_3px_3px_6px_#bfdbfe,inset_-3px_-3px_6px_#ffffff] text-blue-700 font-mono text-xs">
-                            {item.code}
-                          </div>
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#bfdbfe,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-blue-700 font-mono text-sm"
+                              value={item.code || ''}
+                              onChange={(e) => onUpdateBudgetField(actualIndex, 'code', e.target.value)}
+                              placeholder="รหัสงบประมาณ"
+                            />
+                          ) : (
+                            <div className="inline-flex items-center px-2 py-1 rounded-lg bg-blue-50 shadow-[inset_3px_3px_6px_#bfdbfe,inset_-3px_-3px_6px_#ffffff] text-blue-700 font-mono text-xs">
+                              {item.code}
+                            </div>
+                          )}
                         </td>
 
                         {/* Account Code */}
@@ -630,9 +642,19 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
 
                         {/* Item Name */}
                         <td className="px-4 py-2">
-                          <div className="font-medium text-slate-700">
-                            {item.name}
-                          </div>
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-slate-700 font-medium"
+                              value={item.name || ''}
+                              onChange={(e) => onUpdateBudgetField(actualIndex, 'name', e.target.value)}
+                              placeholder="รายการ"
+                            />
+                          ) : (
+                            <div className="font-medium text-slate-700">
+                              {item.name}
+                            </div>
+                          )}
                         </td>
 
                         {/* Current Year Value */}
