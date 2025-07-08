@@ -20,7 +20,8 @@ import {
   UserCheck,
   Crown,
   ShieldCheck,
-  XCircle
+  XCircle,
+  FileText
 } from 'lucide-react';
 
 interface EmployeeManagementProps {
@@ -136,15 +137,15 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 }
               >
                 <Edit3 className="w-4 h-4 mr-2" />
-                {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
+                {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
               </Button>
               <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
                 <Save className="w-4 h-4 mr-2" />
                 บันทึก
               </Button>
               <Button onClick={onExport} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
-                <Download className="w-4 h-4 mr-2" />
-                ส่งออก
+                <FileText className="w-4 h-4 mr-2" />
+                ส่งออก Excel
               </Button>
               <div className="relative">
                 <input

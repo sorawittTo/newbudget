@@ -15,6 +15,7 @@ import {
   X
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/calculations';
+import { exportBudgetToExcel } from '../../utils/excel';
 
 interface BudgetItem {
   type?: 'main_header' | 'header';
@@ -130,6 +131,20 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
     setBudgetItems(prev => prev.map((item, i) => 
       i === index ? { ...item, notes } : item
     ));
+  };
+
+  const handleSave = () => {
+    if (onSave) {
+      onSave();
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      await exportBudgetToExcel(budgetItems, currentYear, compareYear);
+    } catch (error) {
+      console.error('Error exporting budget:', error);
+    }
   };
 
   const addAssetItem = () => {
@@ -353,11 +368,18 @@ export const BudgetManager: React.FC<BudgetManagerProps> = ({ onSave }) => {
                 <span>{editMode ? 'หยุดแก้ไข' : 'แก้ไข'}</span>
               </button>
               <button
-                onClick={onSave}
+                onClick={handleSave}
                 className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
               >
                 <Save className="w-4 h-4" />
                 <span>บันทึก</span>
+              </button>
+              <button
+                onClick={handleExport}
+                className="flex items-center space-x-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+              >
+                <FileText className="w-4 h-4" />
+                <span>ส่งออก Excel</span>
               </button>
             </div>
           </div>

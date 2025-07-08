@@ -17,6 +17,7 @@ import {
   FileText,
   Info
 } from 'lucide-react';
+import { exportSpecialAssistanceToExcel } from '../../utils/excel';
 
 interface UnifiedSpecialAssistanceManagerProps {
   employees: Employee[];
@@ -56,6 +57,14 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   const [customMonths, setCustomMonths] = useState<Record<string, number>>({});
   const [customLumpSum, setCustomLumpSum] = useState<Record<string, number>>({});
   const [customPurchaseAllowance, setCustomPurchaseAllowance] = useState<Record<string, number>>({});
+
+  const handleExport = async () => {
+    try {
+      await exportSpecialAssistanceToExcel(specialAssist1Data, overtimeData, calcYear);
+    } catch (error) {
+      console.error('Error exporting special assistance data:', error);
+    }
+  };
 
   const yearCE = calcYear - 543;
   const holidays = holidaysData[yearCE] || [];
@@ -636,25 +645,35 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               </button>
             </div>
 
-            <button
-              onClick={toggleEditMode}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
-                editMode
-                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
-                  : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
-              }`}
-            >
-              {editMode ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-              {editMode ? 'เสร็จสิ้น' : 'แก้ไข'}
-            </button>
-            
-            <button
-              onClick={handleSave}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              บันทึก
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleEditMode}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                  editMode
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
+                    : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
+                }`}
+              >
+                {editMode ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                {editMode ? 'เสร็จสิ้น' : 'แก้ไข'}
+              </button>
+              
+              <button
+                onClick={handleSave}
+                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                บันทึก
+              </button>
+              
+              <button
+                onClick={handleExport}
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                ส่งออก Excel
+              </button>
+            </div>
           </div>
         </div>
       </div>

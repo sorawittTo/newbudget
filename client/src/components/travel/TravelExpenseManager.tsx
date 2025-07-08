@@ -18,7 +18,8 @@ import {
   Calendar,
   Edit3,
   Check,
-  X
+  X,
+  FileText
 } from 'lucide-react';
 import { 
   calculateTravelEmployees, 
@@ -31,6 +32,7 @@ import {
 import { ModernFamilyVisitCalculationTable } from '../calculations/ModernFamilyVisitCalculationTable';
 import { ModernCompanyTripCalculationTable } from '../calculations/ModernCompanyTripCalculationTable';
 import { ModernManagerRotationCalculationTable } from '../calculations/ModernManagerRotationCalculationTable';
+import { exportTravelToExcel } from '../../utils/excel';
 
 interface TravelExpenseManagerProps {
   employees: Employee[];
@@ -60,6 +62,37 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState<'travel' | 'family' | 'company' | 'manager'>('travel');
   const [globalEditMode, setGlobalEditMode] = useState(false);
+
+  const handleExport = async () => {
+    let data, title;
+    
+    switch (activeSection) {
+      case 'travel':
+        data = travelData;
+        title = 'ค่าเดินทางรับของที่ระลึก';
+        break;
+      case 'family':
+        data = familyVisitData;
+        title = 'ค่าเดินทางเยี่ยมครอบครัว';
+        break;
+      case 'company':
+        data = companyTripData;
+        title = 'ค่าเดินทางร่วมงานวันพนักงาน';
+        break;
+      case 'manager':
+        data = managerRotationData;
+        title = 'ค่าเดินทางหมุนเวียน ผจศ.';
+        break;
+      default:
+        return;
+    }
+    
+    try {
+      await exportTravelToExcel(data, title);
+    } catch (error) {
+      console.error('Error exporting travel data:', error);
+    }
+  };
 
 
   // Calculate data for each section
@@ -204,30 +237,39 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
               </Button>
             </div>
             
-            <Button
-              variant={globalEditMode ? "danger" : "default"}
-              onClick={() => setGlobalEditMode(!globalEditMode)}
-              className="neumorphism-button px-6 py-3"
-            >
-              {globalEditMode ? (
-                <>
-                  <X className="w-4 h-4 mr-2" />
-                  ปิดการแก้ไข
-                </>
-              ) : (
-                <>
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  เปิดการแก้ไข
-                </>
-              )}
-            </Button>
-            <Button 
-              onClick={onSave}
-              className="neumorphism-button px-6 py-3"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              บันทึก
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant={globalEditMode ? "danger" : "default"}
+                onClick={() => setGlobalEditMode(!globalEditMode)}
+                className="neumorphism-button px-6 py-3"
+              >
+                {globalEditMode ? (
+                  <>
+                    <X className="w-4 h-4 mr-2" />
+                    ปิดการแก้ไข
+                  </>
+                ) : (
+                  <>
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    แก้ไข
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={onSave}
+                className="neumorphism-button px-6 py-3"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                บันทึก
+              </Button>
+              <Button 
+                onClick={handleExport}
+                className="neumorphism-button px-6 py-3"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                ส่งออก Excel
+              </Button>
+            </div>
           </div>
         </div>
       </div>
