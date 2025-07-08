@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Employee, MasterRates, ManagerRotationEmployee } from '../../types';
 import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
 import { Save, RotateCcw, MapPin, Edit3, Check, X, Plane, Car, Hotel, DollarSign, Award, Calculator, TrendingUp, Users } from 'lucide-react';
@@ -315,35 +315,38 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
       </div>
 
       {/* Main Table */}
-      <Card className="bg-white overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัส</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าที่พัก</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">เบี้ยเลี้ยง</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าเดินทาง</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าพาหนะอื่นๆ</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม</th>
-              </tr>
-            </thead>
+      <Card className="bg-white border border-gray-200 shadow-sm">
+        <div className="p-6">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1200px] text-sm">
+              <thead className="bg-gray-100 border-b border-gray-200">
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold">รหัสพนักงาน</th>
+                  <th className="px-4 py-3 text-left font-semibold">ชื่อ-นามสกุล</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าเดินทาง</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะอื่นๆ</th>
+                  <th className="px-4 py-3 text-center font-semibold">รวมทั้งหมด</th>
+                </tr>
+              </thead>
             <tbody>
-              {managerRotationData.map((emp, index) => (
-                <motion.tr 
+              <AnimatePresence>
+                {managerRotationData.map((emp, index) => (
+                  <motion.tr 
                   key={emp.id} 
-                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.05 }}
                 >
+                  <td className="px-4 py-3 font-medium text-gray-900">{emp.id}</td>
                   <td className="px-4 py-3">
-                    <div className="font-mono text-sm text-gray-600 font-medium">{emp.id}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">{emp.name}</div>
-                    <div className="text-sm text-gray-500">ระดับ {emp.level}</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{emp.name}</p>
+                      <p className="text-sm text-gray-600">ระดับ {emp.level}</p>
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost / rotationSettings.hotelNights, 'number') : (
@@ -389,9 +392,11 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div className="font-bold text-lg text-purple-600">{formatCurrency(emp.total)}</div>
                   </td>
                 </motion.tr>
-              ))}
+                ))}
+              </AnimatePresence>
             </tbody>
           </table>
+          </div>
         </div>
       </Card>
     </div>
