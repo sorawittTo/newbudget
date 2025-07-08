@@ -144,46 +144,29 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card className="bg-white shadow-sm border border-gray-200">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-green-100">
-                <Users className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">ค่าเดินทางเยี่ยมครอบครัว</h2>
-                <p className="text-gray-600">จัดการค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสิทธิ์</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                  <span className="text-gray-500">‹</span>
-                </button>
-                <span className="text-sm text-gray-600">ค่าใช้จ่ายประจำปี</span>
-                <span className="text-xl font-bold text-gray-900">2569</span>
-                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                  <span className="text-gray-500">›</span>
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  แก้ไข
-                </Button>
-                <Button variant="default" size="sm">
-                  บันทึก
-                </Button>
-                <Button variant="default" size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-                  ส่งออก Excel
-                </Button>
-              </div>
-            </div>
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">ค่าเดินทางเยี่ยมครอบครัว</h2>
+            <p className="text-slate-600">คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสถานะ "มีสิทธิ์"</p>
+          </div>
+          
+          <div className="flex flex-wrap gap-3">
+
           </div>
         </div>
-      </Card>
+        
+        {globalEditMode && (
+          <div className="mt-4 bg-blue-100/80 backdrop-blur-sm rounded-xl p-4 border border-blue-200/50">
+            <div className="flex items-center gap-2 text-blue-700">
+              <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                <span className="text-white text-xs font-bold">!</span>
+              </div>
+              <span className="text-sm font-medium">โหมดแก้ไขเปิดอยู่ - แก้ไขค่าเดินทางได้โดยตรงในตาราง</span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
