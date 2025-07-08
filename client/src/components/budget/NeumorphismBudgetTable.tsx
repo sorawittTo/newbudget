@@ -657,7 +657,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                             />
                           ) : (
                             <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
-                              {item.accountCode || item.code}
+                              {item.accountCode ? item.accountCode : (item.code ? `[${item.code}]` : '-')}
                             </div>
                           )}
                         </td>
