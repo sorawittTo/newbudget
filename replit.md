@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 08, 2025. HTML Export Function Removal
+  * Completely removed handleExportHtml function from App.tsx
+  * Removed all HTML export functionality and template generation
+  * Eliminated budget-related export templates and references
+  * System now has no HTML export capabilities - focuses purely on Excel export for employees
 - July 08, 2025. Complete Budget Functionality Removal
   * Completely removed all budget-related functionality from the system
   * Removed budgetData variable and all budget-related imports from App.tsx
