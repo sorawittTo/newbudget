@@ -132,27 +132,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <p className="text-green-100">จัดการข้อมูลพนักงานและตารางอัตราค่าใช้จ่ายมาตรฐาน</p>
             </div>
             
-            <div className="flex flex-wrap gap-3">
-              <Button 
-                onClick={() => setGlobalEditMode(!globalEditMode)}
-                variant={globalEditMode ? "secondary" : "primary"}
-                className={globalEditMode 
-                  ? "bg-orange-600 hover:bg-orange-700 text-white" 
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-                }
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
-              </Button>
-              <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
-                <Save className="w-4 h-4 mr-2" />
-                บันทึก
-              </Button>
-              <Button onClick={handleExportClick} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
-                <FileText className="w-4 h-4 mr-2" />
-                ส่งออก Excel
-              </Button>
-            </div>
+
           </div>
         </div>
 
@@ -195,10 +175,31 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-gray-900">รายชื่อพนักงาน</h3>
-              <Button onClick={onAddEmployee}>
-                <Plus className="w-4 h-4 mr-2" />
-                เพิ่มพนักงาน
-              </Button>
+              <div className="flex gap-3">
+                <Button onClick={onAddEmployee}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  เพิ่มพนักงาน
+                </Button>
+                <Button 
+                  onClick={() => setGlobalEditMode(!globalEditMode)}
+                  variant={globalEditMode ? "secondary" : "primary"}
+                  className={globalEditMode 
+                    ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                    : "bg-purple-600 hover:bg-purple-700 text-white"
+                  }
+                >
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
+                </Button>
+                <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
+                  <Save className="w-4 h-4 mr-2" />
+                  บันทึก
+                </Button>
+                <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
+                  <FileText className="w-4 h-4 mr-2" />
+                  ส่งออก Excel
+                </Button>
+              </div>
             </div>
           </div>
           
