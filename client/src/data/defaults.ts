@@ -12,23 +12,7 @@ export const defaultMasterRates: MasterRates = {
   '3': { position: 'พนักงานปฏิบัติการ', rent: 6500, monthlyAssist: 4750, lumpSum: 5000, travel: 300, local: 250, perDiem: 450, hotel: 1800 }
 };
 
-export const defaultEmployees: Employee[] = [
-  { id: '62539086', name: 'พัทธดนย์ ทรัพย์ประสม', gender: 'ชาย', startYear: 2539, level: '7', status: 'มีสิทธิ์', visitProvince: 'พิษณุโลก', homeVisitBusFare: 1200 },
-  { id: '52531175', name: 'พีรนุช ธนบดีภัทร', gender: 'หญิง', startYear: 2531, level: '6', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '42538115', name: 'อุณารักษ์ เดสันเทียะ', gender: 'หญิง', startYear: 2538, level: '5.5', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
-  { id: '42538092', name: 'สมควร กลิ่นสนธิ์', gender: 'หญิง', startYear: 2538, level: '5.5', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
-  { id: '52542046', name: 'สรวิชญ์ ธรศุภเดชา', gender: 'ชาย', startYear: 2542, level: '5.5', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 600 },
-  { id: '22538173', name: 'ประภัสนันท์  เล็กตระกูลธารา', gender: 'หญิง', startYear: 2538, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '82542011', name: 'มลธิรา สุขสำราญ', gender: 'หญิง', startYear: 2542, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '62537025', name: 'วิชาญ  อุปนันท์', gender: 'ชาย', startYear: 2537, level: '5', status: 'มีสิทธิ์', visitProvince: 'เชียงใหม่', homeVisitBusFare: 1200 },
-  { id: '82536096', name: 'นุสรา อัศวโชคชัย', gender: 'หญิง', startYear: 2536, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '72539071', name: 'สันติภาพ ทองประดี', gender: 'ชาย', startYear: 2539, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '82538194', name: 'ชัญญ์ญาจิตร์  จุลเกษม', gender: 'หญิง', startYear: 2538, level: '5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '52538087', name: 'สงวน ร้องเกาะเกิด', gender: 'ชาย', startYear: 2538, level: '4.5', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
-  { id: '2539140', name: 'สุมาพร จงภู่', gender: 'หญิง', startYear: 2539, level: '4.5', status: 'มีสิทธิ์', visitProvince: 'ขอนแก่น', homeVisitBusFare: 600 },
-  { id: '42540033', name: 'คมสันติ  นุขุนทด', gender: 'ชาย', startYear: 2540, level: '3', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
-  { id: '82540031', name: 'พิชิต แจ่มศรี', gender: 'ชาย', startYear: 2540, level: '3', status: 'หมดสิทธิ์', visitProvince: '', homeVisitBusFare: 0 },
-];
+// Employee data now loaded from database only - no default fallback
 
 export const defaultSpecialAssist1Data: SpecialAssistItem[] = [
   { item: 'ควบคุมงานบำรุงรักษาระบบไฟฟ้าต้นกำลัง', timesPerYear: 1, days: 2, people: 1, rate: 250 },

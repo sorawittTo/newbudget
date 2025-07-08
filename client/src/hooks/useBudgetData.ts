@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BudgetItem, Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../types';
-import { defaultBudgetItems, defaultEmployees, defaultMasterRates, defaultSpecialAssist1Data, holidaysByYear } from '../data/defaults';
+import { defaultBudgetItems, defaultMasterRates, defaultSpecialAssist1Data, holidaysByYear } from '../data/defaults';
 
 export const useBudgetData = () => {
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
@@ -163,9 +163,8 @@ export const useBudgetData = () => {
         setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
 
-        // Initialize employee selections with all employees
-        const currentEmployees = employees.length > 0 ? employees : defaultEmployees;
-        const allEmployeeIds = currentEmployees.map(emp => emp.id);
+        // Initialize employee selections with all employees from API
+        const allEmployeeIds = employees.map(emp => emp.id);
         setSelectedTravelEmployees(allEmployeeIds);
         setSelectedSpecialAssistEmployees(allEmployeeIds);
         setSelectedFamilyVisitEmployees(allEmployeeIds);
@@ -173,19 +172,18 @@ export const useBudgetData = () => {
         setSelectedManagerRotationEmployees(allEmployeeIds);
       } catch (error) {
         console.error('Error loading data:', error);
-        // Fallback to defaults
-        setBudgetData(initializeBudgetData(defaultBudgetItems));
-        setEmployees(defaultEmployees);
-        setMasterRates(defaultMasterRates);
+        // Set empty data - force using database only
+        setBudgetData([]);
+        setEmployees([]);
+        setMasterRates({});
         setHolidaysData(holidaysByYear);
         
-        // Initialize with default employees
-        const allEmployeeIds = defaultEmployees.map(emp => emp.id);
-        setSelectedTravelEmployees(allEmployeeIds);
-        setSelectedSpecialAssistEmployees(allEmployeeIds);
-        setSelectedFamilyVisitEmployees(allEmployeeIds);
-        setSelectedCompanyTripEmployees(allEmployeeIds);
-        setSelectedManagerRotationEmployees(allEmployeeIds);
+        // Initialize with empty arrays
+        setSelectedTravelEmployees([]);
+        setSelectedSpecialAssistEmployees([]);
+        setSelectedFamilyVisitEmployees([]);
+        setSelectedCompanyTripEmployees([]);
+        setSelectedManagerRotationEmployees([]);
       } finally {
         setIsLoading(false);
       }
@@ -447,19 +445,18 @@ export const useBudgetData = () => {
 
   const resetAllData = () => {
     setBudgetData(initializeBudgetData(defaultBudgetItems));
-    setEmployees([...defaultEmployees]);
+    setEmployees([]);
     setMasterRates({ ...defaultMasterRates });
     setSpecialAssist1DataByYear({});
     setOvertimeDataByYear({});
     setHolidaysData(holidaysByYear);
     
-    // Reset employee selections
-    const allEmployeeIds = defaultEmployees.map(emp => emp.id);
-    setSelectedTravelEmployees(allEmployeeIds);
-    setSelectedSpecialAssistEmployees(allEmployeeIds);
-    setSelectedFamilyVisitEmployees(allEmployeeIds);
-    setSelectedCompanyTripEmployees(allEmployeeIds);
-    setSelectedManagerRotationEmployees(allEmployeeIds);
+    // Reset selections to empty arrays
+    setSelectedTravelEmployees([]);
+    setSelectedSpecialAssistEmployees([]);
+    setSelectedFamilyVisitEmployees([]);
+    setSelectedCompanyTripEmployees([]);
+    setSelectedManagerRotationEmployees([]);
   };
 
   return {
