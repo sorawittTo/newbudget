@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Database Save</title>
+</head>
+<body>
+    <h1>Test Database Save</h1>
+    <button onclick="testSave()">Test Save Budget Item</button>
+    <div id="result"></div>
+
+    <script>
+        async function testSave() {
+            try {
+                const response = await fetch('/api/budget-items', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([{
+                        code: 'TEST001',
+                        name: 'ทดสอบการบันทึก',
+                        values: { 2568: 50000, 2569: 60000 },
+                        notes: 'ทดสอบจากหน้าเว็บ'
+                    }])
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

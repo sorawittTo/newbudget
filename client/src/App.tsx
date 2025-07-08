@@ -70,10 +70,15 @@ function App() {
 
   const handleSave = useCallback(async () => {
     try {
-      await saveAllData();
-      showToast('บันทึกข้อมูลไปยัง Neon PostgreSQL เรียบร้อยแล้ว');
+      const result = await saveAllData();
+      if (result.success) {
+        showToast('บันทึกข้อมูลไปยัง Neon PostgreSQL เรียบร้อยแล้ว');
+      } else {
+        showToast(result.message || 'เกิดข้อผิดพลาดในการบันทึก', 'error');
+      }
     } catch (error) {
       showToast('เกิดข้อผิดพลาดในการบันทึก', 'error');
+      console.error('Save error:', error);
     }
   }, [saveAllData, showToast]);
 

@@ -167,13 +167,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (Array.isArray(data)) {
         const items = [];
         for (const itemData of data) {
-          if (itemData.id) {
-            // Update existing item
-            const existingItem = await storage.getBudgetItems();
-            const found = existingItem.find(item => item.id === parseInt(itemData.id));
-            if (found) {
+          try {
+            // Check if budget item with this code already exists
+            const existingItems = await storage.getBudgetItems();
+            const existing = existingItems.find(item => item.code === itemData.code);
+            
+            if (existing) {
+              // Update existing item
               const validatedData = insertBudgetItemSchema.partial().parse(itemData);
-              const updated = await storage.updateBudgetItem(found.id, validatedData);
+              const updated = await storage.updateBudgetItem(existing.id, validatedData);
               items.push(updated);
             } else {
               // Create new item
@@ -181,11 +183,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               const created = await storage.createBudgetItem(validatedData);
               items.push(created);
             }
-          } else {
-            // Create new item
-            const validatedData = insertBudgetItemSchema.parse(itemData);
-            const created = await storage.createBudgetItem(validatedData);
-            items.push(created);
+          } catch (singleError) {
+            console.error(`Error processing budget item ${itemData.code}:`, singleError);
+            // Continue with other items
           }
         }
         res.status(201).json(items);

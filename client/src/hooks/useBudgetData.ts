@@ -231,32 +231,77 @@ export const useBudgetData = () => {
 
   const saveAllData = async () => {
     try {
-      // Save to database via API
-      await Promise.all([
+      console.log('Saving data to Neon PostgreSQL...');
+      
+      // Save budget items
+      const budgetItemsToSave = budgetData.filter(item => !item.type).map(item => ({
+        code: item.code,
+        name: item.name,
+        values: item.values || {},
+        notes: item.notes || ''
+      }));
+      
+      // Save employees - transform to database format
+      const employeesToSave = employees.map(emp => ({
+        employeeId: emp.id,
+        name: emp.name,
+        gender: emp.gender,
+        startYear: emp.startYear,
+        level: emp.level,
+        status: emp.status || 'มีสิทธิ์',
+        visitProvince: emp.visitProvince,
+        homeVisitBusFare: emp.homeVisitBusFare.toString(),
+        customTravelRates: emp.customTravelRates || null
+      }));
+      
+      // Save master rates - transform to database format
+      const masterRatesToSave = Object.entries(masterRates).map(([level, rates]) => ({
+        level,
+        position: rates.position,
+        rent: rates.rent.toString(),
+        monthlyAssist: rates.monthlyAssist.toString(),
+        lumpSum: rates.lumpSum.toString(),
+        travel: rates.travel.toString(),
+        local: rates.local.toString(),
+        perDiem: rates.perDiem.toString(),
+        hotel: rates.hotel.toString()
+      }));
+      
+      // Save all data
+      const responses = await Promise.all([
         // Save budget items
         fetch('/api/budget-items', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(budgetData)
+          body: JSON.stringify(budgetItemsToSave)
         }),
         // Save employees
         fetch('/api/employees', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(employees)
+          body: JSON.stringify(employeesToSave)
         }),
         // Save master rates
         fetch('/api/master-rates', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(masterRates)
+          body: JSON.stringify(masterRatesToSave)
         })
       ]);
       
+      // Check if all requests were successful
+      responses.forEach((response, index) => {
+        if (!response.ok) {
+          const endpoints = ['budget-items', 'employees', 'master-rates'];
+          throw new Error(`Failed to save ${endpoints[index]}: ${response.status}`);
+        }
+      });
+      
       console.log('Data saved to Neon PostgreSQL successfully');
+      return { success: true, message: 'บันทึกข้อมูลสำเร็จ' };
     } catch (error) {
       console.error('Error saving to database:', error);
-      throw error;
+      return { success: false, message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', error };
     }
   };
 
