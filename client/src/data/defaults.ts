@@ -27,21 +27,21 @@ export const defaultBudgetItems: BudgetItem[] = [
   { code: '53100200', accountCode: '5310-0200', name: 'ค่าใช้จ่ายในการเดินทาง', notes: '' },
 
 
-  { code: '53101000', name: 'ค่าทรัพยากรสาสนเทศห้องสมุด', notes: '' },
-  { code: '53103600', name: 'ค่าจัดประชุม/ชี้แจง', notes: '' },
-  { code: '53101500', name: 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', notes: '' },
-  { code: '53109900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
+  { code: '53101000', accountCode: '5310-1000', name: 'ค่าทรัพยากรสาสนเทศห้องสมุด', notes: '' },
+  { code: '53103600', accountCode: '5310-3600', name: 'ค่าจัดประชุม/ชี้แจง', notes: '' },
+  { code: '53101500', accountCode: '5310-1500', name: 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', notes: '' },
+  { code: '53109900', accountCode: '5310-9900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
   { type: 'header', name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค' },
-  { code: '55080300', name: 'เงินบริจาค', notes: '' },
+  { code: '55080300', accountCode: '5508-0300', name: 'เงินบริจาค', notes: '' },
 
   { type: 'header', name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต' },
-  { code: '53110700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
+  { code: '53110700', accountCode: '5311-0700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
   { type: 'main_header', name: 'รวมงบประมาณรายจ่ายสินทรัพย์' },
   { type: 'header', name: 'หมวด 7 : สินทรัพย์ถาวร' },
-  { code: '10', name: 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', notes: '' },
-  { code: '16', name: 'ครุภัณฑ์เบ็ดเตล็ด', notes: '' },
-  { code: '25', name: 'ครุภัณฑ์ยานพาหนะและขนส่ง', notes: '' },
-  { code: '5', name: 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', notes: '' },
+  { code: '10', accountCode: 'AS-10', name: 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', notes: '' },
+  { code: '16', accountCode: 'AS-16', name: 'ครุภัณฑ์เบ็ดเตล็ด', notes: '' },
+  { code: '25', accountCode: 'AS-25', name: 'ครุภัณฑ์ยานพาหนะและขนส่ง', notes: '' },
+  { code: '5', accountCode: 'AS-05', name: 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', notes: '' },
 ];
 
 export const defaultMasterRates: MasterRates = {
