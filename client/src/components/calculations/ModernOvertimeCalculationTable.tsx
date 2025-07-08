@@ -26,7 +26,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
 
   const handleAddItem = () => {
     const newItem: OvertimeItem = {
-      item: '',
+      item: 'รายการใหม่',
       instances: 1,
       days: 1,
       hours: 8,
@@ -189,7 +189,18 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                 key={index}
                 className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30"
               >
-                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
+                    <NeumorphismInput
+                      type="text"
+                      value={item.item}
+                      onChange={(e) => onUpdateData(calcYear, 'items', index, 'item', e.target.value)}
+                      className="w-full"
+                      placeholder="ระบุรายการ..."
+                    />
+                  </div>
+                  
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                     <NeumorphismInput

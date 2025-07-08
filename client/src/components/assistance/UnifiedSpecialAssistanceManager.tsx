@@ -447,7 +447,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => {
                   const newIndex = (overtimeData.items || []).length;
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', '');
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', 'รายการใหม่');
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'instances', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
@@ -466,7 +466,24 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
         <div className="p-6 space-y-4">
           {(overtimeData.items || []).map((item, index) => (
             <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="text"
+                      value={item.item}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
+                      className="w-full"
+                      placeholder="ระบุรายการ..."
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                      <span className="font-medium text-slate-700">{item.item}</span>
+                    </div>
+                  )}
+                </div>
+                
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                   {editMode ? (
