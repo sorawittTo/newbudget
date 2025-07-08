@@ -299,9 +299,19 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.level}
                         onChange={(e) => updateEmployeeField(index, 'level', e.target.value)}
+                        style={{
+                          WebkitAppearance: 'none',
+                          MozAppearance: 'none',
+                          appearance: 'none',
+                          backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-chevron-down\'%3e%3cpolyline points=\'6,9 12,15 18,9\'%3e%3c/polyline%3e%3c/svg%3e")',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 8px center',
+                          backgroundSize: '16px',
+                          paddingRight: '32px'
+                        }}
                       >
                         {levelOptions.map(level => (
-                          <option key={level} value={level}>{level}</option>
+                          <option key={level} value={level}>ระดับ {level}</option>
                         ))}
                       </select>
                     </td>
