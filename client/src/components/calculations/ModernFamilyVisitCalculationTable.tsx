@@ -169,55 +169,47 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-blue-200/50">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-blue-600 text-sm font-medium">พนักงานทั้งหมด</p>
-              <p className="text-3xl font-bold text-blue-900">{stats.totalEmployees}</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-500 shadow-[8px_8px_16px_#bfdbfe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-              <Users className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-emerald-200/50">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-emerald-600 text-sm font-medium">มีสิทธิ์เดินทาง</p>
-              <p className="text-3xl font-bold text-emerald-900">{stats.eligibleEmployees}</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-emerald-500 shadow-[8px_8px_16px_#a7f3d0,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-              <Target className="w-6 h-6 text-white" />
+      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
+                <Users className="w-6 h-6 text-green-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">ค่าเดินทางเยี่ยมครอบครัว</h2>
+                <p className="text-gray-600">คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสิทธิ์</p>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-purple-200/50">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-600 text-sm font-medium">ยอดรวมทั้งหมด</p>
-              <p className="text-2xl font-bold text-purple-900">{formatCurrency(familyVisitTotal)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-[8px_8px_16px_#ddd6fe,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-              <Calculator className="w-6 h-6 text-white" />
-            </div>
+
+          {/* Statistics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            {[
+              { label: 'พนักงานทั้งหมด', value: stats.totalEmployees, icon: Users, color: 'text-blue-600' },
+              { label: 'มีสิทธิ์เดินทาง', value: stats.eligibleEmployees, icon: Award, color: 'text-green-600' },
+              { label: 'ยอดรวมทั้งหมด', value: formatCurrency(familyVisitTotal), icon: Calculator, color: 'text-purple-600' }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="p-4 rounded-2xl bg-gray-100"
+                style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-xl ${stat.color}`} style={{ boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff', backgroundColor: '#f9fafb' }}>
+                    <stat.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">{stat.label}</p>
+                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
-        
-        <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-amber-200/50">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-amber-600 text-sm font-medium">ไม่มีสิทธิ์</p>
-              <p className="text-3xl font-bold text-amber-900">{stats.ineligibleEmployees}</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-500 shadow-[8px_8px_16px_#fde68a,-8px_-8px_16px_#ffffff] flex items-center justify-center">
-              <AlertCircle className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-      </div>
+      </Card>
 
 
 
