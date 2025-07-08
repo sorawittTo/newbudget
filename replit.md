@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 08, 2025. Remove Holiday Footer from Overtime Tables
+  * Removed holiday information footer from both ModernOvertimeCalculationTable and UnifiedSpecialAssistanceManager
+  * No longer displays "วันหยุดประจำปี 2569" section in overtime calculation pages
+  * Cleaner interface focused on overtime calculations without holiday details
+  * Fixed incomplete removal issue - ensured all holiday footers are removed from all relevant components
 - July 08, 2025. Auto-Update Overtime Rates When Salary Changes
   * Enhanced overtime calculation system to automatically recalculate all item rates when salary changes
   * When salary is modified, all overtime items using default rate (salary ÷ 210) are updated automatically
