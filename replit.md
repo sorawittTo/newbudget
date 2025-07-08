@@ -119,7 +119,8 @@ This is a comprehensive employee management system built for organizational expe
 Changelog:
 - July 08, 2025. Complete Arrow Controls Removal from Employee Table
   * Fixed remaining arrow controls in EmployeeTable.tsx for startYear and homeVisitBusFare fields  
-  * Fixed level dropdown select to remove default browser arrows and added custom dropdown icon
+  * Added global CSS in index.css to force remove all browser arrows with !important
+  * Applied appearance: none to all select elements with custom dropdown icon
   * Added inputMode="numeric" and pattern="[0-9]*" for numeric fields
   * Applied CSS styles to hide spinners: MozAppearance: 'textfield', WebkitAppearance: 'none'
   * Added onWheel preventDefault to prevent accidental value changes
