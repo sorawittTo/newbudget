@@ -57,7 +57,7 @@ export const ManagerRotationCalculationTable: React.FC<ManagerRotationCalculatio
       return (
         <div className="flex items-center gap-2">
           <input
-            type="number"
+            type="text"
             className="w-20 p-1 text-right border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
             value={editingValues[field] || currentValue}
             onChange={(e) => setEditingValues(prev => ({ ...prev, [field]: parseFloat(e.target.value) || 0 }))}

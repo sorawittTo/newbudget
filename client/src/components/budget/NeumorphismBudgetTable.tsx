@@ -697,7 +697,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           {globalEditMode || editingCell === `${actualIndex}-${currentYear}` ? (
                             <div className="flex items-center gap-2">
                               <input
-                                type="number"
+                                type="text"
                                 className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700 text-lg font-semibold"
                                 value={editingCell === `${actualIndex}-${currentYear}` ? tempValue : currentValue.toString()}
                                 onChange={(e) => {
@@ -754,7 +754,7 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                           {globalEditMode || editingCell === `${actualIndex}-${nextYear}` ? (
                             <div className="flex items-center gap-2">
                               <input
-                                type="number"
+                                type="text"
                                 className="w-full p-3 text-right bg-white/80 border-0 rounded-xl shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] focus:outline-none focus:shadow-[inset_10px_10px_20px_#d1d5db,inset_-10px_-10px_20px_#ffffff] transition-all duration-300 text-slate-700 text-lg font-semibold"
                                 value={editingCell === `${actualIndex}-${nextYear}` ? tempValue : nextValue.toString()}
                                 onChange={(e) => {

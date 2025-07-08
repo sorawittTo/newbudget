@@ -91,7 +91,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
       return (
         <div className="flex items-center gap-2">
           <input
-            type="number"
+            type="text"
             className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
             value={currentValue}
             onChange={(e) => handleGlobalUpdate(empId, field, parseFloat(e.target.value) || 0)}
@@ -104,7 +104,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
       return (
         <div className="flex items-center gap-2">
           <input
-            type="number"
+            type="text"
             className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
             value={editingValues[key] || currentValue}
             onChange={(e) => setEditingValues(prev => ({ ...prev, [key]: parseFloat(e.target.value) || 0 }))}
@@ -277,7 +277,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                         {globalEditMode ? (
                           <div className="flex items-center gap-2">
                             <input
-                              type="number"
+                              type="text"
                               className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                               value={emp.roundTripFare}
                               onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', (parseFloat(e.target.value) || 0) / 2)}
@@ -295,7 +295,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                         {globalEditMode ? (
                           <div className="flex items-center gap-2">
                             <input
-                              type="number"
+                              type="text"
                               className="w-20 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-center"
                               value={4}
                               onChange={() => {}} // Fixed at 4 for now

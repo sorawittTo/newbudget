@@ -100,7 +100,7 @@ export const SpecialAssistCalculationTable: React.FC<SpecialAssistCalculationTab
       return (
         <div className="flex items-center gap-2">
           <input
-            type="number"
+            type="text"
             min={field === 'months' ? "1" : "0"}
             max={field === 'months' ? "12" : undefined}
             className="w-20 p-2 text-center border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500"

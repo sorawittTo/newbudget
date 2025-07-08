@@ -10,8 +10,12 @@ export const NeumorphismInput: React.FC<NeumorphismInputProps> = ({
   label,
   error,
   className,
+  type,
   ...props
 }) => {
+  // Force all numeric inputs to be text type to prevent arrow controls
+  const inputType = type === 'number' ? 'text' : type;
+  
   return (
     <div className="w-full">
       {label && (
@@ -20,6 +24,7 @@ export const NeumorphismInput: React.FC<NeumorphismInputProps> = ({
         </label>
       )}
       <input
+        type={inputType}
         className={clsx(
           'w-full px-4 py-3 bg-gray-100 border-0 rounded-2xl transition-all duration-300 focus:outline-none text-gray-900 placeholder-gray-500',
           error ? 'text-red-600' : 'focus:text-blue-600',

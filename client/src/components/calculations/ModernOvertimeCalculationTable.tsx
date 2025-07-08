@@ -119,7 +119,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
           </div>
           <div className="w-64">
             <NeumorphismInput
-              type="number"
+              type="text"
               value={overtimeData.salary}
               onChange={(e) => onUpdateData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
               className="w-full text-lg font-bold text-right"
@@ -182,7 +182,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.instances}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -192,7 +192,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.days}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -202,7 +202,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">ชั่วโมง</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.hours}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -212,7 +212,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.people}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -222,7 +222,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา/ชม.</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.rate || (overtimeData.salary / 30 / 8 * 2)}
                       onChange={(e) => onUpdateData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"

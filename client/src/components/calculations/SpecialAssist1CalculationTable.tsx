@@ -56,7 +56,7 @@ export const SpecialAssist1CalculationTable: React.FC<SpecialAssist1CalculationT
       return (
         <div className="flex items-center gap-2">
           <input
-            type={isText ? "text" : "number"}
+            type="text"
             className="w-full p-1 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
             value={editingValues[key] !== undefined ? editingValues[key] : currentValue}
             onChange={(e) => setEditingValues(prev => ({ 

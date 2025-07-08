@@ -256,7 +256,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">วันเบี้ยเลี้ยง</label>
             <input
-              type="number"
+              type="text"
               value={rotationSettings.perDiemDays}
               onChange={(e) => handleSettingChange('perDiemDays', parseInt(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -265,7 +265,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">คืนที่พัก</label>
             <input
-              type="number"
+              type="text"
               value={rotationSettings.hotelNights}
               onChange={(e) => handleSettingChange('hotelNights', parseInt(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -276,7 +276,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ค่ารถทัวร์</label>
             <input
-              type="number"
+              type="text"
               value={rotationSettings.busCost}
               onChange={(e) => handleSettingChange('busCost', parseFloat(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -285,7 +285,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ค่าเครื่องบิน</label>
             <input
-              type="number"
+              type="text"
               value={rotationSettings.flightCost}
               onChange={(e) => handleSettingChange('flightCost', parseFloat(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -294,7 +294,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ค่าแท็กซี่</label>
             <input
-              type="number"
+              type="text"
               value={rotationSettings.taxiCost}
               onChange={(e) => handleSettingChange('taxiCost', parseFloat(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -331,7 +331,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div className="space-y-2">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={emp.perDiemCost}
                           onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.perDiem', (parseFloat(e.target.value) || 0) / rotationSettings.perDiemDays)}
@@ -345,7 +345,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div className="space-y-2">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={emp.accommodationCost}
                           onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.hotel', (parseFloat(e.target.value) || 0) / rotationSettings.hotelNights)}
@@ -359,7 +359,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div className="space-y-2">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={emp.totalTravel}
                           onChange={(e) => {

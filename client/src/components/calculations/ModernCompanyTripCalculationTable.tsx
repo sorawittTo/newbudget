@@ -147,7 +147,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ค่ารถโดยสาร (ทางเดียว)</label>
             <input
-              type="number"
+              type="text"
               value={tripSettings.busFare}
               onChange={(e) => handleSettingChange('busFare', parseFloat(e.target.value) || 0)}
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300"
@@ -183,7 +183,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
                     <div className="space-y-2">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={emp.accommodationCost}
                           onChange={(e) => handleEditingChange(`accommodation-${emp.id}`, parseFloat(e.target.value) || 0)}
@@ -197,7 +197,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
                     <div className="space-y-2">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={tripSettings.busFare * 2}
                           onChange={(e) => handleSettingChange('busFare', (parseFloat(e.target.value) || 0) / 2)}

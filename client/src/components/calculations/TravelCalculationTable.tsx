@@ -74,7 +74,7 @@ export const TravelCalculationTable: React.FC<TravelCalculationTableProps> = ({
       return (
         <div className="flex items-center gap-2">
           <input
-            type="number"
+            type="text"
             min="1"
             max="10"
             className="w-16 p-2 text-center border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500"

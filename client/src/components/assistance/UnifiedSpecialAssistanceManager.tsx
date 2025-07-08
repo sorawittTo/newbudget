@@ -161,7 +161,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     <label className="block text-sm font-medium text-slate-700 mb-2">จำนวนเดือน</label>
                     {editMode ? (
                       <NeumorphismInput
-                        type="number"
+                        type="text"
                         min="1"
                         max="12"
                         value={months}
@@ -179,9 +179,9 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     <label className="block text-sm font-medium text-slate-700 mb-2">เงินซื้อของเหมาจ่าย</label>
                     {editMode ? (
                       <NeumorphismInput
-                        type="number"
+                        type="text"
                         min="0"
-                        step="100"
+                        
                         value={purchaseAllowance}
                         onChange={(e) => handlePurchaseAllowanceChange(emp.id, parseFloat(e.target.value) || 0)}
                         className="w-full text-right"
@@ -286,7 +286,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง/ปี</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.timesPerYear}
                       onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -302,7 +302,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.days}
                       onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -318,7 +318,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.people}
                       onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -334,7 +334,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา (บาท)</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.rate}
                       onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"
@@ -413,7 +413,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
           <div className="w-64">
             {editMode ? (
               <NeumorphismInput
-                type="number"
+                type="text"
                 value={overtimeData.salary}
                 onChange={(e) => onUpdateOvertimeData(calcYear, 'salary', parseFloat(e.target.value) || 0)}
                 className="w-full text-lg font-bold text-right"
@@ -476,7 +476,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.instances}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -492,7 +492,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.days}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -508,7 +508,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">ชั่วโมง</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.hours}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -524,7 +524,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.people}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -540,7 +540,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา/ชม.</label>
                   {editMode ? (
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.rate || (overtimeData.salary / 30 / 8 * 2)}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"

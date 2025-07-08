@@ -291,7 +291,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       </td>
                       <td className="p-3">
                         <NeumorphismInput
-                          type="number"
+                          type="text"
                           value={emp.startYear}
                           onChange={(e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)}
                           className="text-center"
@@ -356,7 +356,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       </td>
                       <td className="p-3">
                         <input
-                          type="number"
+                          type="text"
                           className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={emp.homeVisitBusFare}
                           onChange={(e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
@@ -456,7 +456,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.rent}
                             onChange={(e) => onUpdateMasterRate(level, 'rent', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -465,7 +465,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.monthlyAssist}
                             onChange={(e) => onUpdateMasterRate(level, 'monthlyAssist', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -474,7 +474,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.lumpSum}
                             onChange={(e) => onUpdateMasterRate(level, 'lumpSum', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -483,7 +483,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.travel}
                             onChange={(e) => onUpdateMasterRate(level, 'travel', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -492,7 +492,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.local}
                             onChange={(e) => onUpdateMasterRate(level, 'local', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -501,7 +501,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.perDiem}
                             onChange={(e) => onUpdateMasterRate(level, 'perDiem', parseFloat(e.target.value) || 0)}
                             placeholder="0"
@@ -510,7 +510,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </td>
                         <td className="p-3 text-right">
                           <NeumorphismInput
-                            type="number"
+                            type="text"
                             value={rate.hotel}
                             onChange={(e) => onUpdateMasterRate(level, 'hotel', parseFloat(e.target.value) || 0)}
                             placeholder="0"

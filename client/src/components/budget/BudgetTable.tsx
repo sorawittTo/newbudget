@@ -246,7 +246,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                     {editingCell === `${index}-${currentYear}` ? (
                       <div className="flex items-center gap-2">
                         <input
-                          type="number"
+                          type="text"
                           className="w-full p-2 text-right bg-blue-50 border-2 border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={tempValue}
                           onChange={(e) => setTempValue(e.target.value)}
@@ -277,7 +277,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                     {editingCell === `${index}-${nextYear}` ? (
                       <div className="flex items-center gap-2">
                         <input
-                          type="number"
+                          type="text"
                           className="w-full p-2 text-right bg-green-50 border-2 border-green-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={tempValue}
                           onChange={(e) => setTempValue(e.target.value)}

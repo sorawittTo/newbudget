@@ -198,7 +198,7 @@ export const ModernSpecialAssistCalculationTable: React.FC<ModernSpecialAssistCa
                     <td className="px-6 py-4 text-right">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           min="1"
                           max="12"
                           className="w-20 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-center"
@@ -218,9 +218,9 @@ export const ModernSpecialAssistCalculationTable: React.FC<ModernSpecialAssistCa
                     <td className="px-6 py-4 text-right">
                       {globalEditMode ? (
                         <input
-                          type="number"
+                          type="text"
                           min="0"
-                          step="100"
+                          
                           className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
                           value={lumpSum}
                           onChange={(e) => handleLumpSumChange(emp.id, parseFloat(e.target.value) || 0)}

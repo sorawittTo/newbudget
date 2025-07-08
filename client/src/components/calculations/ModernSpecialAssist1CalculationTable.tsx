@@ -152,7 +152,7 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง/ปี</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.timesPerYear}
                       onChange={(e) => onUpdateItem(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -162,7 +162,7 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.days}
                       onChange={(e) => onUpdateItem(calcYear, index, 'days', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -172,7 +172,7 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.people}
                       onChange={(e) => onUpdateItem(calcYear, index, 'people', parseInt(e.target.value) || 0)}
                       className="w-full"
@@ -182,7 +182,7 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา (บาท)</label>
                     <NeumorphismInput
-                      type="number"
+                      type="text"
                       value={item.rate}
                       onChange={(e) => onUpdateItem(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"

@@ -201,7 +201,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
         return (
           <input
             {...commonProps}
-            type="number"
+            type="text"
             placeholder={field.placeholder}
             value={value}
             onChange={(e) => handleChange(field.name, parseFloat(e.target.value) || 0)}
