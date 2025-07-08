@@ -172,7 +172,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
               <Car className="w-8 h-8 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-2">เงินช่วยเหลือ</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-2">ค่าเดินทาง</h2>
               <p className="text-slate-600">จัดการค่าใช้จ่ายในการเดินทาง</p>
             </div>
           </div>
