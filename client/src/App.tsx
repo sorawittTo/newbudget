@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useBudgetData } from './hooks/useBudgetData';
 import { AppLayout } from './components/layout/AppLayout';
 import { ModernDashboard } from './components/dashboard/ModernDashboard';
-import { NeumorphismBudgetTable } from './components/budget/NeumorphismBudgetTable';
+
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { SpecialAssistanceManager } from './components/assistance/SpecialAssistanceManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
-import { exportBudgetToExcel, exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
+import { exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
 
 
 function App() {
   const {
-    budgetData,
+
     employees,
     masterRates,
     specialAssist1DataByYear,
@@ -27,9 +27,7 @@ function App() {
     selectedCompanyTripEmployees,
     selectedManagerRotationEmployees,
     isLoading,
-    updateBudgetItem,
-    updateBudgetNotes,
-    updateBudgetField,
+
     updateEmployee,
     addEmployee,
     deleteEmployee,
@@ -83,14 +81,7 @@ function App() {
     }
   }, [saveAllData, showToast]);
 
-  const handleExportBudget = useCallback(() => {
-    try {
-      exportBudgetToExcel(budgetData, currentYear, nextYear);
-      showToast('ส่งออกข้อมูลงบประมาณเรียบร้อยแล้ว');
-    } catch (error) {
-      showToast('เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
-    }
-  }, [budgetData, currentYear, nextYear, showToast]);
+
 
   const handleExportEmployees = useCallback(() => {
     try {
@@ -161,14 +152,7 @@ function App() {
       </tr>`
     ).join('');
 
-    const budgetRows = (budgetData[currentYear] || []).map(
-      (item, idx) => `<tr class="even:bg-blue-50">
-        <td class="px-4 py-2 border">${idx + 1}</td>
-        <td class="px-4 py-2 border">${item.item}</td>
-        <td class="px-4 py-2 border text-right">${item.amount?.toLocaleString() || ""}</td>
-        <td class="px-4 py-2 border">${item.notes || ''}</td>
-      </tr>`
-    ).join('');
+
 
     const html = `
 <!DOCTYPE html>
@@ -268,7 +252,6 @@ function App() {
       case 'dashboard':
         return (
           <ModernDashboard
-            budgetData={budgetData}
             employees={employees}
             currentYear={currentYear}
             nextYear={nextYear}
@@ -276,23 +259,7 @@ function App() {
           />
         );
 
-      case 'budget':
-        return (
-          <NeumorphismBudgetTable
-            budgetData={budgetData}
-            currentYear={currentYear}
-            nextYear={nextYear}
-            onUpdateBudget={updateBudgetItem}
-            onUpdateNotes={updateBudgetNotes}
-            onUpdateBudgetField={updateBudgetField}
-            onYearChange={(current, next) => {
-              setCurrentYear(current);
-              setNextYear(next);
-            }}
-            onSave={handleSave}
-            onExport={handleExportBudget}
-          />
-        );
+
 
       case 'employees':
         return (

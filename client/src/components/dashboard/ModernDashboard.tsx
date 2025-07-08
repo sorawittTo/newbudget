@@ -23,7 +23,7 @@ import { formatCurrency } from '../../utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell, AreaChart, Area } from 'recharts';
 
 interface ModernDashboardProps {
-  budgetData: BudgetItem[];
+
   employees: Employee[];
   currentYear: number;
   nextYear: number;
@@ -70,7 +70,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, trend, ic
 );
 
 export const ModernDashboard: React.FC<ModernDashboardProps> = ({
-  budgetData,
   employees,
   currentYear,
   nextYear,
@@ -79,9 +78,9 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
   const metrics = useMemo(() => {
-    const currentTotal = budgetData.reduce((sum, item) => sum + (item.values?.[currentYear] || 0), 0);
-    const nextTotal = budgetData.reduce((sum, item) => sum + (item.values?.[nextYear] || 0), 0);
-    const totalChange = currentTotal > 0 ? ((nextTotal - currentTotal) / currentTotal) * 100 : 0;
+    const currentTotal = 0; // No budget data available
+    const nextTotal = 0; // No budget data available
+    const totalChange = 0;
     
     const activeEmployees = employees.filter(emp => emp.status === 'มีสิทธิ์').length;
     const employeeChange = 5.2; // Mock data
@@ -94,30 +93,28 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       employeeChange,
       totalEmployees: employees.length
     };
-  }, [budgetData, employees, currentYear, nextYear]);
+  }, [employees]);
 
   // Mock data for charts
-  const budgetTrendData = [
-    { month: 'ม.ค.', current: 2400000, next: 2800000 },
-    { month: 'ก.พ.', current: 1800000, next: 2200000 },
-    { month: 'มี.ค.', current: 3200000, next: 3600000 },
-    { month: 'เม.ย.', current: 2800000, next: 3200000 },
-    { month: 'พ.ค.', current: 2600000, next: 3000000 },
-    { month: 'มิ.ย.', current: 3100000, next: 3500000 },
+  const employeeData = [
+    { level: 'ระดับ 1', count: 2, percentage: 12.5 },
+    { level: 'ระดับ 2', count: 3, percentage: 18.8 },
+    { level: 'ระดับ 3', count: 4, percentage: 25.0 },
+    { level: 'ระดับ 4', count: 3, percentage: 18.8 },
+    { level: 'ระดับ 5', count: 2, percentage: 12.5 },
+    { level: 'ระดับ 6', count: 1, percentage: 6.2 },
+    { level: 'ระดับ 7', count: 1, percentage: 6.2 },
   ];
 
-  const categoryData = [
-    { name: 'ค่าใช้จ่ายพนักงาน', value: 35, color: '#3B82F6' },
-    { name: 'ค่าดำเนินงาน', value: 25, color: '#10B981' },
-    { name: 'ค่าเดินทาง', value: 20, color: '#F59E0B' },
-    { name: 'ค่าช่วยเหลือ', value: 15, color: '#EF4444' },
-    { name: 'อื่นๆ', value: 5, color: '#8B5CF6' },
+  const statusData = [
+    { name: 'พนักงานมีสิทธิ์', value: metrics.activeEmployees, color: '#10B981' },
+    { name: 'พนักงานหมดสิทธิ์', value: metrics.totalEmployees - metrics.activeEmployees, color: '#EF4444' },
   ];
 
   const activityData = [
-    { type: 'success', message: 'อัพเดทงบประมาณสำเร็จ', time: '2 นาทีที่แล้ว' },
+    { type: 'success', message: 'อัพเดทข้อมูลพนักงานสำเร็จ', time: '2 นาทีที่แล้ว' },
     { type: 'info', message: 'เพิ่มพนักงานใหม่ 3 คน', time: '15 นาทีที่แล้ว' },
-    { type: 'warning', message: 'งบประมาณใกล้เกินวงเงิน', time: '1 ชั่วโมงที่แล้ว' },
+    { type: 'warning', message: 'พนักงานหมดสิทธิ์เพิ่มขึ้น', time: '1 ชั่วโมงที่แล้ว' },
     { type: 'success', message: 'ส่งออกรายงานสำเร็จ', time: '2 ชั่วโมงที่แล้ว' },
   ];
 
@@ -127,7 +124,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">DASHBOARD</h1>
-          <p className="text-gray-600 mt-1">ภาพรวมระบบงบประมาณ ณ วันที่ {new Date().toLocaleDateString('th-TH')}</p>
+          <p className="text-gray-600 mt-1">ภาพรวมระบบจัดการพนักงาน ณ วันที่ {new Date().toLocaleDateString('th-TH')}</p>
         </div>
         <div className="flex gap-2">
 
@@ -148,29 +145,29 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          title="งบประมาณปัจจุบัน"
-          value={formatCurrency(metrics.totalBudget)}
-          change={metrics.budgetChange}
-          trend={metrics.budgetChange > 0 ? 'up' : 'down'}
-          icon={<DollarSign className="w-6 h-6" />}
+          title="พนักงานทั้งหมด"
+          value={metrics.totalEmployees.toString()}
+          change={metrics.employeeChange}
+          trend={metrics.employeeChange > 0 ? 'up' : 'down'}
+          icon={<Users className="w-6 h-6" />}
           color="blue"
           gradient="from-blue-500 to-blue-600"
         />
         <MetricCard
-          title="งบประมาณปีหน้า"
-          value={formatCurrency(metrics.nextBudget)}
-          change={12.5}
+          title="พนักงานมีสิทธิ์"
+          value={metrics.activeEmployees.toString()}
+          change={8.2}
           trend="up"
-          icon={<Target className="w-6 h-6" />}
+          icon={<CheckCircle className="w-6 h-6" />}
           color="green"
           gradient="from-green-500 to-green-600"
         />
         <MetricCard
-          title="พนักงานที่มีสิทธิ์"
-          value={metrics.activeEmployees.toString()}
-          change={metrics.employeeChange}
+          title="ระดับความเหมาะสม"
+          value="95%"
+          change={3.2}
           trend="up"
-          icon={<Users className="w-6 h-6" />}
+          icon={<Target className="w-6 h-6" />}
           color="purple"
           gradient="from-purple-500 to-purple-600"
         />
@@ -190,17 +187,17 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         {/* Budget Trend Chart */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">แนวโน้มงบประมาณ</h3>
+            <h3 className="text-lg font-semibold text-gray-900">สถิติพนักงาน</h3>
             <Button 
               variant="secondary" 
               size="sm"
-              onClick={() => onNavigate('budget')}
+              onClick={() => onNavigate('employees')}
             >
               ดูรายละเอียด
             </Button>
           </div>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={budgetTrendData}>
+            <AreaChart data={employeeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
@@ -233,11 +230,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         {/* Budget Distribution */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">การกระจายงบประมาณ</h3>
+            <h3 className="text-lg font-semibold text-gray-900">สถิติสิทธิ์พนักงาน</h3>
             <Button 
               variant="secondary" 
               size="sm"
-              onClick={() => onNavigate('reports')}
+              onClick={() => onNavigate('employees')}
             >
               ดูรายงาน
             </Button>
@@ -248,7 +245,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 <RechartsPieChart>
                   <Tooltip formatter={(value: number) => [`${value}%`, '']} />
                   <RechartsPieChart>
-                    {categoryData.map((entry, index) => (
+                    {statusData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </RechartsPieChart>
@@ -256,7 +253,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </ResponsiveContainer>
             </div>
             <div className="space-y-3">
-              {categoryData.map((item, index) => (
+              {statusData.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div 
                     className="w-3 h-3 rounded-full"
@@ -264,7 +261,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                   />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                    <p className="text-xs text-gray-500">{item.value}%</p>
+                    <p className="text-xs text-gray-500">{item.value} คน</p>
                   </div>
                 </div>
               ))}
@@ -282,10 +279,10 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             <Button 
               variant="primary" 
               className="w-full justify-start"
-              onClick={() => onNavigate('budget')}
+              onClick={() => onNavigate('travel')}
             >
-              <DollarSign className="w-4 h-4 mr-2" />
-              จัดการงบประมาณ
+              <Activity className="w-4 h-4 mr-2" />
+              จัดการเดินทาง
             </Button>
             <Button 
               variant="secondary" 

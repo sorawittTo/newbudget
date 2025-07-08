@@ -55,14 +55,7 @@ const navigationItems: NavigationItem[] = [
     color: 'text-blue-600',
     gradient: 'from-blue-500 to-blue-600'
   },
-  {
-    id: 'budget',
-    label: 'งบประมาณ',
-    icon: <Calculator className="w-5 h-5" />,
-    description: 'จัดการงบประมาณ',
-    color: 'text-green-600',
-    gradient: 'from-green-500 to-green-600'
-  },
+
   {
     id: 'employees',
     label: 'พนักงาน',
