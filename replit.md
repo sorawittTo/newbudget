@@ -117,6 +117,13 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 08, 2025. Server Deployment Issues Fixed
+  * Fixed server binding to properly listen on 0.0.0.0:5000 in development mode
+  * Added health check endpoints at "/" and "/health" for deployment monitoring
+  * Updated server startup logic to use proper environment variable detection
+  * Added graceful shutdown handling for SIGINT and SIGTERM signals
+  * Fixed port binding issues causing "address already in use" errors
+  * Server now runs consistently in development mode without conflicts
 - July 08, 2025. Database Update System Fixed
   * Fixed database update issues - data now properly saves to Neon PostgreSQL
   * Enhanced saveAllData function with proper error handling and success feedback

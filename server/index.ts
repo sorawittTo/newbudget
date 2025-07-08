@@ -50,7 +50,7 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
@@ -60,21 +60,38 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
+  
   // Export the app for Vercel
   if (process.env.NODE_ENV === 'production') {
     // In production (Vercel), export the app
     globalThis.app = app;
   } else {
     // In development, start the server
-    server.listen({
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    }, () => {
+    server.listen(port, "0.0.0.0", () => {
       log(`serving on port ${port}`);
     });
+    
+    // Handle graceful shutdown
+    process.on('SIGINT', () => {
+      log('Received SIGINT, shutting down gracefully...');
+      server.close(() => {
+        log('Server closed');
+        process.exit(0);
+      });
+    });
+    
+    process.on('SIGTERM', () => {
+      log('Received SIGTERM, shutting down gracefully...');
+      server.close(() => {
+        log('Server closed');
+        process.exit(0);
+      });
+    });
   }
-})();
+})().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
 
 // Export for Vercel
 export default app;

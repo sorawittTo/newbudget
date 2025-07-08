@@ -10,6 +10,15 @@ function log(message: string, source = "api") {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get("/health", (req, res) => {
+    res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  });
+
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", message: "Budget Management System API is running" });
+  });
+
   // Employee routes
   app.get("/api/employees", async (req, res) => {
     try {
