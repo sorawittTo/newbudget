@@ -280,3 +280,10 @@ Changelog:
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+**CRITICAL UI/UX Preferences:**
+- DO NOT modify existing UI designs without explicit user instruction
+- Master rates table should maintain its existing neumorphism design
+- Only make changes when specifically requested by the user
+- System requires Edit button to be clicked before data can be modified
+- All sections must have exactly three buttons: Edit, Save, and Export
