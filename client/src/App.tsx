@@ -10,12 +10,12 @@ import { SpecialAssistanceManager } from './components/assistance/SpecialAssista
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
-import { exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
+import { exportEmployeesToExcel, importEmployeesFromExcel, exportBudgetToExcel } from './utils/excel';
 
 
 function App() {
   const {
-
+    budgetData,
     employees,
     masterRates,
     specialAssist1DataByYear,
@@ -81,7 +81,20 @@ function App() {
     }
   }, [saveAllData, showToast]);
 
-
+  const handleExportBudget = useCallback(() => {
+    if (!budgetData || budgetData.length === 0) {
+      showToast('ไม่มีข้อมูลงบประมาณสำหรับการส่งออก', 'error');
+      return;
+    }
+    
+    try {
+      exportBudgetToExcel(budgetData, currentYear, nextYear);
+      showToast('ส่งออกไฟล์ Excel เรียบร้อยแล้ว');
+    } catch (error) {
+      showToast('เกิดข้อผิดพลาดในการส่งออกไฟล์', 'error');
+      console.error('Export error:', error);
+    }
+  }, [budgetData, currentYear, nextYear, showToast]);
 
   const handleExportEmployees = useCallback(() => {
     try {

@@ -10,6 +10,22 @@ function log(message: string, source = "api") {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Root health check endpoint for deployment (only for API requests)
+  app.get("/", (req, res, next) => {
+    // Only respond with JSON for health checks if requested via specific header or in production
+    if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
+      res.json({ 
+        status: "healthy", 
+        message: "Budget Management System is running",
+        timestamp: new Date().toISOString(),
+        version: "1.0.0"
+      });
+    } else {
+      // Let other middleware handle the request (like serving static files)
+      next();
+    }
+  });
+
   // Health check endpoint
   app.get("/health", (req, res) => {
     res.json({ status: "healthy", timestamp: new Date().toISOString() });
