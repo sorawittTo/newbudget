@@ -278,31 +278,7 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
         </div>
       </div>
 
-      {/* Holiday Info */}
-      <div className="bg-amber-50/80 backdrop-blur-sm rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-amber-200/50">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-amber-600 mt-0.5" />
-          <div>
-            <h3 className="text-lg font-bold text-amber-800 mb-2">วันหยุดประจำปี {calcYear}</h3>
-            <p className="text-sm text-amber-700 mb-3">วันหยุดที่ใช้ในการคำนวณค่าล่วงเวลา: {holidays.length} วัน</p>
-            <div className="flex flex-wrap gap-2">
-              {holidays.slice(0, 6).map((holiday, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-amber-100 text-amber-800 text-xs rounded-full border border-amber-200"
-                >
-                  {holiday.name}
-                </span>
-              ))}
-              {holidays.length > 6 && (
-                <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs rounded-full border border-amber-200">
-                  และอีก {holidays.length - 6} วัน...
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };
