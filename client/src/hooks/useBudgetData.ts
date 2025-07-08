@@ -464,7 +464,6 @@ export const useBudgetData = () => {
   };
 
   return {
-    budgetData,
     employees,
     masterRates,
     specialAssist1DataByYear,
@@ -476,9 +475,6 @@ export const useBudgetData = () => {
     selectedCompanyTripEmployees,
     selectedManagerRotationEmployees,
     isLoading,
-    updateBudgetItem,
-    updateBudgetNotes,
-    updateBudgetField,
     updateEmployee,
     addEmployee,
     deleteEmployee,

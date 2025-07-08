@@ -10,12 +10,11 @@ import { SpecialAssistanceManager } from './components/assistance/SpecialAssista
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
-import { exportEmployeesToExcel, importEmployeesFromExcel, exportBudgetToExcel } from './utils/excel';
+import { exportEmployeesToExcel, importEmployeesFromExcel } from './utils/excel';
 
 
 function App() {
   const {
-    budgetData,
     employees,
     masterRates,
     specialAssist1DataByYear,
@@ -82,19 +81,8 @@ function App() {
   }, [saveAllData, showToast]);
 
   const handleExportBudget = useCallback(() => {
-    if (!budgetData || budgetData.length === 0) {
-      showToast('ไม่มีข้อมูลงบประมาณสำหรับการส่งออก', 'error');
-      return;
-    }
-    
-    try {
-      exportBudgetToExcel(budgetData, currentYear, nextYear);
-      showToast('ส่งออกไฟล์ Excel เรียบร้อยแล้ว');
-    } catch (error) {
-      showToast('เกิดข้อผิดพลาดในการส่งออกไฟล์', 'error');
-      console.error('Export error:', error);
-    }
-  }, [budgetData, currentYear, nextYear, showToast]);
+    showToast('ฟังก์ชันส่งออกงบประมาณถูกปิดใช้งาน เนื่องจากระบบได้ถูกปรับเป็นระบบจัดการพนักงาน', 'error');
+  }, [showToast]);
 
   const handleExportEmployees = useCallback(() => {
     try {
@@ -241,7 +229,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            ${budgetRows}
+            <tr><td colspan="4" class="px-4 py-2 border text-center text-gray-500">ไม่มีข้อมูลงบประมาณ (ระบบเป็นระบบจัดการพนักงาน)</td></tr>
           </tbody>
         </table>
       </div>
@@ -352,7 +340,6 @@ function App() {
       default:
         return (
           <ModernDashboard
-            budgetData={budgetData}
             employees={employees}
             currentYear={currentYear}
             nextYear={nextYear}
