@@ -69,12 +69,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   // Enhanced statistics calculation
   const statistics = useMemo(() => {
     const totalCost = travelEmployees.reduce((sum, emp) => {
-      const rates = getRatesForEmployee(emp, masterRates);
-      const hotel = customSettings.hotelNights * (rates.hotel || 0);
-      const perDiem = customSettings.perDiemDays * (rates.perDiem || 0);
-      const travelRoundTrip = 2 * (rates.travel || 0);
-      const localRoundTrip = 2 * (rates.local || 0);
-      return sum + hotel + perDiem + travelRoundTrip + localRoundTrip;
+      const costs = calculateEmployeeCost(emp);
+      return sum + costs.total;
     }, 0);
 
     const byServiceYears = travelEmployees.reduce((acc, emp) => {
@@ -90,22 +86,10 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
       totalCost,
       avgCostPerEmployee,
       byServiceYears,
-      maxCost: Math.max(...travelEmployees.map(emp => {
-        const rates = getRatesForEmployee(emp, masterRates);
-        return customSettings.hotelNights * (rates.hotel || 0) + 
-               customSettings.perDiemDays * (rates.perDiem || 0) + 
-               2 * (rates.travel || 0) + 
-               2 * (rates.local || 0);
-      })),
-      minCost: Math.min(...travelEmployees.map(emp => {
-        const rates = getRatesForEmployee(emp, masterRates);
-        return customSettings.hotelNights * (rates.hotel || 0) + 
-               customSettings.perDiemDays * (rates.perDiem || 0) + 
-               2 * (rates.travel || 0) + 
-               2 * (rates.local || 0);
-      }))
+      maxCost: Math.max(...travelEmployees.map(emp => calculateEmployeeCost(emp).total)),
+      minCost: Math.min(...travelEmployees.map(emp => calculateEmployeeCost(emp).total))
     };
-  }, [travelEmployees, customSettings, masterRates]);
+  }, [travelEmployees, masterRates]);
 
   const handleEditStart = (employeeId: string, field: string, currentValue: any) => {
     setEditingState(prev => ({
@@ -132,6 +116,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
             ...updatedEmployee.customTravelRates,
             [rateField]: parseFloat(editData.value) || 0
           };
+        } else if (field === 'workingDays') {
+          updatedEmployee.workingDays = parseInt(editData.value) || 1;
         } else {
           (updatedEmployee as any)[field] = editData.value;
         }
@@ -216,16 +202,27 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
 
   const calculateEmployeeCost = (employee: TravelEmployee) => {
     const rates = getRatesForEmployee(employee, masterRates);
-    const hotel = customSettings.hotelNights * (rates.hotel || 0);
-    const perDiem = customSettings.perDiemDays * (rates.perDiem || 0);
+    const workingDays = employee.workingDays || 1;
+    
+    // Calculate hotel nights and per diem days based on working days
+    // 1 working day = 2 hotel nights + 3 per diem days
+    // Each additional day adds 1 hotel night + 1 per diem day
+    const hotelNights = workingDays === 1 ? 2 : 2 + (workingDays - 1);
+    const perDiemDays = workingDays === 1 ? 3 : 3 + (workingDays - 1);
+    
+    const hotel = hotelNights * (rates.hotel || 0);
+    const perDiem = perDiemDays * (rates.perDiem || 0);
     const travelRoundTrip = 2 * (rates.travel || 0);
     const localRoundTrip = 2 * (rates.local || 0);
+    
     return {
       hotel,
       perDiem,
       travel: travelRoundTrip,
       local: localRoundTrip,
-      total: hotel + perDiem + travelRoundTrip + localRoundTrip
+      total: hotel + perDiem + travelRoundTrip + localRoundTrip,
+      hotelNights,
+      perDiemDays
     };
   };
 
@@ -248,12 +245,11 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
           </div>
 
           {/* Statistics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             {[
               { label: 'พนักงานทั้งหมด', value: statistics.totalEmployees, icon: Users, color: 'text-blue-600' },
               { label: 'มีสิทธิ์เดินทาง', value: statistics.eligibleEmployees, icon: Award, color: 'text-green-600' },
-              { label: 'ค่าใช้จ่ายรวม', value: formatCurrency(statistics.totalCost), icon: Calculator, color: 'text-purple-600' },
-              { label: 'เฉลี่ยต่อคน', value: formatCurrency(statistics.avgCostPerEmployee), icon: TrendingUp, color: 'text-orange-600' }
+              { label: 'ค่าใช้จ่ายรวม', value: formatCurrency(statistics.totalCost), icon: Calculator, color: 'text-purple-600' }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -289,6 +285,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                     <th className="p-4 text-sm font-semibold text-gray-700 w-32">รหัสพนักงาน</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 w-48">ชื่อ-นามสกุล</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">อายุงาน</th>
+                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">วันทำการ</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าที่พัก</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเบี้ยเลี้ยง</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเดินทาง</th>
@@ -328,24 +325,28 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                             </div>
                           </td>
                           <td className="p-4 text-center">
+                            {globalEditMode ? renderEditableCell(employee.id, 'workingDays', employee.workingDays || 1, 'number') : (
+                              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                                   style={{ boxShadow: 'inset 4px 4px 8px #d1d5db, inset -4px -4px 8px #ffffff' }}>
+                                {employee.workingDays || 1} วัน
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-4 text-center">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.hotel', costs.hotel, 'number') : (
                               <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
                             )}
-                            {customSettings.showDetails && (
-                              <div className="text-xs text-gray-500 mt-1">
-                                {customSettings.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
-                              </div>
-                            )}
+                            <div className="text-xs text-gray-500 mt-1">
+                              {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
+                            </div>
                           </td>
                           <td className="p-4 text-center">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.perDiem', costs.perDiem, 'number') : (
                               <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
                             )}
-                            {customSettings.showDetails && (
-                              <div className="text-xs text-gray-500 mt-1">
-                                {customSettings.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
-                              </div>
-                            )}
+                            <div className="text-xs text-gray-500 mt-1">
+                              {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
+                            </div>
                           </td>
                           <td className="p-4 text-center">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.travel', costs.travel, 'number') : (

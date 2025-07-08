@@ -16,6 +16,7 @@ export interface Employee {
   status?: 'มีสิทธิ์' | 'หมดสิทธิ์';
   visitProvince: string;
   homeVisitBusFare: number;
+  workingDays?: number; // วันทำการ for travel calculations
   // Add custom travel rates for overriding master rates
   customTravelRates?: {
     hotel?: number;
