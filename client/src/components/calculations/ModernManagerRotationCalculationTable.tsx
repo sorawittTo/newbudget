@@ -52,16 +52,27 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   // Filter for level 7 employees only
   const level7Employees = employees.filter(emp => emp.level === '7');
 
-  // Calculate manager rotation data
+  // Calculate manager rotation data - similar to company trip calculation
   const managerRotationData = useMemo(() => {
     return level7Employees.map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
       
-      const perDiemCost = (rates.perDiem || 0) * rotationSettings.perDiemDays;
-      const accommodationCost = (rates.hotel || 0) * rotationSettings.hotelNights;
-      const travelCost = (rates.travel || 0) * 2; // ค่าเดินทางจากตารางอัตรา x2
-      const taxiCost = (rates.local || 0) * 2; // ค่ารถรับจ้างจากตารางอัตราท้องถิ่น x2
-      const otherVehicleCost = 0; // ค่าพาหนะอื่นๆ
+      // Calculate per diem cost (similar to company trip)
+      const perDiemCost = (rates.perDiem || 0) * (emp.workingDays || 1);
+      
+      // Calculate accommodation cost (similar to company trip)
+      // Level 7 gets single room, like in company trip
+      const accommodationCost = (rates.hotel || 0) * (emp.workingDays || 1);
+      
+      // Calculate travel cost from master rates x2 (round trip)
+      const travelCost = (rates.travel || 0) * 2;
+      
+      // Calculate taxi cost from master rates local x2 (round trip)
+      const taxiCost = (rates.local || 0) * 2;
+      
+      // Other vehicle costs (editable)
+      const otherVehicleCost = emp.customTravelRates?.other || 0;
+      
       const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
       
       return {
@@ -74,11 +85,11 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
         total,
         busCost: 0, // No longer used
         flightCost: 0, // No longer used
-        perDiemDay: rotationSettings.perDiemDays,
-        hotelNight: rotationSettings.hotelNights
+        perDiemDay: emp.workingDays || 1,
+        hotelNight: emp.workingDays || 1
       } as ManagerRotationEmployee;
     });
-  }, [level7Employees, masterRates, rotationSettings]);
+  }, [level7Employees, masterRates]);
 
   const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
 
@@ -292,21 +303,21 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost / rotationSettings.hotelNights, 'number') : (
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost, 'number') : (
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          {emp.hotelNight} คืน × {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)}
+                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.workingDays || 1} วัน
                         </div>
                       </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.perDiem', emp.perDiemCost / rotationSettings.perDiemDays, 'number') : (
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.perDiem', emp.perDiemCost, 'number') : (
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.perDiemCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          {emp.perDiemDay} วัน × {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)}
+                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)} x{emp.workingDays || 1} วัน
                         </div>
                       </div>
                     )}
