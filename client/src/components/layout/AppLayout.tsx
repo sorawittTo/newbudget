@@ -74,7 +74,7 @@ const navigationItems: NavigationItem[] = [
   },
   {
     id: 'assistance',
-    label: 'เงินช่วยเหลือต่างๆ',
+    label: 'ค่าใช้จ่ายในการเดินทาง',
     icon: <HandHeart className="w-5 h-5" />,
     description: 'ค่าช่วยเหลือพิเศษ',
     color: 'text-pink-600',
