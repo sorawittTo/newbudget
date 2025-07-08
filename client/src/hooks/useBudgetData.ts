@@ -103,17 +103,15 @@ export const useBudgetData = () => {
         
         // Transform budget items to match frontend format
         if (budgetItems.length > 0) {
-          const defaultData = initializeBudgetData(defaultBudgetItems);
-          const mergedBudget = defaultData.map(defaultItem => {
-            if (defaultItem.type) return defaultItem;
-            const savedItem = budgetItems.find((s: any) => s.accountCode === defaultItem.accountCode || s.code === defaultItem.code);
-            if (savedItem) {
-              const values = savedItem.values || {};
-              return { ...defaultItem, values, notes: savedItem.notes };
-            }
-            return defaultItem;
-          });
-          setBudgetData(mergedBudget);
+          const transformed = budgetItems.map((item: any) => ({
+            type: item.type || undefined,
+            code: item.code || undefined,
+            accountCode: item.accountCode || item.account_code || undefined,
+            name: item.name,
+            values: item.values || {},
+            notes: item.notes || ''
+          }));
+          setBudgetData(transformed);
         } else {
           setBudgetData(initializeBudgetData(defaultBudgetItems));
         }
@@ -121,14 +119,14 @@ export const useBudgetData = () => {
         // Set employees
         if (employees.length > 0) {
           const formattedEmployees = employees.map((emp: any) => ({
-            id: emp.employeeId,
+            id: emp.employeeId || emp.employee_id || emp.id,
             name: emp.name,
             gender: emp.gender,
-            startYear: emp.startYear,
+            startYear: emp.startYear || emp.start_year,
             level: emp.level,
             status: emp.status,
-            visitProvince: emp.visitProvince,
-            homeVisitBusFare: parseFloat(emp.homeVisitBusFare),
+            visitProvince: emp.visitProvince || emp.visit_province || '',
+            homeVisitBusFare: parseFloat(emp.homeVisitBusFare || emp.home_visit_bus_fare || 0),
             customTravelRates: emp.customTravelRates
           }));
           setEmployees(formattedEmployees);
