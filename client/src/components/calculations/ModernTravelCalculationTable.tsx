@@ -8,9 +8,6 @@ import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { formatCurrency, calculateTravelEmployees, getRatesForEmployee } from '../../utils/calculations';
 import { 
   Save, 
-  Edit3, 
-  Check, 
-  X, 
   Users, 
   Calendar, 
   Calculator, 
@@ -37,12 +34,7 @@ interface ModernTravelCalculationTableProps {
   globalEditMode?: boolean;
 }
 
-interface EditingState {
-  [key: string]: {
-    isEditing: boolean;
-    value: any;
-  };
-}
+
 
 export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTableProps> = ({
   employees,
@@ -53,7 +45,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   onUpdateEmployee,
   globalEditMode = false
 }) => {
-  const [editingState, setEditingState] = useState<EditingState>({});
   const [currentCalcYear, setCurrentCalcYear] = useState(calcYear);
   const [customSettings, setCustomSettings] = useState({
     hotelNights: 2,
@@ -61,7 +52,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
     showDetails: false,
     autoCalculate: true
   });
-  const [selectedEmployeeForEdit, setSelectedEmployeeForEdit] = useState<string | null>(null);
 
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
   const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, currentCalcYear);
@@ -118,111 +108,48 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
     };
   }, [travelEmployees, masterRates]);
 
-  const handleEditStart = (employeeId: string, field: string, currentValue: any) => {
-    setEditingState(prev => ({
-      ...prev,
-      [`${employeeId}-${field}`]: {
-        isEditing: true,
-        value: currentValue
-      }
-    }));
-  };
 
-  const handleEditSave = (employeeId: string, field: string) => {
-    const editKey = `${employeeId}-${field}`;
-    const editData = editingState[editKey];
-    
-    if (editData) {
-      const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
-      if (employeeIndex !== -1) {
-        const updatedEmployee = { ...employees[employeeIndex] };
-        
-        if (field.startsWith('customTravelRates.')) {
-          const rateField = field.split('.')[1];
-          updatedEmployee.customTravelRates = {
-            ...updatedEmployee.customTravelRates,
-            [rateField]: parseFloat(editData.value) || 0
-          };
-        } else if (field === 'workingDays') {
-          updatedEmployee.workingDays = parseInt(editData.value) || 1;
-        } else {
-          (updatedEmployee as any)[field] = editData.value;
-        }
-        
-        onUpdateEmployee(employeeIndex, updatedEmployee);
-      }
-      
-      setEditingState(prev => ({
-        ...prev,
-        [editKey]: { isEditing: false, value: undefined }
-      }));
-    }
-  };
-
-  const handleEditCancel = (employeeId: string, field: string) => {
-    const editKey = `${employeeId}-${field}`;
-    setEditingState(prev => ({
-      ...prev,
-      [editKey]: { isEditing: false, value: undefined }
-    }));
-  };
 
   const handleSettingChange = (field: string, value: any) => {
     setCustomSettings(prev => ({ ...prev, [field]: value }));
   };
 
   const renderEditableCell = (employeeId: string, field: string, currentValue: any, type: 'text' | 'number' = 'text') => {
-    const editKey = `${employeeId}-${field}`;
-    const editData = editingState[editKey];
-    const isEditing = editData?.isEditing || false;
-
-    if (isEditing) {
+    if (globalEditMode) {
       return (
-        <div className="flex items-center gap-2">
-          <NeumorphismInput
-            type={type}
-            value={editData.value}
-            onChange={(e) => setEditingState(prev => ({
-              ...prev,
-              [editKey]: { ...prev[editKey], value: e.target.value }
-            }))}
-            className="w-20 text-center text-sm"
-          />
-          <div className="flex gap-1">
-            <button
-              onClick={() => handleEditSave(employeeId, field)}
-              className="p-1 rounded-lg text-green-600 hover:text-green-700 transition-colors"
-              style={{
-                boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff',
-                backgroundColor: '#f9fafb'
-              }}
-            >
-              <Check className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleEditCancel(employeeId, field)}
-              className="p-1 rounded-lg text-red-600 hover:text-red-700 transition-colors"
-              style={{
-                boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff',
-                backgroundColor: '#f9fafb'
-              }}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        <NeumorphismInput
+          type={type}
+          value={currentValue}
+          onChange={(e) => {
+            const newValue = type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
+            const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+            if (employeeIndex !== -1) {
+              const updatedEmployee = { ...employees[employeeIndex] };
+              
+              if (field.startsWith('customTravelRates.')) {
+                const rateField = field.split('.')[1];
+                updatedEmployee.customTravelRates = {
+                  ...updatedEmployee.customTravelRates,
+                  [rateField]: newValue
+                };
+              } else if (field === 'workingDays') {
+                updatedEmployee.workingDays = newValue;
+              } else {
+                (updatedEmployee as any)[field] = newValue;
+              }
+              
+              onUpdateEmployee(employeeIndex, updatedEmployee);
+            }
+          }}
+          className="w-20 text-center text-sm"
+          disabled={!globalEditMode}
+        />
       );
     }
 
     return (
-      <div 
-        className="flex items-center justify-between group cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-all duration-200"
-        onClick={() => handleEditStart(employeeId, field, currentValue)}
-      >
-        <span className="font-medium">
-          {type === 'number' ? formatCurrency(currentValue) : currentValue}
-        </span>
-        <Edit3 className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="font-semibold text-gray-900">
+        {type === 'number' ? formatCurrency(currentValue) : currentValue}
       </div>
     );
   };
@@ -299,7 +226,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                   <AnimatePresence>
                     {travelEmployees.map((employee, index) => {
                       const costs = calculateEmployeeCost(employee);
-                      const isSelected = selectedEmployeeForEdit === employee.id;
                       
                       return (
                         <motion.tr
@@ -308,7 +234,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ delay: index * 0.05 }}
-                          className={`group ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-100'} transition-all duration-200`}
+                          className="group hover:bg-gray-100 transition-all duration-200"
                         >
                           <td className="p-4">
                             <div className="font-semibold text-gray-900">{employee.id}</div>
