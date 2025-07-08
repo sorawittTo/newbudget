@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 08, 2025. Complete Arrow Controls Removal from Employee Table
+  * Fixed remaining arrow controls in EmployeeTable.tsx for startYear and homeVisitBusFare fields  
+  * Added inputMode="numeric" and pattern="[0-9]*" for numeric fields
+  * Applied CSS styles to hide spinners: MozAppearance: 'textfield', WebkitAppearance: 'none'
+  * Added onWheel preventDefault to prevent accidental value changes
+  * All numeric input fields now completely free of arrow controls as requested
 - July 08, 2025. Complete Removal of Default Employee Data - Database Only System
   * Removed all defaultEmployees references from useBudgetData.ts hook
   * Deleted defaultEmployees export from defaults.ts file

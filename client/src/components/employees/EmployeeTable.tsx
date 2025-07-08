@@ -282,9 +282,16 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     <td className="p-3">
                       <input
                         type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         className="w-full p-2 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.startYear}
                         onChange={(e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)}
+                        style={{
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none'
+                        }}
+                        onWheel={(e) => e.preventDefault()}
                       />
                     </td>
                     <td className="p-3">
@@ -347,9 +354,16 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     <td className="p-3">
                       <input
                         type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         className="w-full p-2 border border-gray-300 rounded-md text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.homeVisitBusFare}
                         onChange={(e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
+                        style={{
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none'
+                        }}
+                        onWheel={(e) => e.preventDefault()}
                       />
                     </td>
                     <td className="p-3 text-center">
