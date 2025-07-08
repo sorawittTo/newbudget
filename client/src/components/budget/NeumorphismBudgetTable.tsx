@@ -647,8 +647,21 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
                               type="text"
                               className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-slate-700 font-medium"
                               value={item.name || ''}
-                              onChange={(e) => onUpdateBudgetField(actualIndex, 'name', e.target.value)}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                onUpdateBudgetField(actualIndex, 'name', e.target.value);
+                              }}
+                              onKeyDown={(e) => {
+                                // Allow all key events including backspace and delete
+                                e.stopPropagation();
+                              }}
+                              onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                onUpdateBudgetField(actualIndex, 'name', target.value);
+                              }}
                               placeholder="รายการ"
+                              autoComplete="off"
+                              spellCheck={false}
                             />
                           ) : (
                             <div className="font-medium text-slate-700">
