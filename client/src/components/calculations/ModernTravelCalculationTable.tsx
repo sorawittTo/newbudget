@@ -208,16 +208,16 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
             <div className="overflow-x-auto bg-gray-50 p-4">
               <table className="w-full min-w-[1200px]">
                 <thead>
-                  <tr className="text-left">
-                    <th className="p-4 text-sm font-semibold text-gray-700 w-32">รหัสพนักงาน</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 w-48">ชื่อ-นามสกุล</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">อายุงาน</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">วันทำการ</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าที่พัก</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเบี้ยเลี้ยง</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเดินทาง</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่ารถรับจ้าง</th>
-                    <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">รวมทั้งหมด</th>
+                  <tr className="text-left bg-gradient-to-r from-blue-50 to-blue-100 border-b-2 border-blue-200">
+                    <th className="p-4 text-sm font-bold text-blue-800 w-32 border-r border-blue-200">รหัสพนักงาน</th>
+                    <th className="p-4 text-sm font-bold text-blue-800 w-48 border-r border-blue-200">ชื่อ-นามสกุล</th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-24 border-r border-blue-200">อายุงาน<br/><span className="text-xs text-blue-600">(ปี)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-24 border-r border-blue-200">วันทำการ<br/><span className="text-xs text-blue-600">(วัน)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-32 border-r border-blue-200">ค่าที่พัก<br/><span className="text-xs text-blue-600">(บาท)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-32 border-r border-blue-200">ค่าเบี้ยเลี้ยง<br/><span className="text-xs text-blue-600">(บาท)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-32 border-r border-blue-200">ค่าเดินทาง<br/><span className="text-xs text-blue-600">(บาท)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-32 border-r border-blue-200">ค่ารถรับจ้าง<br/><span className="text-xs text-blue-600">(บาท)</span></th>
+                    <th className="p-4 text-sm font-bold text-blue-800 text-center w-32 bg-gradient-to-r from-emerald-100 to-emerald-200">รวมทั้งหมด<br/><span className="text-xs text-emerald-700">(บาท)</span></th>
                   </tr>
                 </thead>
                 <tbody className="space-y-2">
@@ -232,24 +232,28 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ delay: index * 0.05 }}
-                          className="group hover:bg-gray-100 transition-all duration-200"
+                          className="group hover:bg-blue-50 transition-all duration-200 border-b border-gray-200"
                         >
-                          <td className="p-4">
-                            <div className="font-semibold text-gray-900">{employee.id}</div>
-                          </td>
-                          <td className="p-4">
-                            <div>
-                              <p className="font-semibold text-gray-900">{employee.name}</p>
-                              <p className="text-sm text-gray-600">ระดับ {employee.level}</p>
+                          <td className="p-4 border-r border-gray-200">
+                            <div className="font-semibold text-gray-900 bg-gray-100 px-3 py-2 rounded-lg text-center"
+                                 style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                              {employee.id}
                             </div>
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 border-r border-gray-200">
+                            <div className="bg-gray-100 px-3 py-2 rounded-lg"
+                                 style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                              <p className="font-semibold text-gray-900">{employee.name}</p>
+                              <p className="text-sm text-blue-600">ระดับ {employee.level}</p>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center border-r border-gray-200">
                             <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
                                  style={{ boxShadow: 'inset 4px 4px 8px #d1d5db, inset -4px -4px 8px #ffffff' }}>
                               {employee.serviceYears} ปี
                             </div>
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 text-center border-r border-gray-200">
                             {globalEditMode ? renderEditableCell(employee.id, 'workingDays', employee.workingDays || 1, 'number') : (
                               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
                                    style={{ boxShadow: 'inset 4px 4px 8px #d1d5db, inset -4px -4px 8px #ffffff' }}>
@@ -257,44 +261,59 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                               </div>
                             )}
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 text-center border-r border-gray-200">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.hotel', costs.hotel, 'number') : (
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
+                              <div className="bg-gray-100 px-3 py-2 rounded-lg"
+                                   style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                                <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
+                                </div>
+                              </div>
                             )}
-                            <div className="text-xs text-gray-500 mt-1">
-                              {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
-                            </div>
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 text-center border-r border-gray-200">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.perDiem', costs.perDiem, 'number') : (
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
+                              <div className="bg-gray-100 px-3 py-2 rounded-lg"
+                                   style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                                <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
+                                </div>
+                              </div>
                             )}
-                            <div className="text-xs text-gray-500 mt-1">
-                              {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
-                            </div>
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 text-center border-r border-gray-200">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.travel', costs.travel, 'number') : (
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
-                            )}
-                            {customSettings.showDetails && (
-                              <div className="text-xs text-gray-500 mt-1">
-                                ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).travel || 0)}
+                              <div className="bg-gray-100 px-3 py-2 rounded-lg"
+                                   style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                                <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
+                                {customSettings.showDetails && (
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).travel || 0)}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-4 text-center border-r border-gray-200">
                             {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.local', costs.local, 'number') : (
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
-                            )}
-                            {customSettings.showDetails && (
-                              <div className="text-xs text-gray-500 mt-1">
-                                ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).local || 0)}
+                              <div className="bg-gray-100 px-3 py-2 rounded-lg"
+                                   style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                                <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
+                                {customSettings.showDetails && (
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).local || 0)}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </td>
-                          <td className="p-4 text-center">
-                            <div className="font-bold text-lg text-blue-600">{formatCurrency(costs.total)}</div>
+                          <td className="p-4 text-center bg-gradient-to-r from-emerald-50 to-emerald-100">
+                            <div className="bg-emerald-100 px-4 py-3 rounded-lg border border-emerald-200"
+                                 style={{ boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff' }}>
+                              <div className="font-bold text-lg text-emerald-800">{formatCurrency(costs.total)}</div>
+                            </div>
                           </td>
 
                         </motion.tr>
