@@ -322,15 +322,22 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
               <tr className="bg-gray-100">
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัส</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">เบี้ยเลี้ยง</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าที่พัก</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">เบี้ยเลี้ยง</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าเดินทาง</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าพาหนะอื่นๆ</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม</th>
               </tr>
             </thead>
             <tbody>
               {managerRotationData.map((emp, index) => (
-                <tr key={emp.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                <motion.tr 
+                  key={emp.id} 
+                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
                   <td className="px-4 py-3">
                     <div className="font-mono text-sm text-gray-600 font-medium">{emp.id}</div>
                   </td>
@@ -339,54 +346,51 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div className="text-sm text-gray-500">ระดับ {emp.level}</div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? (
-                      <input
-                        type="text"
-                        className="w-32 p-2 border border-gray-300 rounded text-right"
-                        value={emp.perDiemCost}
-                        onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.perDiem', (parseFloat(e.target.value) || 0) / rotationSettings.perDiemDays)}
-                      />
-                    ) : (
-                      <span className="font-medium text-gray-900">{formatCurrency(emp.perDiemCost)}</span>
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost / rotationSettings.hotelNights, 'number') : (
+                      <div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {emp.hotelNight} คืน × {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)}
+                        </div>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? (
-                      <input
-                        type="text"
-                        className="w-32 p-2 border border-gray-300 rounded text-right"
-                        value={emp.accommodationCost}
-                        onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.hotel', (parseFloat(e.target.value) || 0) / rotationSettings.hotelNights)}
-                      />
-                    ) : (
-                      <span className="font-medium text-gray-900">{formatCurrency(emp.accommodationCost)}</span>
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.perDiem', emp.perDiemCost / rotationSettings.perDiemDays, 'number') : (
+                      <div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.perDiemCost)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {emp.perDiemDay} วัน × {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)}
+                        </div>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? (
-                      <input
-                        type="text"
-                        className="w-32 p-2 border border-gray-300 rounded text-right"
-                        value={emp.totalTravel}
-                        onChange={(e) => {
-                          const newTotal = parseFloat(e.target.value) || 0;
-                          const avgCost = newTotal / 3; // Split evenly between bus, flight, taxi
-                          handleSettingChange('busCost', avgCost);
-                          handleSettingChange('flightCost', avgCost);
-                          handleSettingChange('taxiCost', avgCost);
-                        }}
-                      />
-                    ) : (
-                      <span className="font-medium text-gray-900">{formatCurrency(emp.totalTravel)}</span>
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.travel', emp.busCost + emp.flightCost, 'number') : (
+                      <div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.busCost + emp.flightCost)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          รถ {formatCurrency(emp.busCost)} + เครื่องบิน {formatCurrency(emp.flightCost)}
+                        </div>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <div className="font-semibold text-gray-900">{formatCurrency(emp.total)}</div>
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.local', emp.taxiCost, 'number') : (
+                      <div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          แท็กซี่ + อื่นๆ
+                        </div>
+                      </div>
+                    )}
                   </td>
-                </tr>
+                  <td className="px-4 py-3 text-right">
+                    <div className="font-bold text-lg text-purple-600">{formatCurrency(emp.total)}</div>
+                  </td>
+                </motion.tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </Card>
