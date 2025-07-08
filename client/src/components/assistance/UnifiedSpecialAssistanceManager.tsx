@@ -436,12 +436,12 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => {
                   const newIndex = (overtimeData.items || []).length;
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', 'รายการใหม่');
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', '');
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'instances', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 1);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 30 / 8 * 2);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 210);
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
               >
@@ -455,39 +455,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
         <div className="p-6 space-y-4">
           {(overtimeData.items || []).map((item, index) => (
             <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-              <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.item}
-                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.item}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.instances}
-                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.instances}</span>
-                    </div>
-                  )}
-                </div>
-                
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
                   {editMode ? (
@@ -541,37 +509,53 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   {editMode ? (
                     <NeumorphismInput
                       type="text"
-                      value={item.rate || (overtimeData.salary / 30 / 8 * 2)}
+                      value={item.rate || (overtimeData.salary / 210)}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
                       className="w-full"
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{formatCurrency(item.rate || (overtimeData.salary / 30 / 8 * 2))}</span>
+                      <span className="font-medium text-slate-700">{formatCurrency(item.rate || (overtimeData.salary / 210))}</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
-                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                      <span className="font-bold text-emerald-700">{formatCurrency(item.instances * item.days * item.hours * item.people * (item.rate || (overtimeData.salary / 30 / 8 * 2)))}</span>
-                    </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
+                  <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                    <span className="font-bold text-emerald-700">{formatCurrency(item.days * item.hours * item.people * (item.rate || (overtimeData.salary / 210)))}</span>
                   </div>
+                </div>
+                
+                <div className="flex items-end justify-center">
                   {editMode && (
                     <button
                       onClick={() => {
+                        if ((overtimeData.items || []).length <= 1) {
+                          alert('ต้องมีอย่างน้อย 1 รายการ');
+                          return;
+                        }
                         if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
-                          const items = overtimeData.items.filter((_, i) => i !== index);
-                          items.forEach((item, i) => {
+                          const currentItems = overtimeData.items || [];
+                          const newItems = currentItems.filter((_, i) => i !== index);
+                          
+                          // Clear all items first
+                          currentItems.forEach((_, i) => {
+                            Object.keys(currentItems[i]).forEach(key => {
+                              onUpdateOvertimeData(calcYear, 'items', i, key, undefined);
+                            });
+                          });
+                          
+                          // Add back the remaining items
+                          newItems.forEach((item, i) => {
                             Object.entries(item).forEach(([key, value]) => {
                               onUpdateOvertimeData(calcYear, 'items', i, key, value);
                             });
                           });
                         }
                       }}
-                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                      className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
+                      disabled={(overtimeData.items || []).length <= 1}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -580,6 +564,31 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Notes Section */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <div className="flex items-center gap-3">
+            <FileText className="w-5 h-5 text-slate-600" />
+            <h3 className="text-lg font-bold text-slate-800">หมายเหตุ</h3>
+          </div>
+        </div>
+        <div className="p-6">
+          {editMode ? (
+            <NeumorphismInput
+              type="text"
+              value={overtimeData.notes || ''}
+              onChange={(e) => onUpdateOvertimeData(calcYear, 'notes', e.target.value)}
+              className="w-full"
+              placeholder="ระบุหมายเหตุเพิ่มเติม..."
+            />
+          ) : (
+            <div className="min-h-10 p-4 bg-slate-50/80 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+              <span className="text-slate-700">{overtimeData.notes || 'ไม่มีหมายเหตุ'}</span>
+            </div>
+          )}
         </div>
       </div>
 

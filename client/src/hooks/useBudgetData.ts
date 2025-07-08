@@ -74,10 +74,9 @@ export const useBudgetData = () => {
       const newData = {
         salary: 15000,
         items: [
-          { item: 'วันหยุดยาว 3 วัน', days: 3, instances: consecutiveCounts[3], hours: 8, people: 1 },
-          { item: 'วันหยุดยาว 4 วัน', days: 4, instances: consecutiveCounts[4], hours: 8, people: 1 },
-          { item: 'วันหยุดยาว 5 วัน', days: 5, instances: consecutiveCounts[5], hours: 8, people: 1 },
-        ]
+          { item: '', instances: 1, days: 1, hours: 8, people: 1, rate: 15000 / 210 }
+        ],
+        notes: ''
       };
       setOvertimeDataByYear(prev => ({ ...prev, [year]: newData }));
       return newData;

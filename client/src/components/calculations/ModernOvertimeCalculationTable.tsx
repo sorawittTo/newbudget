@@ -42,23 +42,28 @@ export const ModernOvertimeCalculationTable: React.FC<ModernOvertimeCalculationT
   };
 
   const handleDeleteItem = (index: number) => {
+    const currentItems = overtimeData.items || [];
+    if (currentItems.length <= 1) {
+      alert('ต้องมีอย่างน้อย 1 รายการ');
+      return;
+    }
+    
     if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
-      const currentItems = overtimeData.items || [];
       const newItems = currentItems.filter((_, i) => i !== index);
       
-      // Update the items array
+      // Clear all items first
+      currentItems.forEach((_, i) => {
+        Object.keys(currentItems[i]).forEach(key => {
+          onUpdateData(calcYear, 'items', i, key, undefined);
+        });
+      });
+      
+      // Add back the remaining items
       newItems.forEach((item, i) => {
         Object.entries(item).forEach(([key, value]) => {
           onUpdateData(calcYear, 'items', i, key, value);
         });
       });
-      
-      // Remove extra items if any
-      for (let i = newItems.length; i < currentItems.length; i++) {
-        Object.keys(currentItems[i]).forEach(key => {
-          onUpdateData(calcYear, 'items', i, key, undefined);
-        });
-      }
     }
   };
 
