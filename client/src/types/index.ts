@@ -1,6 +1,7 @@
 export interface BudgetItem {
   type?: 'main_header' | 'header';
   code?: string;
+  accountCode?: string; // รหัสบัญชีสำหรับการอ้างอิง
   name: string;
   values?: Record<number, number>;
   notes?: string;

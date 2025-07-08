@@ -106,7 +106,7 @@ export const useBudgetData = () => {
           const defaultData = initializeBudgetData(defaultBudgetItems);
           const mergedBudget = defaultData.map(defaultItem => {
             if (defaultItem.type) return defaultItem;
-            const savedItem = budgetItems.find((s: any) => s.code === defaultItem.code);
+            const savedItem = budgetItems.find((s: any) => s.accountCode === defaultItem.accountCode || s.code === defaultItem.code);
             if (savedItem) {
               const values = savedItem.values || {};
               return { ...defaultItem, values, notes: savedItem.notes };
@@ -236,6 +236,7 @@ export const useBudgetData = () => {
       // Save budget items
       const budgetItemsToSave = budgetData.filter(item => !item.type).map(item => ({
         code: item.code,
+        accountCode: item.accountCode,
         name: item.name,
         values: item.values || {},
         notes: item.notes || ''

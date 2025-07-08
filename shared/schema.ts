@@ -47,6 +47,7 @@ export const budgetItems = pgTable("budget_items", {
   id: serial("id").primaryKey(),
   type: text("type"), // 'main_header' | 'header' | null
   code: text("code"),
+  accountCode: text("account_code"), // รหัสบัญชีสำหรับการอ้างอิง
   name: text("name").notNull(),
   values: json("values").$type<Record<number, number>>().default({}),
   notes: text("notes"),

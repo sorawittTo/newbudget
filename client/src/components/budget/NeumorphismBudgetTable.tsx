@@ -635,9 +635,31 @@ export const NeumorphismBudgetTable: React.FC<BudgetTableProps> = ({
 
                         {/* Account Code */}
                         <td className="px-4 py-2">
-                          <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
-                            {item.accountCode}
-                          </div>
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 bg-white/80 border-0 rounded-lg shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:shadow-[inset_6px_6px_12px_#a7f3d0,inset_-6px_-6px_12px_#ffffff] transition-all duration-300 text-emerald-700 font-mono text-sm"
+                              value={item.accountCode || ''}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                onUpdateBudgetField(actualIndex, 'accountCode', e.target.value);
+                              }}
+                              onKeyDown={(e) => {
+                                e.stopPropagation();
+                              }}
+                              onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                onUpdateBudgetField(actualIndex, 'accountCode', target.value);
+                              }}
+                              placeholder="รหัสบัญชี"
+                              autoComplete="off"
+                              spellCheck={false}
+                            />
+                          ) : (
+                            <div className="inline-flex items-center px-2 py-1 rounded-lg bg-emerald-50 shadow-[inset_3px_3px_6px_#a7f3d0,inset_-3px_-3px_6px_#ffffff] text-emerald-700 font-mono text-xs">
+                              {item.accountCode || item.code}
+                            </div>
+                          )}
                         </td>
 
                         {/* Item Name */}

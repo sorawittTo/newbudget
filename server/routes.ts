@@ -177,9 +177,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const items = [];
         for (const itemData of data) {
           try {
-            // Check if budget item with this code already exists
+            // Check if budget item with this account code already exists
             const existingItems = await storage.getBudgetItems();
-            const existing = existingItems.find(item => item.code === itemData.code);
+            const existing = existingItems.find(item => item.accountCode === itemData.accountCode || (!itemData.accountCode && item.code === itemData.code));
             
             if (existing) {
               // Update existing item
