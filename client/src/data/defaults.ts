@@ -1,48 +1,6 @@
 import { BudgetItem, Employee, MasterRates, SpecialAssistItem, Holiday } from '../types';
 
-export const defaultBudgetItems: BudgetItem[] = [
-  { type: 'main_header', name: 'รวมงบประมาณรายจ่ายดำเนินงาน' },
-  { type: 'header', name: 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน' },
-  { code: '52021100', accountCode: '5202-1100', name: 'ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร', notes: '' },
-
-  { type: 'header', name: 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป' },
-  { code: '53010200', accountCode: '5301-0200', name: 'ค่าไฟฟ้า', notes: '' },
-  { code: '53010300', accountCode: '5301-0300', name: 'ค่าน้ำประปา', notes: '' },
-  { code: '53010400', accountCode: '5301-0400', name: 'ค่าโทรศัพท์', notes: '' },
-  { code: '53040100', accountCode: '5304-0100', name: 'ค่าวัสดุทั่วไป', notes: '' },
-  { code: '53040200', accountCode: '5304-0200', name: 'ค่าวัสดุงานบ้านงานครัว', notes: '' },
-  { code: '53050100', accountCode: '5305-0100', name: 'ค่าน้ำมันเชื้อเพลิง', notes: '' },
-  { code: '53100001', accountCode: '5310-0001', name: 'ค่าจ้าง', notes: '' },
-  { code: '53010100', accountCode: '5301-0100', name: 'ค่าไปรษณียากรและพัสดุไปรษณีย์', notes: '' },
-  { code: '53050500', accountCode: '5305-0500', name: 'ค่าขนส่ง', notes: '' },
-  { code: '53100400', accountCode: '5310-0400', name: 'ค่าจ้างแรงงานและทำของ', notes: '' },
-  { code: '53103900', accountCode: '5310-3900', name: 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก', notes: '' },
-  { code: '53021100', accountCode: '5302-1100', name: 'ค่าซ่อมแซมและบำรุงรักษา', notes: '' },
-  { code: '53060600', accountCode: '5306-0600', name: 'ค่าตอบแทน', notes: '' },
-  { code: '53100004', accountCode: '5310-0004', name: 'ค่าเช่า', notes: '' },
-  { code: '53040300', accountCode: '5304-0300', name: 'ค่าเช่าเครื่องถ่ายเอกสาร', notes: '' },
-  { code: '53050200', accountCode: '5305-0200', name: 'ค่าเช่ายานพาหนะ', notes: '' },
-  { code: '53070400', accountCode: '5307-0400', name: 'ค่าธรรมเนียม', notes: '' },
-  { code: '53100100', accountCode: '5310-0100', name: 'ค่ารับรอง', notes: '' },
-  { code: '53100200', accountCode: '5310-0200', name: 'ค่าใช้จ่ายในการเดินทาง', notes: '' },
-
-
-  { code: '53101000', accountCode: '5310-1000', name: 'ค่าทรัพยากรสาสนเทศห้องสมุด', notes: '' },
-  { code: '53103600', accountCode: '5310-3600', name: 'ค่าจัดประชุม/ชี้แจง', notes: '' },
-  { code: '53101500', accountCode: '5310-1500', name: 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', notes: '' },
-  { code: '53109900', accountCode: '5310-9900', name: 'ค่าใช้จ่ายเบ็ดเตล็ด', notes: '' },
-  { type: 'header', name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค' },
-  { code: '55080300', accountCode: '5508-0300', name: 'เงินบริจาค', notes: '' },
-
-  { type: 'header', name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต' },
-  { code: '53110700', accountCode: '5311-0700', name: 'ค่าวัสดุผลิต - ทั่วไป', notes: '' },
-  { type: 'main_header', name: 'รวมงบประมาณรายจ่ายสินทรัพย์' },
-  { type: 'header', name: 'หมวด 7 : สินทรัพย์ถาวร' },
-  { code: '10', accountCode: 'AS-10', name: 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', notes: '' },
-  { code: '16', accountCode: 'AS-16', name: 'ครุภัณฑ์เบ็ดเตล็ด', notes: '' },
-  { code: '25', accountCode: 'AS-25', name: 'ครุภัณฑ์ยานพาหนะและขนส่ง', notes: '' },
-  { code: '5', accountCode: 'AS-05', name: 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', notes: '' },
-];
+export const defaultBudgetItems: BudgetItem[] = [];
 
 export const defaultMasterRates: MasterRates = {
   '7': { position: 'ผู้บริหารส่วน', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
