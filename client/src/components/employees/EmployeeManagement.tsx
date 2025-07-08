@@ -441,16 +441,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     return (
                       <tr key={level} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                         <td className="p-3">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="text"
-                              value={rate.position}
-                              onChange={(e) => onUpdateMasterRate(level, 'position', e.target.value)}
-                              placeholder="ตำแหน่ง"
-                            />
-                          ) : (
-                            <span className="font-medium">{rate.position}</span>
-                          )}
+                          <NeumorphismInput
+                            type="text"
+                            value={rate.position}
+                            onChange={(e) => onUpdateMasterRate(level, 'position', e.target.value)}
+                            placeholder="ตำแหน่ง"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-center">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
@@ -458,88 +455,67 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           </span>
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.rent}
-                              onChange={(e) => onUpdateMasterRate(level, 'rent', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.rent.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.rent}
+                            onChange={(e) => onUpdateMasterRate(level, 'rent', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.monthlyAssist}
-                              onChange={(e) => onUpdateMasterRate(level, 'monthlyAssist', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.monthlyAssist.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.monthlyAssist}
+                            onChange={(e) => onUpdateMasterRate(level, 'monthlyAssist', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.lumpSum}
-                              onChange={(e) => onUpdateMasterRate(level, 'lumpSum', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.lumpSum.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.lumpSum}
+                            onChange={(e) => onUpdateMasterRate(level, 'lumpSum', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.travel}
-                              onChange={(e) => onUpdateMasterRate(level, 'travel', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.travel.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.travel}
+                            onChange={(e) => onUpdateMasterRate(level, 'travel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.local}
-                              onChange={(e) => onUpdateMasterRate(level, 'local', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.local.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.local}
+                            onChange={(e) => onUpdateMasterRate(level, 'local', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.perDiem}
-                              onChange={(e) => onUpdateMasterRate(level, 'perDiem', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.perDiem.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.perDiem}
+                            onChange={(e) => onUpdateMasterRate(level, 'perDiem', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                         <td className="p-3 text-right">
-                          {globalEditMode ? (
-                            <NeumorphismInput
-                              type="number"
-                              value={rate.hotel}
-                              onChange={(e) => onUpdateMasterRate(level, 'hotel', parseFloat(e.target.value) || 0)}
-                              placeholder="0"
-                            />
-                          ) : (
-                            <span className="font-mono">{rate.hotel.toLocaleString()}</span>
-                          )}
+                          <NeumorphismInput
+                            type="number"
+                            value={rate.hotel}
+                            onChange={(e) => onUpdateMasterRate(level, 'hotel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                            disabled={!globalEditMode}
+                          />
                         </td>
                       </tr>
                     );
