@@ -306,10 +306,21 @@ export const useBudgetData = () => {
   };
 
   const updateBudgetItem = (index: number, year: number, value: number) => {
+    console.log('Updating budget item:', { index, year, value });
     setBudgetData(prev => {
       const updated = [...prev];
-      if (updated[index].values) {
-        updated[index].values![year] = value;
+      if (updated[index]) {
+        if (!updated[index].values) {
+          updated[index] = { ...updated[index], values: {} };
+        }
+        updated[index] = {
+          ...updated[index],
+          values: {
+            ...updated[index].values,
+            [year]: value
+          }
+        };
+        console.log('Updated item:', updated[index]);
       }
       return updated;
     });
