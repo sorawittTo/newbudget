@@ -260,6 +260,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเดินทาง</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่ารถรับจ้าง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะอื่นๆ</th>
                   <th className="px-4 py-3 text-center font-semibold">รวมทั้งหมด</th>
                 </tr>
@@ -322,7 +323,17 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          แท็กซี่ + อื่นๆ
+                          ค่ารถรับจ้าง
+                        </div>
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.other', 0, 'number') : (
+                      <div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(0)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          อื่นๆ
                         </div>
                       </div>
                     )}
