@@ -380,114 +380,176 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         </Card>
       )}
 
-      {/* Modern Neumorphism Rates Section */}
+      {/* Master Rates Section */}
       {activeSection === 'rates' && (
-        <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-3xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] p-8">
-          {/* Header Section */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-            <div className="mb-6 lg:mb-0">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                ตารางอัตราค่าใช้จ่ายมาตรฐาน
-              </h2>
-              <p className="text-slate-600 mt-2">จัดการอัตราค่าใช้จ่ายสำหรับแต่ละระดับตำแหน่ง</p>
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              {globalEditMode && (
-                <div className="bg-blue-50/80 border border-blue-200 rounded-xl px-4 py-3 shadow-[inset_4px_4px_8px_#bfdbfe,inset_-4px_-4px_8px_#ffffff]">
-                  <div className="flex items-center gap-2 text-blue-700">
-                    <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">!</span>
-                    </div>
-                    <span className="text-sm font-medium">โหมดแก้ไขเปิดอยู่ - แก้ไขได้ทุกช่องในตาราง</span>
-                  </div>
-                </div>
-              )}
-              
+        <Card>
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-gray-900">ตารางอัตราค่าใช้จ่ายมาตรฐาน</h3>
               <div className="flex gap-3">
-                <button 
+                <Button 
                   onClick={() => setGlobalEditMode(!globalEditMode)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
-                    globalEditMode 
-                      ? "bg-orange-100 shadow-[inset_8px_8px_16px_#fed7aa,inset_-8px_-8px_16px_#ffffff] text-orange-700" 
-                      : "bg-purple-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] text-purple-700 hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]"
-                  }`}
+                  variant={globalEditMode ? "secondary" : "primary"}
+                  className={globalEditMode 
+                    ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                    : "bg-purple-600 hover:bg-purple-700 text-white"
+                  }
                 >
-                  <Edit3 className="w-4 h-4" />
-                  {globalEditMode ? 'ปิดการแก้ไข' : 'เปิดการแก้ไข'}
-                </button>
-                
-                <button 
-                  onClick={onSave}
-                  className="flex items-center gap-2 px-6 py-3 bg-emerald-100 text-emerald-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
-                >
-                  <Save className="w-4 h-4" />
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
+                </Button>
+                <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
+                  <Save className="w-4 h-4 mr-2" />
                   บันทึก
-                </button>
-                
-                <button 
-                  onClick={handleExportClick}
-                  className="flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
-                >
-                  <FileText className="w-4 h-4" />
+                </Button>
+                <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
+                  <FileText className="w-4 h-4 mr-2" />
                   ส่งออก Excel
-                </button>
+                </Button>
               </div>
             </div>
           </div>
           
-          {/* Modern Rates Table */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-[inset_10px_10px_20px_#e2e8f0,inset_-10px_-10px_20px_#ffffff] overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1200px]">
-                {/* Enhanced Table Header */}
-                <thead>
-                  <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]">
-                    <th className="px-6 py-4 text-left font-bold text-white">ตำแหน่ง</th>
-                    <th className="px-6 py-4 text-center font-bold text-white">ระดับ</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่าเช่าบ้าน</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">เงินช่วยเหลือรายเดือน</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่าซื้อของเหมาจ่าย</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่ารถประจำทาง</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่ารถรับจ้าง</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่าเบี้ยเลี้ยง</th>
-                    <th className="px-6 py-4 text-right font-bold text-white">ค่าที่พัก</th>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1200px] text-sm">
+              <thead className="bg-gray-100 border-b border-gray-200">
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold">ตำแหน่ง</th>
+                  <th className="px-4 py-3 text-center font-semibold">ระดับ</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าเช่าบ้าน</th>
+                  <th className="px-4 py-3 text-right font-semibold">เงินช่วยเหลือรายเดือน</th>
+                  <th className="px-4 py-3 text-right font-semibold">เงินก้อน</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าเดินทาง</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าท้องถิ่น</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าเบี้ยเลี้ยง</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าโรงแรม</th>
+                </tr>
+              </thead>
+              <tbody>
+                {levelOptions.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="text-center text-gray-500 py-12">
+                      <div className="flex flex-col items-center gap-3">
+                        <Settings className="w-12 h-12 text-gray-300" />
+                        <p>ไม่มีข้อมูลอัตราค่าใช้จ่าย</p>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(masterRates)
-                    .sort((a, b) => parseFloat(b) - parseFloat(a))
-                    .map((level, index) => {
-                      const data = masterRates[level];
-                      return (
-                        <tr 
-                          key={level} 
-                          className="border-b border-slate-200/30 hover:bg-white/60 transition-all duration-300"
-                          style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                          <td className="px-6 py-4">
-                            {renderEditableCell(level, 'position', data.position, true)}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <div className="inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] border border-blue-200/50">
-                              <span className="text-blue-700 font-bold">ระดับ {level}</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'rent', data.rent)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'monthlyAssist', data.monthlyAssist)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'lumpSum', data.lumpSum)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'travel', data.travel)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'local', data.local)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'perDiem', data.perDiem)}</td>
-                          <td className="px-6 py-4">{renderEditableCell(level, 'hotel', data.hotel)}</td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
+                ) : (
+                  levelOptions.map((level) => {
+                    const rate = masterRates[level];
+                    return (
+                      <tr key={level} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td className="p-3">
+                          {globalEditMode ? (
+                            <input
+                              type="text"
+                              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.position}
+                              onChange={(e) => onUpdateMasterRate(level, 'position', e.target.value)}
+                              placeholder="ตำแหน่ง"
+                            />
+                          ) : (
+                            <span className="font-medium">{rate.position}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            {level}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.rent}
+                              onChange={(e) => onUpdateMasterRate(level, 'rent', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.rent.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.monthlyAssist}
+                              onChange={(e) => onUpdateMasterRate(level, 'monthlyAssist', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.monthlyAssist.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.lumpSum}
+                              onChange={(e) => onUpdateMasterRate(level, 'lumpSum', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.lumpSum.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.travel}
+                              onChange={(e) => onUpdateMasterRate(level, 'travel', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.travel.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.local}
+                              onChange={(e) => onUpdateMasterRate(level, 'local', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.local.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.perDiem}
+                              onChange={(e) => onUpdateMasterRate(level, 'perDiem', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.perDiem.toLocaleString()}</span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          {globalEditMode ? (
+                            <input
+                              type="number"
+                              className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                              value={rate.hotel}
+                              onChange={(e) => onUpdateMasterRate(level, 'hotel', parseFloat(e.target.value) || 0)}
+                            />
+                          ) : (
+                            <span className="font-mono">{rate.hotel.toLocaleString()}</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
