@@ -633,6 +633,131 @@ export const exportSpecialAssistanceToExcel = async (data: any, overtimeData: an
   URL.revokeObjectURL(url);
 };
 
+// Master Rates Export Function
+export const exportMasterRatesToExcel = async (masterRates: Record<string, any>) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('ตารางค่าใช้จ่ายมาตรฐาน');
+
+  // Set up page layout for A4 landscape
+  worksheet.pageSetup = {
+    paperSize: 9, // A4
+    orientation: 'landscape',
+    margins: {
+      left: 0.5,
+      right: 0.5,
+      top: 0.5,
+      bottom: 0.5,
+      header: 0.3,
+      footer: 0.3
+    },
+    fitToPage: true,
+    fitToWidth: 1,
+    fitToHeight: 0
+  };
+
+  // Add title
+  worksheet.mergeCells('A1:H1');
+  const titleCell = worksheet.getCell('A1');
+  titleCell.value = 'ตารางค่าใช้จ่ายมาตรฐาน';
+  titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+  titleCell.font = { size: 16, bold: true };
+  titleCell.border = {
+    top: { style: 'thin' },
+    left: { style: 'thin' },
+    bottom: { style: 'thin' },
+    right: { style: 'thin' }
+  };
+
+  // Add headers
+  const headers = [
+    'ระดับ',
+    'ตำแหน่ง',
+    'ค่าเช่าที่พัก',
+    'ค่าช่วยเหลือรายเดือน',
+    'เงินก้อน',
+    'ค่าเดินทาง',
+    'ค่าท้องถิ่น',
+    'ค่าเบี้ยเลี้ยง',
+    'ค่าโรงแรม'
+  ];
+
+  worksheet.getRow(2).values = headers;
+  worksheet.getRow(2).font = { bold: true };
+  worksheet.getRow(2).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.getRow(2).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE3F2FD' }
+  };
+
+  // Add borders to header row
+  headers.forEach((_, index) => {
+    const cell = worksheet.getCell(2, index + 1);
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
+    };
+  });
+
+  // Add data rows
+  const levels = Object.keys(masterRates).sort((a, b) => parseFloat(b) - parseFloat(a));
+  levels.forEach((level, index) => {
+    const rate = masterRates[level];
+    const row = worksheet.getRow(index + 3);
+    row.values = [
+      level,
+      rate.position || '',
+      rate.rent || 0,
+      rate.monthlyAssist || 0,
+      rate.lumpSum || 0,
+      rate.travel || 0,
+      rate.local || 0,
+      rate.perDiem || 0,
+      rate.hotel || 0
+    ];
+
+    // Format numbers
+    for (let i = 3; i <= 9; i++) {
+      row.getCell(i).numFmt = '#,##0';
+    }
+
+    // Add borders
+    row.eachCell({ includeEmpty: true }, (cell) => {
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+      };
+    });
+  });
+
+  // Set column widths
+  worksheet.columns = [
+    { width: 10 }, // ระดับ
+    { width: 20 }, // ตำแหน่ง
+    { width: 15 }, // ค่าเช่าที่พัก
+    { width: 20 }, // ค่าช่วยเหลือรายเดือน
+    { width: 15 }, // เงินก้อน
+    { width: 15 }, // ค่าเดินทาง
+    { width: 15 }, // ค่าท้องถิ่น
+    { width: 15 }, // ค่าเบี้ยเลี้ยง
+    { width: 15 }  // ค่าโรงแรม
+  ];
+
+  // Generate file
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `ตารางค่าใช้จ่ายมาตรฐาน_${new Date().toISOString().split('T')[0]}.xlsx`;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
 // Legacy XLSX function for backward compatibility
 export const exportEmployeesToExcelLegacy = (employees: Employee[]) => {
   const headers = {

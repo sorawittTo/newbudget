@@ -4,6 +4,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { NeumorphismSelect } from '../ui/NeumorphismSelect';
+import { exportEmployeesToExcel, exportMasterRatesToExcel } from '../../utils/excel';
 import { 
   Plus, 
   Trash2, 
@@ -75,6 +76,14 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
     setTempValue('');
   };
 
+  const handleExportClick = async () => {
+    if (activeSection === 'employees') {
+      await exportEmployeesToExcel(employees);
+    } else if (activeSection === 'rates') {
+      await exportMasterRatesToExcel(masterRates);
+    }
+  };
+
   const renderEditableCell = (level: string, field: string, value: any, isText = false) => {
     const cellKey = `${level}-${field}`;
     const isEditing = editingCell === cellKey;
@@ -139,7 +148,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <Save className="w-4 h-4 mr-2" />
                 บันทึก
               </Button>
-              <Button onClick={onExport} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+              <Button onClick={handleExportClick} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
                 <FileText className="w-4 h-4 mr-2" />
                 ส่งออก Excel
               </Button>
@@ -413,6 +422,14 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 >
                   <Save className="w-4 h-4" />
                   บันทึก
+                </button>
+                
+                <button 
+                  onClick={handleExportClick}
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-100 text-blue-700 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium"
+                >
+                  <FileText className="w-4 h-4" />
+                  ส่งออก Excel
                 </button>
               </div>
             </div>
