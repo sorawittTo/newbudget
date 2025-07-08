@@ -117,6 +117,14 @@ This is a comprehensive budget management system built for organizational expens
 
 ```
 Changelog:
+- July 08, 2025. Account Code Display System Implemented Successfully
+  * Successfully implemented account code (รหัสบัญชี) display in budget table
+  * Added account_code field to budget_items database table with proper format (5XXX-XXXX)
+  * Fixed data transformation in useBudgetData.ts to properly handle accountCode from API
+  * Enhanced NeumorphismBudgetTable to display account codes in emerald-colored column
+  * Added comprehensive budget data with 37 items including main_header, header, and budget items
+  * Account codes now display correctly: 5202-1100, 5301-0200, 5304-0100, AS-10, etc.
+  * System now uses account codes as primary reference for budget item identification
 - July 08, 2025. Server Deployment Issues Fixed
   * Fixed server binding to properly listen on 0.0.0.0:5000 in development mode
   * Added health check endpoints at "/" and "/health" for deployment monitoring
