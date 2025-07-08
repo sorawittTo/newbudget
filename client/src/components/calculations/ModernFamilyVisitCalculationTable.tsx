@@ -292,42 +292,12 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                 ))
               )}
             </tbody>
-            {familyVisitData.length > 0 && (
-              <tfoot className="bg-gray-100">
-                <tr>
-                  <td colSpan={5} className="px-4 py-3 text-right font-semibold text-gray-700">
-                    ยอดรวมทั้งหมด:
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="font-bold text-gray-900">{formatCurrency(familyVisitTotal)}</div>
-                  </td>
-                </tr>
-              </tfoot>
-            )}
+
           </table>
         </div>
       </Card>
 
-      {/* Summary Footer */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="text-sm text-slate-600">พนักงานที่มีสิทธิ์</div>
-            <div className="text-3xl font-bold text-emerald-600">{stats.eligibleEmployees}</div>
-            <div className="text-sm text-slate-500">คน</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-slate-600">ยอดรวมทั้งหมด</div>
-            <div className="text-3xl font-bold text-blue-600">{formatCurrency(familyVisitTotal)}</div>
-            <div className="text-sm text-slate-500">บาท</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-slate-600">เฉลี่ยต่อคน</div>
-            <div className="text-3xl font-bold text-purple-600">{formatCurrency(stats.averagePerEmployee)}</div>
-            <div className="text-sm text-slate-500">บาท</div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

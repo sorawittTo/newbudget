@@ -213,16 +213,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr className="bg-gray-100">
-                <td colSpan={5} className="px-4 py-3 text-right font-semibold text-gray-700">
-                  ยอดรวมทั้งหมด:
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="font-bold text-gray-900">{formatCurrency(companyTripTotal)}</div>
-                </td>
-              </tr>
-            </tfoot>
+
           </table>
         </div>
       </Card>
