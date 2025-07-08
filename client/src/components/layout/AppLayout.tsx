@@ -18,6 +18,7 @@ import {
   HandHeart,
   Calendar,
   FileText,
+  Banknote,
   BarChart3,
   Download,
   Upload,
@@ -79,6 +80,14 @@ const navigationItems: NavigationItem[] = [
     description: 'ค่าช่วยเหลือพิเศษ',
     color: 'text-pink-600',
     gradient: 'from-pink-500 to-pink-600'
+  },
+  {
+    id: 'budget',
+    label: 'การจัดการงบประมาณประจำปี',
+    icon: <Banknote className="w-5 h-5" />,
+    description: 'จัดการงบประมาณรายจ่าย',
+    color: 'text-green-600',
+    gradient: 'from-green-500 to-green-600'
   },
   {
     id: 'workdays',

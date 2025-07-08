@@ -7,6 +7,7 @@ import { ModernDashboard } from './components/dashboard/ModernDashboard';
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { SpecialAssistanceManager } from './components/assistance/SpecialAssistanceManager';
+import { BudgetManager } from './components/budget/BudgetManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
@@ -208,6 +209,13 @@ function App() {
             onUpdateSpecialAssist1Item={updateSpecialAssist1Item}
             onUpdateSpecialAssist1Notes={updateSpecialAssist1Notes}
             onUpdateOvertimeData={updateOvertimeData}
+            onSave={handleSave}
+          />
+        );
+
+      case 'budget':
+        return (
+          <BudgetManager
             onSave={handleSave}
           />
         );
