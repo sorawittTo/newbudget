@@ -274,42 +274,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
             ))}
           </div>
 
-          {/* Settings Panel */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">ปีคำนวณ</label>
-              <NeumorphismSelect
-                value={currentCalcYear}
-                onChange={(e) => setCurrentCalcYear(parseInt(e.target.value))}
-              >
-                {[2567, 2568, 2569, 2570].map(year => (
-                  <option key={year} value={year}>พ.ศ. {year}</option>
-                ))}
-              </NeumorphismSelect>
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">คืนที่พัก</label>
-              <NeumorphismInput
-                type="number"
-                min="1"
-                max="10"
-                value={customSettings.hotelNights}
-                onChange={(e) => handleSettingChange('hotelNights', parseInt(e.target.value) || 1)}
-                className="text-center"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">วันเบี้ยเลี้ยง</label>
-              <NeumorphismInput
-                type="number"
-                min="1"
-                max="10"
-                value={customSettings.perDiemDays}
-                onChange={(e) => handleSettingChange('perDiemDays', parseInt(e.target.value) || 1)}
-                className="text-center"
-              />
-            </div>
-          </div>
+
         </div>
       </Card>
 
@@ -432,53 +397,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
             </div>
           </div>
 
-          {/* Summary Footer */}
-          <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50"
-               style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-6">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">พนักงานมีสิทธิ์</p>
-                  <p className="text-2xl font-bold text-blue-600">{statistics.eligibleEmployees}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">ค่าใช้จ่ายรวม</p>
-                  <p className="text-2xl font-bold text-green-600">{formatCurrency(statistics.totalCost)}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">เฉลี่ยต่อคน</p>
-                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(statistics.avgCostPerEmployee)}</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Button variant="secondary" className="flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4" />
-                  รีเซ็ต
-                </Button>
-                <Button onClick={onSave} className="flex items-center gap-2">
-                  <Save className="w-4 h-4" />
-                  บันทึกการเปลี่ยนแปลง
-                </Button>
-              </div>
-            </div>
-          </div>
 
-          {/* Instructions */}
-          <div className="mt-4 p-4 rounded-2xl bg-yellow-50"
-               style={{ boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff' }}>
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
-              <div className="text-sm text-yellow-800">
-                <p className="font-semibold mb-1">วิธีใช้งาน:</p>
-                <ul className="space-y-1 list-disc list-inside">
-                  <li>กดปุ่ม "เปิดการแก้ไข" เพื่อแก้ไขค่าใช้จ่ายแต่ละรายการ</li>
-                  <li>คลิกที่ตัวเลขในตารางเพื่อแก้ไขค่าใช้จ่าย</li>
-                  <li>ปรับค่าคืนที่พักและวันเบี้ยเลี้ยงเพื่อคำนวณอัตโนมัติ</li>
-                  <li>บันทึกการเปลี่ยนแปลงเมื่อเสร็จสิ้น</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       </Card>
     </div>
