@@ -3,6 +3,7 @@ import { Employee, MasterRates, CompanyTripEmployee } from '../../types';
 import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
 import { Save, Users, MapPin, Edit3, Check, X, Car } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
 
 interface ModernCompanyTripCalculationTableProps {
   employees: Employee[];
@@ -157,78 +158,74 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
       </div>
 
       {/* Main Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '16px 16px 32px #d1d5db, -16px -16px 32px #ffffff' }}>
+      <Card className="bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gradient-to-r from-slate-100 to-slate-200">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">รหัส</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">ชื่อ-สกุล</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ค่าที่พัก</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ค่ารถโดยสารไป-กลับ</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">หมายเหตุ</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ยอดรวม</th>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัส</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าที่พัก</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่ารถโดยสารไป-กลับ</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">หมายเหตุ</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม</th>
               </tr>
             </thead>
             <tbody>
               {companyTripData.map((emp, index) => (
-                <tr key={emp.id} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="font-mono text-sm text-slate-600 font-medium">{emp.id}</div>
+                <tr key={emp.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="font-mono text-sm text-gray-600 font-medium">{emp.id}</div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-slate-900">{emp.name}</div>
+                  <td className="px-4 py-3">
+                    <div className="font-medium text-gray-900">{emp.name}</div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="space-y-2">
-                      {globalEditMode ? (
-                        <input
-                          type="text"
-                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                          value={emp.accommodationCost}
-                          onChange={(e) => handleEditingChange(`accommodation-${emp.id}`, parseFloat(e.target.value) || 0)}
-                        />
-                      ) : (
-                        <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.accommodationCost)}</span>
-                      )}
-                    </div>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? (
+                      <input
+                        type="text"
+                        className="w-32 p-2 border border-gray-300 rounded text-right"
+                        value={emp.accommodationCost}
+                        onChange={(e) => handleEditingChange(`accommodation-${emp.id}`, parseFloat(e.target.value) || 0)}
+                      />
+                    ) : (
+                      <span className="font-medium text-gray-900">{formatCurrency(emp.accommodationCost)}</span>
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="space-y-2">
-                      {globalEditMode ? (
-                        <input
-                          type="text"
-                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                          value={tripSettings.busFare * 2}
-                          onChange={(e) => handleSettingChange('busFare', (parseFloat(e.target.value) || 0) / 2)}
-                        />
-                      ) : (
-                        <span className="font-bold text-lg text-slate-700">{formatCurrency(tripSettings.busFare * 2)}</span>
-                      )}
-                    </div>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? (
+                      <input
+                        type="text"
+                        className="w-32 p-2 border border-gray-300 rounded text-right"
+                        value={tripSettings.busFare * 2}
+                        onChange={(e) => handleSettingChange('busFare', (parseFloat(e.target.value) || 0) / 2)}
+                      />
+                    ) : (
+                      <span className="font-medium text-gray-900">{formatCurrency(tripSettings.busFare * 2)}</span>
+                    )}
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-slate-600">{emp.note}</div>
+                  <td className="px-4 py-3">
+                    <div className="text-sm text-gray-600">{emp.note}</div>
                   </td>
-                  <td className="px-6 py-4 text-right bg-gradient-to-r from-blue-50 to-purple-50">
-                    <div className="font-bold text-xl text-blue-900">{formatCurrency(emp.total)}</div>
+                  <td className="px-4 py-3 text-right">
+                    <div className="font-semibold text-gray-900">{formatCurrency(emp.total)}</div>
                   </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr className="bg-gradient-to-r from-slate-100 to-slate-200 font-bold">
-                <td colSpan={5} className="px-6 py-4 text-right">
+              <tr className="bg-gray-100">
+                <td colSpan={5} className="px-4 py-3 text-right font-semibold text-gray-700">
                   ยอดรวมทั้งหมด:
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <div className="font-bold text-2xl">{formatCurrency(companyTripTotal)}</div>
+                <td className="px-4 py-3 text-right">
+                  <div className="font-bold text-gray-900">{formatCurrency(companyTripTotal)}</div>
                 </td>
               </tr>
             </tfoot>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

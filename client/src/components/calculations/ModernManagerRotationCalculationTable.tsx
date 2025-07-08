@@ -3,6 +3,7 @@ import { Employee, MasterRates, ManagerRotationEmployee } from '../../types';
 import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
 import { Save, RotateCcw, MapPin, Edit3, Check, X, Plane, Car, Hotel, DollarSign } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
 
 interface ModernManagerRotationCalculationTableProps {
   employees: Employee[];
@@ -304,96 +305,90 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
       </div>
 
       {/* Main Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '16px 16px 32px #d1d5db, -16px -16px 32px #ffffff' }}>
+      <Card className="bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gradient-to-r from-slate-100 to-slate-200">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">รหัส</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">ชื่อ-สกุล</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">เบี้ยเลี้ยง</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ค่าที่พัก</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ค่าเดินทาง</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">ยอดรวม</th>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัส</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">เบี้ยเลี้ยง</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าที่พัก</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่าเดินทาง</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม</th>
               </tr>
             </thead>
             <tbody>
               {managerRotationData.map((emp, index) => (
-                <tr key={emp.id} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="font-mono text-sm text-slate-600 font-medium">{emp.id}</div>
+                <tr key={emp.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="font-mono text-sm text-gray-600 font-medium">{emp.id}</div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-slate-900">{emp.name}</div>
-                    <div className="text-sm text-slate-500">ระดับ {emp.level}</div>
+                  <td className="px-4 py-3">
+                    <div className="font-medium text-gray-900">{emp.name}</div>
+                    <div className="text-sm text-gray-500">ระดับ {emp.level}</div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="space-y-2">
-                      {globalEditMode ? (
-                        <input
-                          type="text"
-                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                          value={emp.perDiemCost}
-                          onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.perDiem', (parseFloat(e.target.value) || 0) / rotationSettings.perDiemDays)}
-                        />
-                      ) : (
-                        <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.perDiemCost)}</span>
-                      )}
-                    </div>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? (
+                      <input
+                        type="text"
+                        className="w-32 p-2 border border-gray-300 rounded text-right"
+                        value={emp.perDiemCost}
+                        onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.perDiem', (parseFloat(e.target.value) || 0) / rotationSettings.perDiemDays)}
+                      />
+                    ) : (
+                      <span className="font-medium text-gray-900">{formatCurrency(emp.perDiemCost)}</span>
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="space-y-2">
-                      {globalEditMode ? (
-                        <input
-                          type="text"
-                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                          value={emp.accommodationCost}
-                          onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.hotel', (parseFloat(e.target.value) || 0) / rotationSettings.hotelNights)}
-                        />
-                      ) : (
-                        <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.accommodationCost)}</span>
-                      )}
-                    </div>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? (
+                      <input
+                        type="text"
+                        className="w-32 p-2 border border-gray-300 rounded text-right"
+                        value={emp.accommodationCost}
+                        onChange={(e) => handleGlobalUpdate(emp.id, 'customTravelRates.hotel', (parseFloat(e.target.value) || 0) / rotationSettings.hotelNights)}
+                      />
+                    ) : (
+                      <span className="font-medium text-gray-900">{formatCurrency(emp.accommodationCost)}</span>
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="space-y-2">
-                      {globalEditMode ? (
-                        <input
-                          type="text"
-                          className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                          value={emp.totalTravel}
-                          onChange={(e) => {
-                            const newTotal = parseFloat(e.target.value) || 0;
-                            const avgCost = newTotal / 3; // Split evenly between bus, flight, taxi
-                            handleSettingChange('busCost', avgCost);
-                            handleSettingChange('flightCost', avgCost);
-                            handleSettingChange('taxiCost', avgCost);
-                          }}
-                        />
-                      ) : (
-                        <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.totalTravel)}</span>
-                      )}
-                    </div>
+                  <td className="px-4 py-3 text-right">
+                    {globalEditMode ? (
+                      <input
+                        type="text"
+                        className="w-32 p-2 border border-gray-300 rounded text-right"
+                        value={emp.totalTravel}
+                        onChange={(e) => {
+                          const newTotal = parseFloat(e.target.value) || 0;
+                          const avgCost = newTotal / 3; // Split evenly between bus, flight, taxi
+                          handleSettingChange('busCost', avgCost);
+                          handleSettingChange('flightCost', avgCost);
+                          handleSettingChange('taxiCost', avgCost);
+                        }}
+                      />
+                    ) : (
+                      <span className="font-medium text-gray-900">{formatCurrency(emp.totalTravel)}</span>
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-right bg-gradient-to-r from-blue-50 to-purple-50">
-                    <div className="font-bold text-xl text-blue-900">{formatCurrency(emp.total)}</div>
+                  <td className="px-4 py-3 text-right">
+                    <div className="font-semibold text-gray-900">{formatCurrency(emp.total)}</div>
                   </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr className="bg-gradient-to-r from-slate-100 to-slate-200 font-bold">
-                <td colSpan={5} className="px-6 py-4 text-right">
+              <tr className="bg-gray-100">
+                <td colSpan={5} className="px-4 py-3 text-right font-semibold text-gray-700">
                   ยอดรวมทั้งหมด:
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <div className="font-bold text-2xl">{formatCurrency(managerRotationTotal)}</div>
+                <td className="px-4 py-3 text-right">
+                  <div className="font-bold text-gray-900">{formatCurrency(managerRotationTotal)}</div>
                 </td>
               </tr>
             </tfoot>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Employee, FamilyVisitEmployee } from '../../types';
 import { formatCurrency, calculateFamilyVisit } from '../../utils/calculations';
 import { Save, Info, Edit3, Check, X, Users, MapPin, Calculator, AlertCircle, TrendingUp, Target } from 'lucide-react';
+import { Card } from '../ui/Card';
 
 interface ModernFamilyVisitCalculationTableProps {
   employees: Employee[];
@@ -221,17 +222,17 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
 
 
       {/* Main Table */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50 overflow-hidden">
+      <Card className="bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gradient-to-r from-slate-600 to-blue-600 text-white">
-                <th className="px-6 py-4 text-left font-bold">รหัสพนักงาน</th>
-                <th className="px-6 py-4 text-left font-bold">ชื่อ-สกุล</th>
-                <th className="px-6 py-4 text-left font-bold">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-6 py-4 text-right font-bold">ค่ารถทัวร์ไป-กลับ</th>
-                <th className="px-6 py-4 text-right font-bold">จำนวนครั้ง</th>
-                <th className="px-6 py-4 text-right font-bold bg-gradient-to-r from-blue-600 to-purple-600">ยอดรวม (บาท)</th>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัสพนักงาน</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-700">จังหวัดเยี่ยมบ้าน</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่ารถทัวร์ไป-กลับ</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">จำนวนครั้ง</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม (บาท)</th>
               </tr>
             </thead>
             <tbody>
@@ -253,81 +254,66 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                 </tr>
               ) : (
                 familyVisitData.map((emp, index) => (
-                  <tr key={index} className="border-b border-gray-100 hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="inline-flex items-center px-3 py-1 rounded-lg bg-slate-100 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] font-mono text-sm font-medium text-slate-700">
+                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="font-mono text-sm text-gray-600 font-medium">
                         {emp.id}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-slate-800">{emp.name}</div>
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-gray-900">{emp.name}</div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-lg bg-emerald-500 shadow-[4px_4px_8px_#a7f3d0,-4px_-4px_8px_#ffffff] flex items-center justify-center">
-                          <MapPin className="w-3 h-3 text-white" />
-                        </div>
-                        <div className="inline-flex items-center px-3 py-1 rounded-lg bg-gradient-to-r from-emerald-100 to-green-100 shadow-[inset_4px_4px_8px_#a7f3d0,inset_-4px_-4px_8px_#ffffff] text-sm font-medium text-emerald-800">
-                          {emp.visitProvince}
-                        </div>
+                    <td className="px-4 py-3">
+                      <div className="text-gray-700">
+                        {emp.visitProvince}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="space-y-2">
-                        {globalEditMode ? (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              className="w-32 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-right"
-                              value={emp.roundTripFare}
-                              onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', (parseFloat(e.target.value) || 0) / 2)}
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 group">
-                            <span className="font-bold text-lg text-slate-700">{formatCurrency(emp.roundTripFare)}</span>
-                          </div>
-                        )}
-                      </div>
+                    <td className="px-4 py-3 text-right">
+                      {globalEditMode ? (
+                        <input
+                          type="text"
+                          className="w-32 p-2 border border-gray-300 rounded text-right"
+                          value={emp.roundTripFare}
+                          onChange={(e) => handleGlobalUpdate(emp.id, 'homeVisitBusFare', (parseFloat(e.target.value) || 0) / 2)}
+                        />
+                      ) : (
+                        <span className="font-medium text-gray-900">{formatCurrency(emp.roundTripFare)}</span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="space-y-2">
-                        {globalEditMode ? (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              className="w-20 p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700 font-medium text-center"
-                              value={4}
-                              onChange={() => {}} // Fixed at 4 for now
-                            />
-                          </div>
-                        ) : (
-                          <div className="font-bold text-lg text-blue-700">4</div>
-                        )}
-                      </div>
+                    <td className="px-4 py-3 text-right">
+                      {globalEditMode ? (
+                        <input
+                          type="text"
+                          className="w-20 p-2 border border-gray-300 rounded text-center"
+                          value={4}
+                          onChange={() => {}} // Fixed at 4 for now
+                        />
+                      ) : (
+                        <span className="font-medium text-gray-900">4</span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-right bg-gradient-to-r from-blue-50 to-purple-50">
-                      <div className="font-bold text-xl text-blue-900">{formatCurrency(emp.total)}</div>
+                    <td className="px-4 py-3 text-right">
+                      <div className="font-semibold text-gray-900">{formatCurrency(emp.total)}</div>
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
             {familyVisitData.length > 0 && (
-              <tfoot className="bg-gradient-to-r from-slate-600 to-blue-600 text-white">
+              <tfoot className="bg-gray-100">
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-right font-bold text-lg">
+                  <td colSpan={5} className="px-4 py-3 text-right font-semibold text-gray-700">
                     ยอดรวมทั้งหมด:
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="font-bold text-2xl">{formatCurrency(familyVisitTotal)}</div>
+                  <td className="px-4 py-3 text-right">
+                    <div className="font-bold text-gray-900">{formatCurrency(familyVisitTotal)}</div>
                   </td>
                 </tr>
               </tfoot>
             )}
           </table>
         </div>
-      </div>
+      </Card>
 
       {/* Summary Footer */}
       <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
