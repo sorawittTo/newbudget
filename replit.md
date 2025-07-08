@@ -117,16 +117,16 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 08, 2025. Remove Holiday Footer from Overtime Tables
-  * Removed holiday information footer from both ModernOvertimeCalculationTable and UnifiedSpecialAssistanceManager
-  * No longer displays "วันหยุดประจำปี 2569" section in overtime calculation pages
-  * Cleaner interface focused on overtime calculations without holiday details
-  * Fixed incomplete removal issue - ensured all holiday footers are removed from all relevant components
+- July 08, 2025. Remove Unused ModernOvertimeCalculationTable Component
+  * Deleted ModernOvertimeCalculationTable.tsx - unused component that was not imported anywhere
+  * System now uses only UnifiedSpecialAssistanceManager for overtime calculations
+  * Cleaned up codebase by removing redundant overtime calculation component
+  * Removed holiday information footer from UnifiedSpecialAssistanceManager overtime tab
 - July 08, 2025. Auto-Update Overtime Rates When Salary Changes
   * Enhanced overtime calculation system to automatically recalculate all item rates when salary changes
   * When salary is modified, all overtime items using default rate (salary ÷ 210) are updated automatically
   * Prevents manual recalculation errors and ensures consistency across all overtime items
-  * Applied to both ModernOvertimeCalculationTable and UnifiedSpecialAssistanceManager
+  * Applied to UnifiedSpecialAssistanceManager overtime calculation section
   * Maintains custom rates that users have manually set while updating default rates
 - July 08, 2025. Complete Travel Expense Tables UI Standardization
   * Updated all 4 travel expense tables to match system's consistent UI design
