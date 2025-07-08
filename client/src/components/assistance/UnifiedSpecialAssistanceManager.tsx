@@ -611,7 +611,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <Heart className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">เงินช่วยเหลือต่างๆ</h2>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">ค่าใช้จ่ายในการเดินทาง</h2>
               <p className="text-slate-600">จัดการข้อมูลเงินช่วยเหลือทุกประเภทในปี {calcYear}</p>
             </div>
           </div>
