@@ -13,7 +13,6 @@ import {
   Calculator, 
   Award, 
   AlertCircle,
-  Settings,
   Car,
   Hotel,
   Coffee,
@@ -219,7 +218,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่าเดินทาง</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">ค่ารถรับจ้าง</th>
                     <th className="p-4 text-sm font-semibold text-gray-700 text-center w-32">รวมทั้งหมด</th>
-                    {globalEditMode && <th className="p-4 text-sm font-semibold text-gray-700 text-center w-24">จัดการ</th>}
                   </tr>
                 </thead>
                 <tbody className="space-y-2">
@@ -298,24 +296,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           <td className="p-4 text-center">
                             <div className="font-bold text-lg text-blue-600">{formatCurrency(costs.total)}</div>
                           </td>
-                          {globalEditMode && (
-                            <td className="p-4 text-center">
-                              <button
-                                onClick={() => setSelectedEmployeeForEdit(isSelected ? null : employee.id)}
-                                className={`p-2 rounded-xl transition-all duration-300 ${
-                                  isSelected ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'
-                                }`}
-                                style={{
-                                  boxShadow: isSelected
-                                    ? 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
-                                    : '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
-                                  backgroundColor: '#f9fafb'
-                                }}
-                              >
-                                <Settings className="w-4 h-4" />
-                              </button>
-                            </td>
-                          )}
+
                         </motion.tr>
                       );
                     })}
