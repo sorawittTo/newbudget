@@ -16,6 +16,7 @@ interface EmployeeTableProps {
   onAddEmployee: () => void;
   onDeleteEmployee: (index: number) => void;
   onUpdateSelection: (type: string, employeeIds: string[]) => void;
+  globalEditMode?: boolean;
 }
 
 export const EmployeeTable: React.FC<EmployeeTableProps> = ({
@@ -25,7 +26,8 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
   onUpdateEmployee,
   onAddEmployee,
   onDeleteEmployee,
-  onUpdateSelection
+  onUpdateSelection,
+  globalEditMode = false
 }) => {
   const [attachedDocuments, setAttachedDocuments] = useState<Array<{
     name: string;
@@ -231,6 +233,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.id}
                         onChange={(e) => updateEmployeeField(index, 'id', e.target.value)}
+                        disabled={!globalEditMode}
                       />
                     </td>
                     <td className="p-3">
@@ -239,6 +242,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.name}
                         onChange={(e) => updateEmployeeField(index, 'name', e.target.value)}
+                        disabled={!globalEditMode}
                       />
                     </td>
                     <td className="p-3">
@@ -246,6 +250,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'gender', 'ชาย')}
+                          disabled={!globalEditMode}
                           className={`p-3 rounded-2xl transition-all duration-300 ${
                             emp.gender === 'ชาย' 
                               ? 'bg-gray-100 text-blue-600 shadow-inner' 
@@ -263,6 +268,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'gender', 'หญิง')}
+                          disabled={!globalEditMode}
                           className={`p-3 rounded-2xl transition-all duration-300 ${
                             emp.gender === 'หญิง' 
                               ? 'bg-gray-100 text-pink-600 shadow-inner' 
@@ -287,6 +293,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.startYear}
                         onChange={(e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)}
+                        disabled={!globalEditMode}
                         style={{
                           MozAppearance: 'textfield',
                           WebkitAppearance: 'none'
@@ -299,6 +306,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.level}
                         onChange={(e) => updateEmployeeField(index, 'level', e.target.value)}
+                        disabled={!globalEditMode}
                       >
                         {levelOptions.map(level => (
                           <option key={level} value={level}>ระดับ {level}</option>
@@ -310,6 +318,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'status', 'มีสิทธิ์')}
+                          disabled={!globalEditMode}
                           className={`p-3 rounded-2xl transition-all duration-300 ${
                             (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
                               ? 'bg-gray-100 text-green-600 shadow-inner' 
@@ -327,6 +336,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         <button
                           type="button"
                           onClick={() => updateEmployeeField(index, 'status', 'หมดสิทธิ์')}
+                          disabled={!globalEditMode}
                           className={`p-3 rounded-2xl transition-all duration-300 ${
                             (emp as any).status === 'หมดสิทธิ์'
                               ? 'bg-gray-100 text-red-600 shadow-inner' 
@@ -349,6 +359,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.visitProvince}
                         onChange={(e) => updateEmployeeField(index, 'visitProvince', e.target.value)}
+                        disabled={!globalEditMode}
                       />
                     </td>
                     <td className="p-3">
@@ -359,6 +370,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         className="w-full p-2 border border-gray-300 rounded-md text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.homeVisitBusFare}
                         onChange={(e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
+                        disabled={!globalEditMode}
                         style={{
                           MozAppearance: 'textfield',
                           WebkitAppearance: 'none'

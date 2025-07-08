@@ -117,6 +117,14 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 08, 2025. Fixed Edit Mode Bypass Issue in Employee Management
+  * Fixed critical issue where employee data could be edited without clicking Edit button first
+  * Added disabled={!globalEditMode} to ALL input fields in EmployeeManagement.tsx
+  * Applied edit mode control to buttons (gender, status) and input fields (name, ID, year, province, busFare)
+  * Fixed NeumorphismSelect dropdown to respect edit mode state
+  * Removed all dropdown icons and browser arrows per user request
+  * System now properly enforces Edit button requirement before allowing any data modifications
+  * All employee data editing now requires explicit Edit button click as intended
 - July 08, 2025. Complete Arrow Controls Removal from Employee Table
   * Fixed remaining arrow controls in EmployeeTable.tsx for startYear and homeVisitBusFare fields  
   * Added global CSS in index.css to force remove all browser arrows with !important

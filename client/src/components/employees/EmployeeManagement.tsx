@@ -241,6 +241,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           value={emp.id}
                           onChange={(e) => updateEmployeeField(index, 'id', e.target.value)}
                           placeholder="รหัสพนักงาน"
+                          disabled={!globalEditMode}
                         />
                       </td>
                       <td className="p-3">
@@ -249,6 +250,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           value={emp.name}
                           onChange={(e) => updateEmployeeField(index, 'name', e.target.value)}
                           placeholder="ชื่อ-สกุล"
+                          disabled={!globalEditMode}
                         />
                       </td>
                       <td className="p-3">
@@ -256,6 +258,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'ชาย')}
+                            disabled={!globalEditMode}
                             className={`p-3 rounded-2xl transition-all duration-300 ${
                               emp.gender === 'ชาย' 
                                 ? 'bg-gray-100 text-blue-600 shadow-inner' 
@@ -273,6 +276,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'gender', 'หญิง')}
+                            disabled={!globalEditMode}
                             className={`p-3 rounded-2xl transition-all duration-300 ${
                               emp.gender === 'หญิง' 
                                 ? 'bg-gray-100 text-pink-600 shadow-inner' 
@@ -295,12 +299,14 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           value={emp.startYear}
                           onChange={(e) => updateEmployeeField(index, 'startYear', parseInt(e.target.value) || 0)}
                           className="text-center"
+                          disabled={!globalEditMode}
                         />
                       </td>
                       <td className="p-3">
                         <NeumorphismSelect
                           value={emp.level}
                           onChange={(e) => updateEmployeeField(index, 'level', e.target.value)}
+                          disabled={!globalEditMode}
                         >
                           {levelOptions.map(level => (
                             <option key={level} value={level}>ระดับ {level}</option>
@@ -312,6 +318,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'มีสิทธิ์')}
+                            disabled={!globalEditMode}
                             className={`p-3 rounded-2xl transition-all duration-300 ${
                               (emp as any).status === 'มีสิทธิ์' || !(emp as any).status
                                 ? 'bg-gray-100 text-green-600 shadow-inner' 
@@ -329,6 +336,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           <button
                             type="button"
                             onClick={() => updateEmployeeField(index, 'status', 'หมดสิทธิ์')}
+                            disabled={!globalEditMode}
                             className={`p-3 rounded-2xl transition-all duration-300 ${
                               (emp as any).status === 'หมดสิทธิ์'
                                 ? 'bg-gray-100 text-red-600 shadow-inner' 
@@ -352,6 +360,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           value={emp.visitProvince}
                           onChange={(e) => updateEmployeeField(index, 'visitProvince', e.target.value)}
                           placeholder="จังหวัด"
+                          disabled={!globalEditMode}
                         />
                       </td>
                       <td className="p-3">
@@ -360,6 +369,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           className="w-full p-2 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           value={emp.homeVisitBusFare}
                           onChange={(e) => updateEmployeeField(index, 'homeVisitBusFare', parseFloat(e.target.value) || 0)}
+                          disabled={!globalEditMode}
                         />
                       </td>
                       <td className="p-3 text-center">
