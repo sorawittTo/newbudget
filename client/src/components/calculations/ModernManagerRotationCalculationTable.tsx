@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Employee, MasterRates, ManagerRotationEmployee } from '../../types';
 import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
-import { Save, RotateCcw, MapPin, Edit3, Check, X, Plane, Car, Hotel, DollarSign } from 'lucide-react';
+import { Save, RotateCcw, MapPin, Edit3, Check, X, Plane, Car, Hotel, DollarSign, Award, Calculator, TrendingUp, Users } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 
@@ -202,40 +203,49 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   const eligibleEmployees = level7Employees.length;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
-            <RotateCcw className="w-6 h-6 text-blue-600" />
+    <div className="space-y-6">
+      {/* Header with Statistics */}
+      <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl" style={{ boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff', backgroundColor: '#f9fafb' }}>
+                <RotateCcw className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">เดินทางหมุนเวียน ผจศ.</h2>
+                <p className="text-gray-600">คำนวณค่าใช้จ่ายการเดินทางหมุนเวียนสำหรับผู้จัดการศูนย์</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">เดินทางหมุนเวียน ผจศ.</h2>
-            <p className="text-gray-600">คำนวณค่าใช้จ่ายการเดินทางหมุนเวียนสำหรับผู้จัดการศูนย์</p>
+
+          {/* Statistics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            {[
+              { label: 'ผู้จัดการศูนย์', value: totalEmployees, icon: Users, color: 'text-blue-600' },
+              { label: 'ระดับ 7 ที่มีสิทธิ์', value: eligibleEmployees, icon: Award, color: 'text-green-600' },
+              { label: 'ยอดรวมทั้งหมด', value: formatCurrency(managerRotationTotal), icon: Calculator, color: 'text-purple-600' }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="p-4 rounded-2xl bg-gray-100"
+                style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-xl ${stat.color}`} style={{ boxShadow: '4px 4px 8px #d1d5db, -4px -4px 8px #ffffff', backgroundColor: '#f9fafb' }}>
+                    <stat.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">{stat.label}</p>
+                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
-
-      </div>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-          <div className="text-3xl font-bold text-blue-700">{totalEmployees}</div>
-          <div className="text-sm text-blue-600">ผู้จัดการศูนย์</div>
-        </div>
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-          <div className="text-3xl font-bold text-green-700">{eligibleEmployees}</div>
-          <div className="text-sm text-green-600">ระดับ 7 ที่มีสิทธิ์</div>
-        </div>
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-orange-50 to-red-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-          <div className="text-3xl font-bold text-orange-700">{rotationSettings.perDiemDays}</div>
-          <div className="text-sm text-orange-600">วันเบี้ยเลี้ยง</div>
-        </div>
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-violet-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
-          <div className="text-3xl font-bold text-purple-700">{formatCurrency(managerRotationTotal)}</div>
-          <div className="text-sm text-purple-600">ยอดรวมทั้งหมด</div>
-        </div>
-      </div>
+      </Card>
 
       {/* Settings Panel */}
       <div className="p-6 rounded-2xl bg-gradient-to-br from-yellow-50 to-orange-50" style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}>
