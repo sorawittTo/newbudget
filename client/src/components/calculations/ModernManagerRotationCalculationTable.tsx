@@ -59,18 +59,21 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
       
       const perDiemCost = (rates.perDiem || 0) * rotationSettings.perDiemDays;
       const accommodationCost = (rates.hotel || 0) * rotationSettings.hotelNights;
-      const totalTravel = rotationSettings.busCost + rotationSettings.flightCost + rotationSettings.taxiCost;
-      const total = perDiemCost + accommodationCost + totalTravel;
+      const travelCost = (rates.travel || 0) * 2; // ค่าเดินทางจากตารางอัตรา x2
+      const taxiCost = (rates.local || 0) * 2; // ค่ารถรับจ้างจากตารางอัตราท้องถิ่น x2
+      const otherVehicleCost = 0; // ค่าพาหนะอื่นๆ
+      const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
       
       return {
         ...emp,
         perDiemCost,
         accommodationCost,
-        totalTravel,
+        travelCost,
+        taxiCost,
+        otherVehicleCost,
         total,
-        busCost: rotationSettings.busCost,
-        flightCost: rotationSettings.flightCost,
-        taxiCost: rotationSettings.taxiCost,
+        busCost: 0, // No longer used
+        flightCost: 0, // No longer used
         perDiemDay: rotationSettings.perDiemDays,
         hotelNight: rotationSettings.hotelNights
       } as ManagerRotationEmployee;
@@ -309,11 +312,11 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.travel', emp.busCost + emp.flightCost, 'number') : (
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.travel', emp.travelCost, 'number') : (
                       <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(emp.busCost + emp.flightCost)}</div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.travelCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          รถ {formatCurrency(emp.busCost)} + เครื่องบิน {formatCurrency(emp.flightCost)}
+                          อัตรา {formatCurrency(emp.travelCost / 2)} x2
                         </div>
                       </div>
                     )}
@@ -323,15 +326,15 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          ค่ารถรับจ้าง
+                          อัตรา {formatCurrency(emp.taxiCost / 2)} x2
                         </div>
                       </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.other', 0, 'number') : (
+                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.other', emp.otherVehicleCost, 'number') : (
                       <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(0)}</div>
+                        <div className="font-semibold text-gray-900">{formatCurrency(emp.otherVehicleCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
                           อื่นๆ
                         </div>
