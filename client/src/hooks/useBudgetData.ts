@@ -112,9 +112,10 @@ export const useBudgetData = () => {
               values: item.values || {},
               notes: item.notes || ''
             };
-            // Debug log for first few items
-            if (item.id <= 5) {
-              console.log('Transformed item:', item.id, {
+            // Debug log for items with account codes
+            if (item.accountCode) {
+              console.log('Item with accountCode:', {
+                id: item.id,
                 code: item.code,
                 accountCode: item.accountCode,
                 name: item.name?.substring(0, 20)
