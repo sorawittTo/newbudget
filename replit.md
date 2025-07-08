@@ -121,6 +121,8 @@ Changelog:
   * Fixed remaining arrow controls in EmployeeTable.tsx for startYear and homeVisitBusFare fields  
   * Added global CSS in index.css to force remove all browser arrows with !important
   * Applied appearance: none to all select elements with custom dropdown icon
+  * Added browser-specific CSS to remove dropdown arrows: ::-webkit-dropdown-arrow, ::-moz-dropdown-arrow, ::-ms-expand
+  * Fixed double arrow issue where custom icon overlapped with browser default arrow
   * Added inputMode="numeric" and pattern="[0-9]*" for numeric fields
   * Applied CSS styles to hide spinners: MozAppearance: 'textfield', WebkitAppearance: 'none'
   * Added onWheel preventDefault to prevent accidental value changes
