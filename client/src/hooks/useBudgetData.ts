@@ -262,7 +262,7 @@ export const useBudgetData = () => {
         position: rates.position,
         rent: rates.rent.toString(),
         monthlyAssist: rates.monthlyAssist.toString(),
-        lumpSum: rates.lumpSum.toString(),
+        souvenirAllowance: rates.souvenirAllowance.toString(),
         travel: rates.travel.toString(),
         local: rates.local.toString(),
         perDiem: rates.perDiem.toString(),
@@ -373,7 +373,8 @@ export const useBudgetData = () => {
     setEmployees(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateMasterRate = (level: string, key: string, value: any) => {
+  const updateMasterRate = async (level: string, key: string, value: any) => {
+    // Update local state first for immediate UI feedback
     setMasterRates(prev => ({
       ...prev,
       [level]: {
@@ -381,6 +382,55 @@ export const useBudgetData = () => {
         [key]: key === 'position' ? value : (parseFloat(value) || 0)
       }
     }));
+
+    try {
+      // Find the master rate ID for this level
+      const allRates = await fetch('/api/master-rates').then(res => res.json());
+      const rateToUpdate = allRates.find((rate: any) => rate.level === level);
+      
+      if (rateToUpdate) {
+        // Prepare data for database update (snake_case)
+        const updateData: any = {};
+        
+        // Map camelCase to snake_case for database
+        const fieldMapping: { [key: string]: string } = {
+          position: 'position',
+          rent: 'rent',
+          monthlyAssist: 'monthlyAssist',
+          souvenirAllowance: 'souvenirAllowance',
+          travel: 'travel',
+          local: 'local',
+          perDiem: 'perDiem',
+          hotel: 'hotel'
+        };
+        
+        const dbField = fieldMapping[key] || key;
+        updateData[dbField] = key === 'position' ? value : value.toString();
+        
+        // Update database
+        const response = await fetch(`/api/master-rates/${rateToUpdate.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateData)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to update master rate: ${response.status}`);
+        }
+        
+        console.log(`Successfully updated ${key} for level ${level}`);
+      }
+    } catch (error) {
+      console.error('Error updating master rate:', error);
+      // Revert local state on error
+      setMasterRates(prev => ({
+        ...prev,
+        [level]: {
+          ...prev[level],
+          [key]: prev[level][key] // Revert to previous value
+        }
+      }));
+    }
   };
 
   const updateSpecialAssist1Item = (year: number, index: number, key: string, value: any) => {
