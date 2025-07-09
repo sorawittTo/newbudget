@@ -102,11 +102,10 @@ export interface SpecialAssistData {
 
 export interface OvertimeItem {
   item: string;
-  instances: number;
   days: number;
   hours: number;
   people: number;
-  rate?: number;
+  hourlyRate: number;
 }
 
 export interface OvertimeData {

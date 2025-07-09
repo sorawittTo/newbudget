@@ -79,7 +79,7 @@ export const useBudgetData = () => {
       const newData = {
         salary: 15000,
         items: [
-          { item: 'รายการใหม่', instances: 1, days: 1, hours: 8, people: 1, rate: 15000 / 210 }
+          { item: '', days: 0, hours: 0, people: 0, hourlyRate: 15000 / 210 }
         ],
         notes: ''
       };
