@@ -176,7 +176,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                   <th className="px-4 py-3 text-left font-semibold">รหัสพนักงาน</th>
                   <th className="px-4 py-3 text-left font-semibold">ชื่อ-นามสกุล</th>
                   <th className="px-4 py-3 text-center font-semibold">อายุงาน</th>
-                  <th className="px-4 py-3 text-center font-semibold">คืน/วัน</th>
+                  <th className="px-4 py-3 text-center font-semibold">วันทำการ</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะประจำทาง<br />ศนร.-กทม. ไปกลับ</th>
@@ -207,11 +207,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           <span className="font-medium text-gray-900">{employee.serviceYears} ปี</span>
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <div>
-                            <span className="font-medium text-gray-900">2 คืน</span>
-                            <br />
-                            <span className="text-sm text-gray-500">3 วัน</span>
-                          </div>
+                          <span className="font-medium text-gray-900">1 วัน</span>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
