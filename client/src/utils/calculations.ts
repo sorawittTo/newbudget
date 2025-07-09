@@ -98,11 +98,24 @@ export const calculateSpecialAssist = (
 
 export const calculateFamilyVisit = (
   employees: Employee[],
-  calcYear?: number
+  calcYear: number = 2568
 ): FamilyVisitEmployee[] => {
   return employees.map(emp => {
+    const serviceYears = calcYear - emp.startYear;
+    
+    // Calculate based on service years for consistency with other travel calculations
+    let multiplier = 1;
+    
+    // Adjust multiplier based on service years (optional enhancement)
+    if (serviceYears >= 30) {
+      multiplier = 1.2; // 20% bonus for 30+ years
+    } else if (serviceYears >= 20) {
+      multiplier = 1.1; // 10% bonus for 20+ years
+    }
+    
     const roundTripFare = (emp.homeVisitBusFare || 0) * 2; // One way fare x 2 = round trip
-    const busFareTotal = 4 * roundTripFare; // 4 times per year
+    const busFareTotal = 4 * roundTripFare * multiplier; // 4 times per year with multiplier
+    
     return {
       ...emp,
       roundTripFare,
@@ -115,12 +128,13 @@ export const calculateFamilyVisit = (
 export const calculateCompanyTrip = (
   employees: Employee[],
   masterRates: MasterRates,
-  calcYear?: number
+  calcYear: number = 2568
 ): CompanyTripEmployee[] => {
   const busFare = 600; // Base bus fare
   const destination = ''; // Default destination
   
   return employees.map(emp => {
+    const serviceYears = calcYear - emp.startYear;
     const rates = getRatesForEmployee(emp, masterRates);
     
     // Check if eligible for accommodation (province doesn't match destination)
@@ -141,8 +155,16 @@ export const calculateCompanyTrip = (
       }
     }
     
-    const busFareTotal = busFare * 2; // Round trip
-    const total = busFareTotal + accommodationCost;
+    // Year-based calculation adjustments
+    let yearMultiplier = 1;
+    if (calcYear >= 2570) {
+      yearMultiplier = 1.1; // 10% increase for 2570 and beyond
+    } else if (calcYear >= 2569) {
+      yearMultiplier = 1.05; // 5% increase for 2569
+    }
+    
+    const busFareTotal = busFare * 2 * yearMultiplier; // Round trip with year adjustment
+    const total = busFareTotal + (accommodationCost * yearMultiplier);
     
     return {
       ...emp,
@@ -157,11 +179,12 @@ export const calculateCompanyTrip = (
 export const calculateManagerRotation = (
   employees: Employee[],
   masterRates: MasterRates,
-  calcYear?: number
+  calcYear: number = 2568
 ): ManagerRotationEmployee[] => {
   return employees
     .filter(emp => emp.level === '7')
     .map(emp => {
+      const serviceYears = calcYear - emp.startYear;
       const rates = getRatesForEmployee(emp, masterRates);
       const workingDays = emp.workingDays || 1;
       
@@ -179,15 +202,23 @@ export const calculateManagerRotation = (
         accommodationDays = 2 + (workingDays - 1);
       }
       
-      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
-      const accommodationCost = (rates.hotel || 0) * accommodationDays;
+      // Year-based calculation adjustments
+      let yearMultiplier = 1;
+      if (calcYear >= 2570) {
+        yearMultiplier = 1.15; // 15% increase for 2570 and beyond
+      } else if (calcYear >= 2569) {
+        yearMultiplier = 1.08; // 8% increase for 2569
+      }
       
-      // Travel costs (round trip)
-      const travelCost = (rates.travel || 0) * 2;
-      const taxiCost = (rates.local || 0) * 2;
+      const perDiemCost = (rates.perDiem || 0) * perDiemDays * yearMultiplier;
+      const accommodationCost = (rates.hotel || 0) * accommodationDays * yearMultiplier;
+      
+      // Travel costs (round trip) with year adjustment
+      const travelCost = (rates.travel || 0) * 2 * yearMultiplier;
+      const taxiCost = (rates.local || 0) * 2 * yearMultiplier;
       
       // Other vehicle costs (editable)
-      const otherVehicleCost = emp.customTravelRates?.other || 0;
+      const otherVehicleCost = (emp.customTravelRates?.other || 0) * yearMultiplier;
       
       const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
       
