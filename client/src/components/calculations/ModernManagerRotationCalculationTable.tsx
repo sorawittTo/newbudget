@@ -316,7 +316,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.workingDays || 1} วัน
+                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.hotelNight} วัน
                         </div>
                       </div>
                     )}
@@ -326,7 +326,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                       <div>
                         <div className="font-semibold text-gray-900">{formatCurrency(emp.perDiemCost)}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)} x{emp.workingDays || 1} วัน
+                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)} x{emp.perDiemDay} วัน
                         </div>
                       </div>
                     )}
