@@ -466,6 +466,8 @@ Preferred communication style: Simple, everyday language.
 - Only make changes when specifically requested by the user
 - System requires Edit button to be clicked before data can be modified
 - All sections must have exactly three buttons: Edit, Save, and Export
+- CRITICAL: Cannot edit fields that reference standard rates table across all pages in the system
+- Fields from master rates (hotel, per diem, travel rates, local transport) are read-only in all calculation tables
 
 **CRITICAL Analysis Requirements:**
 - Always analyze thoroughly before making changes: "วิเคราะห์ให้ละเอียดก่อนทำ"

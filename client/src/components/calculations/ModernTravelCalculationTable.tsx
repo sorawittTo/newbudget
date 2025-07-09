@@ -239,48 +239,40 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           )}
                         </td>
                         <td className="px-4 py-3 text-right">
-                          {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.hotel', costs.hotel, 'number') : (
-                            <div>
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
+                          <div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
+                            {customSettings.showDetails && (
                               <div className="text-xs text-gray-500 mt-1">
-                                {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
+                                ศนร.-กทม. ไปกลับ
                               </div>
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.perDiem', costs.perDiem, 'number') : (
-                            <div>
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
+                          <div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
+                            {customSettings.showDetails && (
                               <div className="text-xs text-gray-500 mt-1">
-                                {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
+                                ขนส่ง-ที่พัก ไป-กลับ
                               </div>
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.travel', costs.travel, 'number') : (
-                            <div>
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
-                              {customSettings.showDetails && (
-                                <div className="text-xs text-gray-500 mt-1">
-                                  ศนร.-กทม. ไปกลับ
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.local', costs.local, 'number') : (
-                            <div>
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
-                              {customSettings.showDetails && (
-                                <div className="text-xs text-gray-500 mt-1">
-                                  ขนส่ง-ที่พัก ไป-กลับ
-                                </div>
-                              )}
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </td>
 
                         <td className="px-4 py-3 text-right">

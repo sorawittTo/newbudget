@@ -305,44 +305,36 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.hotel', emp.accommodationCost, 'number') : (
-                      <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.hotelNight} วัน
-                        </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.hotelNight} วัน
                       </div>
-                    )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.perDiem', emp.perDiemCost, 'number') : (
-                      <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(emp.perDiemCost)}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)} x{emp.perDiemDay} วัน
-                        </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">{formatCurrency(emp.perDiemCost)}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).perDiem || 0)} x{emp.perDiemDay} วัน
                       </div>
-                    )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.travel', emp.travelCost, 'number') : (
-                      <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(emp.travelCost)}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(emp.travelCost / 2)} x2
-                        </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">{formatCurrency(emp.travelCost)}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        อัตรา {formatCurrency(emp.travelCost / 2)} x2
                       </div>
-                    )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.local', emp.taxiCost, 'number') : (
-                      <div>
-                        <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          อัตรา {formatCurrency(emp.taxiCost / 2)} x2
-                        </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        อัตรา {formatCurrency(emp.taxiCost / 2)} x2
                       </div>
-                    )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {globalEditMode ? renderEditableCell(emp.id, 'customTravelRates.other', emp.otherVehicleCost, 'number') : (
