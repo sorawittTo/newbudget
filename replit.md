@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Footer and Added Level-Based Sorting in Travel Expense Table
+  * Removed Summary Card footer from travel expense table (ModernTravelCalculationTable)
+  * Added employee sorting by level in descending order (7→6→5.5→5→4.5→4→3)
+  * Within same level, employees sorted alphabetically by name
+  * Table now displays employees in consistent level-based hierarchy
+  * Simplified table display without summary statistics footer
 - July 09, 2025. Updated Travel Expense Table Headers and Removed Trip Calculation Logic
   * Changed "ค่ารถโดยสาร/เที่ยว" to "ค่าพาหนะประจำทาง ศนร.-กทม. ไปกลับ"
   * Changed "ค่ารถรับจ้าง/เที่ยว" to "ค่าพาหนะรับจ้าง ขนส่ง-ที่พัก ไป-กลับ"

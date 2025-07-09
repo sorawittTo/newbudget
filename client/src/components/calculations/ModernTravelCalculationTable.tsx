@@ -50,7 +50,17 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   });
 
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
-  const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, calcYear);
+  const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, calcYear)
+    .sort((a, b) => {
+      // Sort by level (7 -> 6 -> 5.5 -> 5 -> 4.5 -> 4 -> 3)
+      const levelA = parseFloat(a.level);
+      const levelB = parseFloat(b.level);
+      if (levelA !== levelB) {
+        return levelB - levelA; // Descending order
+      }
+      // If same level, sort alphabetically by name
+      return a.name.localeCompare(b.name, 'th');
+    });
 
   // Calculate employee cost function - Independent travel calculation
   const calculateEmployeeCost = (employee: TravelEmployee) => {
@@ -286,30 +296,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
         </div>
       </Card>
 
-      {/* Summary Card */}
-      <Card className="bg-white border border-gray-200 shadow-sm">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">สรุปยอดรวม</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{travelEmployees.length}</div>
-              <div className="text-sm text-gray-600">พนักงานที่มีสิทธิ์</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{formatCurrency(statistics.totalCost)}</div>
-              <div className="text-sm text-gray-600">ยอดรวมทั้งหมด</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{formatCurrency(statistics.avgCostPerEmployee)}</div>
-              <div className="text-sm text-gray-600">ค่าเฉลี่ยต่อคน</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{customSettings.showDetails ? 'แสดง' : 'ซ่อน'}</div>
-              <div className="text-sm text-gray-600">รายละเอียด</div>
-            </div>
-          </div>
-        </div>
-      </Card>
+
     </div>
   );
 };
