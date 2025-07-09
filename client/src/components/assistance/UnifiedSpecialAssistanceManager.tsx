@@ -450,11 +450,11 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     const salary = parseFloat(e.target.value) || 0;
                     onUpdateOvertimeData(calcYear, 'salary', salary);
                     
-                    // Auto-update all items with default rate
+                    // Auto-update all items with default rate (per hour)
                     const currentItems = overtimeData.items || [];
                     currentItems.forEach((item, index) => {
                       if (!item.rate || item.rate === 0) { // Only update if no custom rate
-                        onUpdateOvertimeData(calcYear, 'items', index, 'rate', salary / 210);
+                        onUpdateOvertimeData(calcYear, 'items', index, 'rate', (salary / 210) / 8);
                       }
                     });
                   }}
@@ -467,9 +467,9 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อวัน)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อชั่วโมง)</label>
               <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                <span className="font-bold text-emerald-700">{formatCurrency(overtimeData.salary / 210)}</span>
+                <span className="font-bold text-emerald-700">{formatCurrency((overtimeData.salary / 210) / 8)}</span>
               </div>
             </div>
           </div>
@@ -490,7 +490,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 1);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 210);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', (overtimeData.salary / 210) / 8);
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
               >
