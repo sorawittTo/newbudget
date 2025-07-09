@@ -180,24 +180,21 @@ export const useBudgetData = () => {
         setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
         
-        // Transform overtime items by year
+        // Transform overtime items by year (one record per year)
         const overtimeByYear: Record<number, any> = {};
         if (overtimeItems && overtimeItems.length > 0) {
           overtimeItems.forEach((item: any) => {
-            if (!overtimeByYear[item.year]) {
-              overtimeByYear[item.year] = {
-                salary: parseFloat(item.salary) || 15000,
-                items: [],
-                notes: ''
-              };
-            }
-            overtimeByYear[item.year].items.push({
-              item: item.item,
-              days: item.days || 0,
-              hours: item.hours || 0,
-              people: item.people || 0,
-              hourlyRate: parseFloat(item.rate) || (parseFloat(item.salary) || 15000) / 210
-            });
+            overtimeByYear[item.year] = {
+              salary: parseFloat(item.salary) || 15000,
+              items: [{
+                item: item.item || '',
+                days: item.days || 0,
+                hours: item.hours || 0,
+                people: item.people || 0,
+                hourlyRate: parseFloat(item.rate) || (parseFloat(item.salary) || 15000) / 210
+              }],
+              notes: ''
+            };
           });
         }
         
@@ -325,27 +322,40 @@ export const useBudgetData = () => {
         hotel: rates.hotel.toString()
       }));
       
-      // Prepare overtime items for saving
+      // Prepare overtime items for saving (one record per year)
       const overtimeItemsToSave: any[] = [];
       console.log('Preparing overtime data for saving:', overtimeDataByYear);
       Object.entries(overtimeDataByYear).forEach(([year, data]) => {
         console.log(`Processing year ${year}:`, data);
-        data.items.forEach((item, index) => {
-          console.log(`Processing item ${index}:`, item);
-          if (item.item && item.item.trim()) { // Only save non-empty items
-            const overtimeItem = {
-              year: parseInt(year),
-              item: item.item,
-              days: item.days || 0,
-              hours: item.hours || 0,
-              people: item.people || 0,
-              rate: item.hourlyRate?.toString() || '0',
-              salary: data.salary?.toString() || '15000'
-            };
-            console.log('Adding overtime item:', overtimeItem);
-            overtimeItemsToSave.push(overtimeItem);
-          }
-        });
+        // For each year, find the first non-empty item or create default
+        const firstItem = data.items.find(item => item.item && item.item.trim());
+        
+        if (firstItem) {
+          const overtimeItem = {
+            year: parseInt(year),
+            item: firstItem.item,
+            days: firstItem.days || 0,
+            hours: firstItem.hours || 0,
+            people: firstItem.people || 0,
+            rate: firstItem.hourlyRate?.toString() || '0',
+            salary: data.salary?.toString() || '15000'
+          };
+          console.log('Adding overtime item for year:', overtimeItem);
+          overtimeItemsToSave.push(overtimeItem);
+        } else if (data.items.length > 0) {
+          // If no items have content, create default record for the year
+          const overtimeItem = {
+            year: parseInt(year),
+            item: '',
+            days: 0,
+            hours: 0,
+            people: 0,
+            rate: '0',
+            salary: data.salary?.toString() || '15000'
+          };
+          console.log('Adding default overtime item for year:', overtimeItem);
+          overtimeItemsToSave.push(overtimeItem);
+        }
       });
       console.log('Final overtime items to save:', overtimeItemsToSave);
 

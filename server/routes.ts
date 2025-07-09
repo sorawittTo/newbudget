@@ -256,21 +256,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const items = [];
         for (const itemData of data) {
           try {
-            const validatedData = insertOvertimeItemSchema.parse(itemData);
-            const created = await storage.createOvertimeItem(validatedData);
-            items.push(created);
+            // Check if overtime item for this year already exists
+            const existingItems = await storage.getOvertimeItems();
+            const existing = existingItems.find(item => item.year === itemData.year);
+            
+            if (existing) {
+              // Update existing item
+              const validatedData = insertOvertimeItemSchema.partial().parse(itemData);
+              const updated = await storage.updateOvertimeItem(existing.id, validatedData);
+              items.push(updated);
+            } else {
+              // Create new item
+              const validatedData = insertOvertimeItemSchema.parse(itemData);
+              const created = await storage.createOvertimeItem(validatedData);
+              items.push(created);
+            }
           } catch (singleError) {
             console.error(`Error processing overtime item:`, singleError);
           }
         }
         res.status(201).json(items);
       } else {
-        const validatedData = insertOvertimeItemSchema.parse(data);
-        const item = await storage.createOvertimeItem(validatedData);
-        res.status(201).json(item);
+        // Check if overtime item for this year already exists
+        const existingItems = await storage.getOvertimeItems();
+        const existing = existingItems.find(item => item.year === data.year);
+        
+        if (existing) {
+          // Update existing item
+          const validatedData = insertOvertimeItemSchema.partial().parse(data);
+          const updated = await storage.updateOvertimeItem(existing.id, validatedData);
+          res.json(updated);
+        } else {
+          // Create new item
+          const validatedData = insertOvertimeItemSchema.parse(data);
+          const created = await storage.createOvertimeItem(validatedData);
+          res.status(201).json(created);
+        }
       }
     } catch (error) {
-      console.error("Error creating overtime item:", error);
+      console.error("Error creating/updating overtime item:", error);
       res.status(400).json({ error: "Invalid overtime item data" });
     }
   });
