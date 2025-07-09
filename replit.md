@@ -117,13 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Single Room Logic - Enhanced Accommodation Calculation
-  * Updated calculateCompanyTrip function to handle single room allocation based on gender pairing
-  * If no same-gender pair available, employee gets full accommodation cost instead of shared cost
-  * Added gender counting logic to determine pairing eligibility
-  * Updated accommodation notes to show "ไม่มีคู่ - พักคนเดียว" when no same-gender pair exists
-  * Level 7 employees always get single rooms regardless of gender pairing
-  * Addresses user requirement: "ถ้าไม่มีคู่ได้ค่าหักพักเต็ม"
+- July 09, 2025. Company Trip Display All Employees - Removed Status Filter
+  * Removed status filter from calculateCompanyTrip function to show all employees
+  * All employees now appear in company trip calculation table regardless of status
+  * Only accommodation eligibility is filtered by province matching (not by employee status)
+  * Gender pairing logic applies to all employees eligible for accommodation
+  * Addresses user requirement: "ให้แสดงรายชื่อทุกคน เอาตัวกรองสถานะออก"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering
