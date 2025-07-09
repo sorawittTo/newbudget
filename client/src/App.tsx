@@ -6,8 +6,7 @@ import { ModernDashboard } from './components/dashboard/ModernDashboard';
 
 import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
-import { SpecialAssistanceManager } from './components/assistance/SpecialAssistanceManager';
-import { BudgetManager } from './components/budget/BudgetManager';
+import { UnifiedSpecialAssistanceManager } from './components/assistance/UnifiedSpecialAssistanceManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
@@ -178,7 +177,7 @@ function App() {
 
       case 'assistance':
         return (
-          <SpecialAssistanceManager
+          <UnifiedSpecialAssistanceManager
             employees={employees}
             masterRates={masterRates}
             calcYear={calcYear}
@@ -198,9 +197,10 @@ function App() {
 
       case 'budget':
         return (
-          <BudgetManager
-            onSave={handleSave}
-          />
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">งบประมาณ</h2>
+            <p className="text-gray-600">ระบบงบประมาณถูกปิดใช้งาน เนื่องจากระบบได้ถูกปรับเป็นระบบจัดการพนักงาน</p>
+          </div>
         );
 
       case 'workdays':
