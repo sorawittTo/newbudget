@@ -155,31 +155,6 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">ค่าเดินทางเยี่ยมครอบครัว</h2>
-            <p className="text-slate-600">คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสถานะ "มีสิทธิ์"</p>
-          </div>
-          
-          <div className="flex flex-wrap gap-3">
-
-          </div>
-        </div>
-        
-        {globalEditMode && (
-          <div className="mt-4 bg-blue-100/80 backdrop-blur-sm rounded-xl p-4 border border-blue-200/50">
-            <div className="flex items-center gap-2 text-blue-700">
-              <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-                <span className="text-white text-xs font-bold">!</span>
-              </div>
-              <span className="text-sm font-medium">โหมดแก้ไขเปิดอยู่ - แก้ไขค่าเดินทางได้โดยตรงในตาราง</span>
-            </div>
-          </div>
-        )}
-      </div>
-
       {/* Statistics Cards */}
       <Card className="bg-gray-100" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
         <div className="p-6">
