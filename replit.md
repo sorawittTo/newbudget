@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Fixed Bus Cost from Manager Rotation Table
+  * Removed default bus cost (600 baht) from manager rotation calculation
+  * Total now calculated without fixed vehicle cost: perDiemCost + accommodationCost + travelCost + localCost + otherVehicleCost
+  * Updated both ModernManagerRotationCalculationTable and utils/calculations.ts
+  * System now uses only standard rates from master rates table plus editable other vehicle costs
 - July 09, 2025. Fixed Manager Rotation Table Calculation System
   * Fixed critical bug where table was using rotationSettings instead of workingDays-based calculation
   * Corrected hotel nights = working days + 1 (dynamic calculation based on each employee's working days)

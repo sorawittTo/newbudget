@@ -70,12 +70,11 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
       // Use rates from master rates table
       const travelCost = rates.travel || 0;
       const localCost = rates.local || 0;
-      const vehicleCost = rotationSettings.busCost;
       
       // Other vehicle costs (editable)
       const otherVehicleCost = emp.customTravelRates?.other || 0;
       
-      const total = perDiemCost + accommodationCost + travelCost + localCost + vehicleCost + otherVehicleCost;
+      const total = perDiemCost + accommodationCost + travelCost + localCost + otherVehicleCost;
       
       return {
         ...emp,
@@ -83,11 +82,11 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
         accommodationCost,
         travelCost,
         taxiCost: localCost,
-        busCost: vehicleCost,
+        busCost: 0,
         flightCost: travelCost,
         otherVehicleCost,
         total,
-        totalTravel: travelCost + localCost + vehicleCost + otherVehicleCost,
+        totalTravel: travelCost + localCost + otherVehicleCost,
         perDiemDay: perDiemDaysCalc,
         hotelNight: hotelNights
       } as ManagerRotationEmployee;
