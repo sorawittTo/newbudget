@@ -251,11 +251,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">ช่วยเหลือพิเศษ</span>
+              <span className="text-sm text-gray-600">เงินช่วยเหลือพิเศษ</span>
               <span className="font-semibold text-emerald-600">{formatCurrency(metrics.specialAssistTotal)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">โครงการอื่นๆ</span>
+              <span className="text-sm text-gray-600">เงินช่วยเหลืออื่นๆ</span>
               <span className="font-semibold text-teal-600">{formatCurrency(0)}</span>
             </div>
             <div className="border-t pt-3">
@@ -278,12 +278,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">ล่วงเวลาปกติ</span>
-              <span className="font-semibold text-amber-600">{formatCurrency(metrics.overtimeTotal * 0.7)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">ล่วงเวลาพิเศษ</span>
-              <span className="font-semibold text-orange-600">{formatCurrency(metrics.overtimeTotal * 0.3)}</span>
+              <span className="text-sm text-gray-600">ค่าล่วงเวลาวันหยุด</span>
+              <span className="font-semibold text-amber-600">{formatCurrency(metrics.overtimeTotal)}</span>
             </div>
             <div className="border-t pt-3">
               <div className="flex justify-between items-center">

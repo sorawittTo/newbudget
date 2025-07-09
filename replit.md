@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Dashboard Assistance and Overtime Display Names
+  * Updated assistance section to show "เงินช่วยเหลือพิเศษ" instead of "ช่วยเหลือพิเศษ"
+  * Changed "โครงการอื่นๆ" to "เงินช่วยเหลืออื่นๆ"
+  * Simplified overtime section to show only "ค่าล่วงเวลาวันหยุด" instead of splitting into regular/special
+  * Removed duplicate overtime breakdown (ล่วงเวลาปกติ/ล่วงเวลาพิเศษ)
+  * Dashboard now displays exactly three assistance categories as requested
 - July 09, 2025. Removed Numbers from Assistance Navigation Tabs
   * Completely removed employee and item count numbers from assistance navigation tabs per user request  
   * Removed count property from tabs array in UnifiedSpecialAssistanceManager.tsx
