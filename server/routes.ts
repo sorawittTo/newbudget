@@ -239,7 +239,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Special Assistance routes
-  app.get("/api/special-assist/:year", async (req, res) => {
+  app.get("/api/special-assist-items/:year", async (req, res) => {
     try {
       const year = parseInt(req.params.year);
       const items = await storage.getSpecialAssistItems(year);
@@ -300,7 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Overtime routes
-  app.get("/api/overtime/:year", async (req, res) => {
+  app.get("/api/overtime-items/:year", async (req, res) => {
     try {
       const year = parseInt(req.params.year);
       const items = await storage.getOvertimeItems(year);
