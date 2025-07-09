@@ -101,20 +101,8 @@ export const calculateFamilyVisit = (
   calcYear: number = 2568
 ): FamilyVisitEmployee[] => {
   return employees.map(emp => {
-    const serviceYears = calcYear - emp.startYear;
-    
-    // Calculate based on service years for consistency with other travel calculations
-    let multiplier = 1;
-    
-    // Adjust multiplier based on service years (optional enhancement)
-    if (serviceYears >= 30) {
-      multiplier = 1.2; // 20% bonus for 30+ years
-    } else if (serviceYears >= 20) {
-      multiplier = 1.1; // 10% bonus for 20+ years
-    }
-    
     const roundTripFare = (emp.homeVisitBusFare || 0) * 2; // One way fare x 2 = round trip
-    const busFareTotal = 4 * roundTripFare * multiplier; // 4 times per year with multiplier
+    const busFareTotal = 4 * roundTripFare; // 4 times per year
     
     return {
       ...emp,

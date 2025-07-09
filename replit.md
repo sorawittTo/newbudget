@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Service Year Bonus from Family Visit Calculations
+  * Removed multiplier calculation based on service years (20+ years: 1.1x, 30+ years: 1.2x)
+  * Simplified family visit calculation to: 4 × roundTripFare (no bonus)
+  * Updated calculateFamilyVisit function to use straightforward calculation
+  * Example: 2,400 baht × 4 = 9,600 baht (instead of 11,520 with 20% bonus)
+  * System now uses consistent calculation without age-based bonuses
 - July 09, 2025. Added Cache Control System to Prevent Browser Caching Issues
   * Added comprehensive cache control meta tags to client/index.html
   * Implemented server-side cache control headers for API responses and static assets
