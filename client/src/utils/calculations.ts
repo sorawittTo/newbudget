@@ -118,129 +118,40 @@ export const calculateCompanyTrip = (
   calcYear?: number
 ): CompanyTripEmployee[] => {
   const busFare = 600; // Base bus fare
-  const results: CompanyTripEmployee[] = [];
+  const destination = ''; // Default destination
   
-  // Separate employees by category
-  const nonLocalEmployees = employees.filter(emp => 
-    emp.visitProvince !== 'ขอนแก่น' && emp.level !== 'ท้องถิ่น'
-  );
-  
-  const managers = nonLocalEmployees.filter(emp => emp.level === '7');
-  const maleStaff = nonLocalEmployees.filter(emp => 
-    emp.level !== '7' && emp.gender === 'ชาย'
-  ).sort((a, b) => getRatesForEmployee(b, masterRates).hotel - getRatesForEmployee(a, masterRates).hotel);
-  
-  const femaleStaff = nonLocalEmployees.filter(emp => 
-    emp.level !== '7' && emp.gender === 'หญิง'
-  ).sort((a, b) => getRatesForEmployee(b, masterRates).hotel - getRatesForEmployee(a, masterRates).hotel);
-  
-  // Managers get single rooms
-  managers.forEach(emp => {
-    const accommodationCost = getRatesForEmployee(emp, masterRates).hotel;
-    results.push({
+  return employees.map(emp => {
+    const rates = getRatesForEmployee(emp, masterRates);
+    
+    // Check if eligible for accommodation (province doesn't match destination)
+    const isEligibleForAccommodation = emp.visitProvince.trim() !== destination.trim();
+    
+    let accommodationCost = 0;
+    let note = 'ไม่มีสิทธิ์ค่าที่พัก';
+    
+    if (isEligibleForAccommodation) {
+      if (emp.level === '7') {
+        // Level 7 gets single room
+        accommodationCost = rates.hotel || 0;
+        note = 'พักคนเดียว';
+      } else {
+        // Others share rooms by gender (cost divided by 2)
+        accommodationCost = (rates.hotel || 0) / 2;
+        note = `พักคู่ (${emp.gender})`;
+      }
+    }
+    
+    const busFareTotal = busFare * 2; // Round trip
+    const total = busFareTotal + accommodationCost;
+    
+    return {
       ...emp,
       busFare,
       accommodationCost,
-      total: busFare + accommodationCost,
-      note: 'พักเดี่ยว'
-    });
+      total,
+      note
+    } as CompanyTripEmployee;
   });
-  
-  // Pair male staff
-  for (let i = 0; i < maleStaff.length; i += 2) {
-    const emp1 = maleStaff[i];
-    const emp2 = maleStaff[i + 1];
-    
-    if (emp2) {
-      const roomCost = Math.max(
-        getRatesForEmployee(emp1, masterRates).hotel,
-        getRatesForEmployee(emp2, masterRates).hotel
-      );
-      const costPerPerson = roomCost / 2;
-      
-      results.push({
-        ...emp1,
-        busFare,
-        accommodationCost: costPerPerson,
-        total: busFare + costPerPerson,
-        note: `พักคู่ (ห้องละ ${roomCost})`
-      });
-      
-      results.push({
-        ...emp2,
-        busFare,
-        accommodationCost: costPerPerson,
-        total: busFare + costPerPerson,
-        note: `พักคู่ (ห้องละ ${roomCost})`
-      });
-    } else {
-      const accommodationCost = getRatesForEmployee(emp1, masterRates).hotel;
-      results.push({
-        ...emp1,
-        busFare,
-        accommodationCost,
-        total: busFare + accommodationCost,
-        note: 'พักเดี่ยว'
-      });
-    }
-  }
-  
-  // Pair female staff
-  for (let i = 0; i < femaleStaff.length; i += 2) {
-    const emp1 = femaleStaff[i];
-    const emp2 = femaleStaff[i + 1];
-    
-    if (emp2) {
-      const roomCost = Math.max(
-        getRatesForEmployee(emp1, masterRates).hotel,
-        getRatesForEmployee(emp2, masterRates).hotel
-      );
-      const costPerPerson = roomCost / 2;
-      
-      results.push({
-        ...emp1,
-        busFare,
-        accommodationCost: costPerPerson,
-        total: busFare + costPerPerson,
-        note: `พักคู่ (ห้องละ ${roomCost})`
-      });
-      
-      results.push({
-        ...emp2,
-        busFare,
-        accommodationCost: costPerPerson,
-        total: busFare + costPerPerson,
-        note: `พักคู่ (ห้องละ ${roomCost})`
-      });
-    } else {
-      const accommodationCost = getRatesForEmployee(emp1, masterRates).hotel;
-      results.push({
-        ...emp1,
-        busFare,
-        accommodationCost,
-        total: busFare + accommodationCost,
-        note: 'พักเดี่ยว'
-      });
-    }
-  }
-  
-  // Local employees (no accommodation cost)
-  employees
-    .filter(emp => emp.visitProvince === 'ขอนแก่น' || emp.level === 'ท้องถิ่น')
-    .forEach(emp => {
-      results.push({
-        ...emp,
-        busFare,
-        accommodationCost: 0,
-        total: busFare,
-        note: 'ไม่คิดค่าที่พัก'
-      });
-    });
-  
-  // Sort by original employee order
-  return results.sort((a, b) => 
-    employees.findIndex(e => e.id === a.id) - employees.findIndex(e => e.id === b.id)
-  );
 };
 
 export const calculateManagerRotation = (
@@ -252,23 +163,48 @@ export const calculateManagerRotation = (
     .filter(emp => emp.level === '7')
     .map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
-      const perDiemCost = (rates.perDiem || 0) * 7;
-      const accommodationCost = (rates.hotel || 0) * 6;
-      const totalTravel = 600 + 4000 + 1000; // Bus + Flight + Taxi
-      const total = perDiemCost + accommodationCost + totalTravel;
+      const workingDays = emp.workingDays || 1;
+      
+      // Manager rotation calculation rules:
+      // 1 working day = 3 days per diem + 2 days accommodation  
+      // Each additional working day = +1 day per diem + +1 day accommodation
+      let perDiemDays: number;
+      let accommodationDays: number;
+      
+      if (workingDays === 1) {
+        perDiemDays = 3;
+        accommodationDays = 2;
+      } else {
+        perDiemDays = 3 + (workingDays - 1);
+        accommodationDays = 2 + (workingDays - 1);
+      }
+      
+      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
+      const accommodationCost = (rates.hotel || 0) * accommodationDays;
+      
+      // Travel costs (round trip)
+      const travelCost = (rates.travel || 0) * 2;
+      const taxiCost = (rates.local || 0) * 2;
+      
+      // Other vehicle costs (editable)
+      const otherVehicleCost = emp.customTravelRates?.other || 0;
+      
+      const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
       
       return {
         ...emp,
         perDiemCost,
         accommodationCost,
-        totalTravel,
+        travelCost,
+        taxiCost,
+        otherVehicleCost,
         total,
-        busCost: 600,
-        flightCost: 4000,
-        taxiCost: 1000,
-        perDiemDay: rates.perDiem || 0,
-        hotelNight: rates.hotel || 0
-      };
+        busCost: 0, // No longer used
+        flightCost: 0, // No longer used
+        totalTravel: travelCost + taxiCost + otherVehicleCost,
+        perDiemDay: perDiemDays,
+        hotelNight: accommodationDays
+      } as ManagerRotationEmployee;
     });
 };
 

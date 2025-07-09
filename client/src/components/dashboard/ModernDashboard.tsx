@@ -85,24 +85,32 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const activeEmployees = employees.filter(emp => emp.status === 'มีสิทธิ์').length;
     const employeeChange = 5.2; // Mock data
     
-    // Calculate travel expenses
+    // Calculate travel expenses - only eligible employees (service years 20, 25, 30, 35, 40)
     const travelData = calculateTravelEmployees(employees, masterRates, currentYear);
     const travelTotal = travelData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate special assistance
+    // Calculate special assistance - only eligible employees
     const specialAssistData = calculateSpecialAssist(employees, masterRates);
     const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate family visit
-    const familyVisitData = calculateFamilyVisit(employees, currentYear);
+    // Calculate family visit - only eligible employees with proper filtering
+    const familyVisitEligible = employees.filter(emp => 
+      emp.status === 'มีสิทธิ์' &&
+      emp.level !== 'ท้องถิ่น' && 
+      emp.visitProvince && 
+      emp.visitProvince.trim() !== '' &&
+      emp.visitProvince !== 'ขอนแก่น'
+    );
+    const familyVisitData = calculateFamilyVisit(familyVisitEligible, currentYear);
     const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate company trip
+    // Calculate company trip - all employees
     const companyTripData = calculateCompanyTrip(employees, masterRates, currentYear);
     const companyTripTotal = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate manager rotation
-    const managerRotationData = calculateManagerRotation(employees, masterRates, currentYear);
+    // Calculate manager rotation - only level 7 employees
+    const managerRotationEligible = employees.filter(emp => emp.level === '7');
+    const managerRotationData = calculateManagerRotation(managerRotationEligible, masterRates, currentYear);
     const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate overtime from real data
