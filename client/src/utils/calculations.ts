@@ -130,6 +130,35 @@ export const calculateCompanyTrip = (
     return acc;
   }, {} as Record<string, number>);
   
+  // Create pairing symbols for employees who share rooms
+  const pairSymbols = ['🔵', '🔴', '🟢', '🟡', '🟣', '🟠', '⚫', '⚪'];
+  const genderPairs: Record<string, string[]> = {};
+  let symbolIndex = 0;
+  
+  // Group eligible employees by gender for pairing
+  eligibleEmployees.forEach(emp => {
+    if (!genderPairs[emp.gender]) {
+      genderPairs[emp.gender] = [];
+    }
+    genderPairs[emp.gender].push(emp.id);
+  });
+  
+  // Assign symbols to pairs
+  const employeePairSymbols: Record<string, string> = {};
+  Object.entries(genderPairs).forEach(([gender, employeeIds]) => {
+    if (employeeIds.length > 1) {
+      // Create pairs for this gender
+      for (let i = 0; i < employeeIds.length; i += 2) {
+        const symbol = pairSymbols[symbolIndex % pairSymbols.length];
+        employeePairSymbols[employeeIds[i]] = symbol;
+        if (i + 1 < employeeIds.length) {
+          employeePairSymbols[employeeIds[i + 1]] = symbol;
+        }
+        symbolIndex++;
+      }
+    }
+  });
+  
   return employees.map(emp => {
     const rates = getRatesForEmployee(emp, masterRates);
     
@@ -147,6 +176,7 @@ export const calculateCompanyTrip = (
       } else {
         // Check if this employee has a pair of same gender
         const sameGenderCount = genderCounts[emp.gender] || 0;
+        const pairSymbol = employeePairSymbols[emp.id];
         
         if (sameGenderCount === 1) {
           // No pair available, gets full accommodation cost
@@ -155,7 +185,7 @@ export const calculateCompanyTrip = (
         } else {
           // Has pair, share accommodation cost
           accommodationCost = (rates.hotel || 0) / 2;
-          note = `พักคู่ (${emp.gender})`;
+          note = pairSymbol ? `${pairSymbol} พักคู่ (${emp.gender})` : `พักคู่ (${emp.gender})`;
         }
       }
     }

@@ -117,12 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Display All Employees - Removed Status Filter
-  * Removed status filter from calculateCompanyTrip function to show all employees
-  * All employees now appear in company trip calculation table regardless of status
-  * Only accommodation eligibility is filtered by province matching (not by employee status)
-  * Gender pairing logic applies to all employees eligible for accommodation
-  * Addresses user requirement: "ให้แสดงรายชื่อทุกคน เอาตัวกรองสถานะออก"
+- July 09, 2025. Company Trip Pairing Symbols - Visual Room Sharing Indicators
+  * Added colored symbols (🔵🔴🟢🟡🟣🟠⚫⚪) to show which employees share rooms
+  * Employees with same symbol share the same room and split accommodation costs
+  * Pairing logic groups employees by gender, then assigns symbols to pairs
+  * Notes display format: "🔵 พักคู่ (ชาย)" or "🔴 พักคู่ (หญิง)"
+  * Single employees show "ไม่มีคู่ - พักคนเดียว" without symbols
+  * Addresses user requirement: "ใครพักคู่ใครให้ใส่สัญลักษณ์เหมือนกัน"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering
