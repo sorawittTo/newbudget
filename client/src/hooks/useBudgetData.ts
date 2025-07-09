@@ -286,6 +286,7 @@ export const useBudgetData = () => {
   const saveAllData = async () => {
     try {
       console.log('Saving data to Neon PostgreSQL...');
+      console.log('Current overtimeDataByYear:', overtimeDataByYear);
       
       // Save budget items
       const budgetItemsToSave = budgetData.filter(item => !item.type).map(item => ({
@@ -326,10 +327,13 @@ export const useBudgetData = () => {
       
       // Prepare overtime items for saving
       const overtimeItemsToSave: any[] = [];
+      console.log('Preparing overtime data for saving:', overtimeDataByYear);
       Object.entries(overtimeDataByYear).forEach(([year, data]) => {
-        data.items.forEach(item => {
+        console.log(`Processing year ${year}:`, data);
+        data.items.forEach((item, index) => {
+          console.log(`Processing item ${index}:`, item);
           if (item.item && item.item.trim()) { // Only save non-empty items
-            overtimeItemsToSave.push({
+            const overtimeItem = {
               year: parseInt(year),
               item: item.item,
               days: item.days || 0,
@@ -337,10 +341,13 @@ export const useBudgetData = () => {
               people: item.people || 0,
               rate: item.hourlyRate?.toString() || '0',
               salary: data.salary?.toString() || '15000'
-            });
+            };
+            console.log('Adding overtime item:', overtimeItem);
+            overtimeItemsToSave.push(overtimeItem);
           }
         });
       });
+      console.log('Final overtime items to save:', overtimeItemsToSave);
 
       // Save all data
       const responses = await Promise.all([
@@ -536,13 +543,17 @@ export const useBudgetData = () => {
   };
 
   const updateOvertimeData = (year: number, field: string, indexOrValue: any, key?: string, value?: any) => {
+    console.log('updateOvertimeData called:', { year, field, indexOrValue, key, value });
     setOvertimeDataByYear(prev => {
       const yearData = prev[year] || { salary: 15000, items: [] };
+      console.log('Current yearData:', yearData);
       if (field === 'salary') {
-        return {
+        const updated = {
           ...prev,
           [year]: { ...yearData, salary: parseFloat(indexOrValue) || 0 }
         };
+        console.log('Updated overtime data (salary):', updated);
+        return updated;
       } else if (field === 'items' && key) {
         const updatedItems = [...yearData.items];
         const isNumeric = key !== 'item';
@@ -550,10 +561,12 @@ export const useBudgetData = () => {
           ...updatedItems[indexOrValue],
           [key]: isNumeric ? (parseFloat(value) || 0) : value
         };
-        return {
+        const updated = {
           ...prev,
           [year]: { ...yearData, items: updatedItems }
         };
+        console.log('Updated overtime data (items):', updated);
+        return updated;
       }
       return prev;
     });
