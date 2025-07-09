@@ -450,7 +450,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     const salary = parseFloat(e.target.value) || 0;
                     onUpdateOvertimeData(calcYear, 'salary', salary);
                     
-                    // Auto-update all items with default rate (per hour)
+                    // Auto-update all items with default rate
                     const currentItems = overtimeData.items || [];
                     currentItems.forEach((item, index) => {
                       if (!item.rate || item.rate === 0) { // Only update if no custom rate
@@ -467,7 +467,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อชั่วโมง)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อวัน)</label>
               <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
                 <span className="font-bold text-emerald-700">{formatCurrency(overtimeData.salary / 210)}</span>
               </div>
@@ -485,10 +485,11 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => {
                   const newIndex = (overtimeData.items || []).length;
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', '');
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 0);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 0);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 0);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', 'รายการใหม่');
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'instances', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 1);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 210);
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
@@ -503,7 +504,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
         <div className="p-6 space-y-4">
           {(overtimeData.items || []).map((item, index) => (
             <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-              <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
                   {editMode ? (
@@ -515,7 +516,23 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-bold text-slate-700">{item.item || ''}</span>
+                      <span className="font-bold text-slate-700">{item.item}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="text"
+                      value={item.instances}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
+                      className="w-full text-center"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-blue-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-blue-200/30">
+                      <span className="font-bold text-blue-700">{item.instances}</span>
                     </div>
                   )}
                 </div>
@@ -531,7 +548,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                      <span className="font-bold text-emerald-700">{item.days || ''}</span>
+                      <span className="font-bold text-emerald-700">{item.days}</span>
                     </div>
                   )}
                 </div>
@@ -547,7 +564,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-purple-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-purple-200/30">
-                      <span className="font-bold text-purple-700">{item.hours || ''}</span>
+                      <span className="font-bold text-purple-700">{item.hours}</span>
                     </div>
                   )}
                 </div>
@@ -563,7 +580,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-yellow-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-yellow-200/30">
-                      <span className="font-bold text-yellow-700">{item.people || ''}</span>
+                      <span className="font-bold text-yellow-700">{item.people}</span>
                     </div>
                   )}
                 </div>
@@ -573,21 +590,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     <label className="block text-sm font-medium text-slate-700 mb-2">ยอดรวม</label>
                     <div className="h-10 flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-blue-200/50">
                       <span className="font-bold text-lg text-blue-900">
-                        {(() => {
-                          const rate = parseFloat(item.rate || 0);
-                          const total = rate * item.people * item.days * item.hours;
-                          console.log('Overtime calculation debug:', {
-                            item: item.item,
-                            rate_original: item.rate,
-                            rate_parsed: rate,
-                            people: item.people,
-                            days: item.days,
-                            hours: item.hours,
-                            formula: `${rate} × ${item.people} × ${item.days} × ${item.hours}`,
-                            total: total
-                          });
-                          return formatCurrency(total);
-                        })()}
+                        {formatCurrency(item.instances * item.days * item.hours * item.people * (item.rate || 0))}
                       </span>
                     </div>
                   </div>
@@ -623,41 +626,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Overtime Total Summary */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-blue-200/50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-blue-100 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff]">
-              <Calculator className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-blue-900">ยอดรวมค่าล่วงเวลาทั้งหมด</h3>
-              <p className="text-sm text-blue-700">คำนวณจาก: อัตราต่อชั่วโมง × คน × วัน × ชั่วโมง</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-blue-900">
-              {formatCurrency(
-                (overtimeData.items || []).reduce((sum, item) => {
-                  const rate = parseFloat(item.rate || 0);
-                  const itemTotal = rate * item.people * item.days * item.hours;
-                  console.log('Total calculation debug:', {
-                    item: item.item,
-                    rate_original: item.rate,
-                    rate_parsed: rate,
-                    people: item.people,
-                    days: item.days,
-                    hours: item.hours,
-                    itemTotal: itemTotal
-                  });
-                  return sum + itemTotal;
-                }, 0)
-              )}
-            </div>
-          </div>
         </div>
       </div>
 

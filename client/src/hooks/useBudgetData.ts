@@ -78,7 +78,9 @@ export const useBudgetData = () => {
 
       const newData = {
         salary: 15000,
-        items: [],
+        items: [
+          { item: 'รายการใหม่', instances: 1, days: 1, hours: 8, people: 1, rate: 15000 / 210 }
+        ],
         notes: ''
       };
       setOvertimeDataByYear(prev => ({ ...prev, [year]: newData }));
@@ -169,63 +171,9 @@ export const useBudgetData = () => {
           setMasterRates({});
         }
         
-        // Load special assistance and overtime data for all years
-        const yearsToLoad = [2568, 2569, 2570, 2571, 2572, 2573, 2574, 2575, 2576, 2577, 2578, 2579, 2580];
-        
-        // Load special assistance data
-        const specialAssistPromises = yearsToLoad.map(year => 
-          fetch(`/api/special-assist-items/${year}`).then(res => res.json()).catch(() => [])
-        );
-        
-        // Load overtime data
-        const overtimePromises = yearsToLoad.map(year => 
-          fetch(`/api/overtime-items/${year}`).then(res => res.json()).catch(() => [])
-        );
-        
-        const [specialAssistResults, overtimeResults] = await Promise.all([
-          Promise.all(specialAssistPromises),
-          Promise.all(overtimePromises)
-        ]);
-        
-        // Transform special assistance data
-        const specialAssistByYear: Record<number, SpecialAssistData> = {};
-        specialAssistResults.forEach((items, index) => {
-          const year = yearsToLoad[index];
-          if (items.length > 0) {
-            specialAssistByYear[year] = {
-              items: items.map((item: any) => ({
-                item: item.item,
-                timesPerYear: item.timesPerYear || item.times_per_year || 0,
-                days: item.days || 0,
-                people: item.people || 0,
-                rate: parseFloat(item.rate || 0)
-              })),
-              notes: items[0]?.notes || ''
-            };
-          }
-        });
-        setSpecialAssist1DataByYear(specialAssistByYear);
-        
-        // Transform overtime data
-        const overtimeByYear: Record<number, OvertimeData> = {};
-        overtimeResults.forEach((items, index) => {
-          const year = yearsToLoad[index];
-          if (items.length > 0) {
-            overtimeByYear[year] = {
-              salary: parseFloat(items[0]?.salary || 15000),
-              items: items.map((item: any) => ({
-                item: item.item,
-                days: item.days || 0,
-                hours: item.hours || 0,
-                people: item.people || 0,
-                rate: parseFloat(item.rate || 0)
-              })),
-              notes: items[0]?.notes || ''
-            };
-          }
-        });
-        setOvertimeDataByYear(overtimeByYear);
-        
+        // Initialize other data with defaults
+        setSpecialAssist1DataByYear({});
+        setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
 
         // Employee selections are now initialized above after formatting employees
@@ -326,46 +274,8 @@ export const useBudgetData = () => {
         hotel: rates.hotel.toString()
       }));
       
-      // Save special assistance and overtime data
-      const allSpecialAssistItems = [];
-      const allOvertimeItems = [];
-      
-      // Collect all special assistance items from all years
-      for (const [year, data] of Object.entries(specialAssist1DataByYear)) {
-        if (data.items && data.items.length > 0) {
-          data.items.forEach(item => {
-            allSpecialAssistItems.push({
-              year: parseInt(year),
-              item: item.item,
-              timesPerYear: item.timesPerYear,
-              days: item.days,
-              people: item.people,
-              rate: item.rate.toString(),
-              notes: data.notes || ''
-            });
-          });
-        }
-      }
-      
-      // Collect all overtime items from all years
-      for (const [year, data] of Object.entries(overtimeDataByYear)) {
-        if (data.items && data.items.length > 0) {
-          data.items.forEach(item => {
-            allOvertimeItems.push({
-              year: parseInt(year),
-              item: item.item,
-              days: item.days,
-              hours: item.hours,
-              people: item.people,
-              rate: item.rate ? item.rate.toString() : null,
-              salary: data.salary.toString()
-            });
-          });
-        }
-      }
-
       // Save all data
-      const requests = [
+      const responses = await Promise.all([
         // Save budget items
         fetch('/api/budget-items', {
           method: 'POST',
@@ -384,38 +294,13 @@ export const useBudgetData = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(masterRatesToSave)
         })
-      ];
-
-      // Add special assistance items if any
-      if (allSpecialAssistItems.length > 0) {
-        requests.push(
-          fetch('/api/special-assist', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(allSpecialAssistItems)
-          })
-        );
-      }
-
-      // Add overtime items if any
-      if (allOvertimeItems.length > 0) {
-        requests.push(
-          fetch('/api/overtime', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(allOvertimeItems)
-          })
-        );
-      }
-
-      const responses = await Promise.all(requests);
+      ]);
       
       // Check if all requests were successful
       responses.forEach((response, index) => {
         if (!response.ok) {
-          const endpoints = ['budget-items', 'employees', 'master-rates', 'special-assist', 'overtime'];
-          const endpoint = endpoints[index] || 'unknown';
-          throw new Error(`Failed to save ${endpoint}: ${response.status}`);
+          const endpoints = ['budget-items', 'employees', 'master-rates'];
+          throw new Error(`Failed to save ${endpoints[index]}: ${response.status}`);
         }
       });
       
