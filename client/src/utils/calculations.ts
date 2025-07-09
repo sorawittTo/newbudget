@@ -116,13 +116,11 @@ export const calculateFamilyVisit = (
 export const calculateCompanyTrip = (
   employees: Employee[],
   masterRates: MasterRates,
-  calcYear: number = 2568
+  calcYear: number = 2568,
+  destination: string = '',
+  busFare: number = 600
 ): CompanyTripEmployee[] => {
-  const busFare = 600; // Base bus fare
-  const destination = ''; // Default destination
-  
   return employees.map(emp => {
-    const serviceYears = calcYear - emp.startYear;
     const rates = getRatesForEmployee(emp, masterRates);
     
     // Check if eligible for accommodation (province doesn't match destination)

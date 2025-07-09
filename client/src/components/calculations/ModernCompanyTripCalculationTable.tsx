@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Employee, MasterRates, CompanyTripEmployee } from '../../types';
-import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
+import { formatCurrency, calculateCompanyTrip } from '../../utils/calculations';
 import { Save, Users, MapPin, Edit3, Check, X, Car, Award, Calculator, TrendingUp } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -36,41 +36,10 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
   });
   const [editingValues, setEditingValues] = useState<Record<string, any>>({});
 
-  // Calculate company trip data
+  // Calculate company trip data using unified function
   const companyTripData = useMemo(() => {
-    const allEmployees = employees; // Show all employees as requested
-    
-    return allEmployees.map(emp => {
-      const rates = getRatesForEmployee(emp, masterRates);
-      
-      // Check if eligible for accommodation (province doesn't match destination)
-      const isEligibleForAccommodation = emp.visitProvince.trim() !== tripSettings.destination.trim();
-      
-      let accommodationCost = 0;
-      if (isEligibleForAccommodation) {
-        if (emp.level === '7') {
-          // Level 7 gets single room
-          accommodationCost = rates.hotel || 0;
-        } else {
-          // Others share rooms by gender (divide by 2)
-          accommodationCost = (rates.hotel || 0) / 2;
-        }
-      }
-      
-      const busFareTotal = tripSettings.busFare * 2; // Round trip
-      const total = busFareTotal + accommodationCost;
-      
-      return {
-        ...emp,
-        busFare: tripSettings.busFare,
-        accommodationCost,
-        total,
-        note: isEligibleForAccommodation ? 
-          (emp.level === '7' ? 'พักคนเดียว' : `พักคู่ (${emp.gender})`) : 
-          'ไม่มีสิทธิ์ค่าที่พัก'
-      } as CompanyTripEmployee;
-    });
-  }, [employees, masterRates, tripSettings]);
+    return calculateCompanyTrip(employees, masterRates, calcYear, tripSettings.destination, tripSettings.busFare);
+  }, [employees, masterRates, calcYear, tripSettings]);
 
   const companyTripTotal = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
 
@@ -89,6 +58,19 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
 
   const handleEditingChange = (key: string, value: any) => {
     setEditingValues(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleAccommodationUpdate = (employeeId: string, value: number) => {
+    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+    if (employeeIndex !== -1) {
+      const updatedEmployee = { ...employees[employeeIndex] };
+      // Store custom accommodation cost in customTravelRates
+      if (!updatedEmployee.customTravelRates) {
+        updatedEmployee.customTravelRates = {};
+      }
+      updatedEmployee.customTravelRates.hotel = value;
+      onUpdateEmployee(employeeIndex, updatedEmployee);
+    }
   };
 
   const totalEmployees = companyTripData.length;
@@ -197,24 +179,24 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
                       <input
                         type="text"
                         className="w-32 p-2 border border-gray-300 rounded text-right"
-                        value={emp.accommodationCost}
-                        onChange={(e) => handleEditingChange(`accommodation-${emp.id}`, parseFloat(e.target.value) || 0)}
+                        value={editingValues[`accommodation-${emp.id}`] ?? emp.accommodationCost}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value) || 0;
+                          handleEditingChange(`accommodation-${emp.id}`, value);
+                        }}
+                        onBlur={() => {
+                          const value = editingValues[`accommodation-${emp.id}`];
+                          if (value !== undefined) {
+                            handleAccommodationUpdate(emp.id, value);
+                          }
+                        }}
                       />
                     ) : (
                       <span className="font-medium text-gray-900">{formatCurrency(emp.accommodationCost)}</span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {globalEditMode ? (
-                      <input
-                        type="text"
-                        className="w-32 p-2 border border-gray-300 rounded text-right"
-                        value={tripSettings.busFare * 2}
-                        onChange={(e) => handleSettingChange('busFare', (parseFloat(e.target.value) || 0) / 2)}
-                      />
-                    ) : (
-                      <span className="font-medium text-gray-900">{formatCurrency(tripSettings.busFare * 2)}</span>
-                    )}
+                    <span className="font-medium text-gray-900">{formatCurrency((tripSettings.busFare * 2) * (calcYear >= 2570 ? 1.1 : calcYear >= 2569 ? 1.05 : 1))}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm text-gray-600">{emp.note}</div>
