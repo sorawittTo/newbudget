@@ -171,9 +171,63 @@ export const useBudgetData = () => {
           setMasterRates({});
         }
         
-        // Initialize other data with defaults
-        setSpecialAssist1DataByYear({});
-        setOvertimeDataByYear({});
+        // Load special assistance and overtime data for all years
+        const yearsToLoad = [2568, 2569, 2570, 2571, 2572, 2573, 2574, 2575, 2576, 2577, 2578, 2579, 2580];
+        
+        // Load special assistance data
+        const specialAssistPromises = yearsToLoad.map(year => 
+          fetch(`/api/special-assist-items/${year}`).then(res => res.json()).catch(() => [])
+        );
+        
+        // Load overtime data
+        const overtimePromises = yearsToLoad.map(year => 
+          fetch(`/api/overtime-items/${year}`).then(res => res.json()).catch(() => [])
+        );
+        
+        const [specialAssistResults, overtimeResults] = await Promise.all([
+          Promise.all(specialAssistPromises),
+          Promise.all(overtimePromises)
+        ]);
+        
+        // Transform special assistance data
+        const specialAssistByYear: Record<number, SpecialAssistData> = {};
+        specialAssistResults.forEach((items, index) => {
+          const year = yearsToLoad[index];
+          if (items.length > 0) {
+            specialAssistByYear[year] = {
+              items: items.map((item: any) => ({
+                item: item.item,
+                timesPerYear: item.timesPerYear || item.times_per_year || 0,
+                days: item.days || 0,
+                people: item.people || 0,
+                rate: parseFloat(item.rate || 0)
+              })),
+              notes: items[0]?.notes || ''
+            };
+          }
+        });
+        setSpecialAssist1DataByYear(specialAssistByYear);
+        
+        // Transform overtime data
+        const overtimeByYear: Record<number, OvertimeData> = {};
+        overtimeResults.forEach((items, index) => {
+          const year = yearsToLoad[index];
+          if (items.length > 0) {
+            overtimeByYear[year] = {
+              salary: parseFloat(items[0]?.salary || 15000),
+              items: items.map((item: any) => ({
+                item: item.item,
+                days: item.days || 0,
+                hours: item.hours || 0,
+                people: item.people || 0,
+                rate: parseFloat(item.rate || 0)
+              })),
+              notes: items[0]?.notes || ''
+            };
+          }
+        });
+        setOvertimeDataByYear(overtimeByYear);
+        
         setHolidaysData(holidaysByYear);
 
         // Employee selections are now initialized above after formatting employees
