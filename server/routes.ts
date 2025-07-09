@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage.js";
-import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema } from "../shared/schema.js";
+import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema, insertSpecialAssistItemSchema, insertOvertimeItemSchema } from "../shared/schema.js";
 
 // Log utility
 function log(message: string, source = "api") {
@@ -235,6 +235,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating budget item:", error);
       res.status(400).json({ error: "Failed to update budget item" });
+    }
+  });
+
+  // Special Assistance routes
+  app.get("/api/special-assist/:year", async (req, res) => {
+    try {
+      const year = parseInt(req.params.year);
+      const items = await storage.getSpecialAssistItems(year);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching special assist items:", error);
+      res.status(500).json({ error: "Failed to fetch special assist items" });
+    }
+  });
+
+  app.post("/api/special-assist", async (req, res) => {
+    try {
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const items = [];
+        for (const itemData of data) {
+          try {
+            const validatedData = insertSpecialAssistItemSchema.parse(itemData);
+            const created = await storage.createSpecialAssistItem(validatedData);
+            items.push(created);
+          } catch (singleError) {
+            console.error(`Error processing special assist item:`, singleError);
+          }
+        }
+        res.status(201).json(items);
+      } else {
+        const validatedData = insertSpecialAssistItemSchema.parse(data);
+        const item = await storage.createSpecialAssistItem(validatedData);
+        res.status(201).json(item);
+      }
+    } catch (error) {
+      console.error("Error creating special assist item:", error);
+      res.status(400).json({ error: "Invalid special assist item data" });
+    }
+  });
+
+  app.put("/api/special-assist/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedData = insertSpecialAssistItemSchema.partial().parse(req.body);
+      const item = await storage.updateSpecialAssistItem(id, validatedData);
+      res.json(item);
+    } catch (error) {
+      console.error("Error updating special assist item:", error);
+      res.status(400).json({ error: "Failed to update special assist item" });
+    }
+  });
+
+  app.delete("/api/special-assist/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteSpecialAssistItem(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting special assist item:", error);
+      res.status(400).json({ error: "Failed to delete special assist item" });
+    }
+  });
+
+  // Overtime routes
+  app.get("/api/overtime/:year", async (req, res) => {
+    try {
+      const year = parseInt(req.params.year);
+      const items = await storage.getOvertimeItems(year);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching overtime items:", error);
+      res.status(500).json({ error: "Failed to fetch overtime items" });
+    }
+  });
+
+  app.post("/api/overtime", async (req, res) => {
+    try {
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const items = [];
+        for (const itemData of data) {
+          try {
+            const validatedData = insertOvertimeItemSchema.parse(itemData);
+            const created = await storage.createOvertimeItem(validatedData);
+            items.push(created);
+          } catch (singleError) {
+            console.error(`Error processing overtime item:`, singleError);
+          }
+        }
+        res.status(201).json(items);
+      } else {
+        const validatedData = insertOvertimeItemSchema.parse(data);
+        const item = await storage.createOvertimeItem(validatedData);
+        res.status(201).json(item);
+      }
+    } catch (error) {
+      console.error("Error creating overtime item:", error);
+      res.status(400).json({ error: "Invalid overtime item data" });
+    }
+  });
+
+  app.put("/api/overtime/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedData = insertOvertimeItemSchema.partial().parse(req.body);
+      const item = await storage.updateOvertimeItem(id, validatedData);
+      res.json(item);
+    } catch (error) {
+      console.error("Error updating overtime item:", error);
+      res.status(400).json({ error: "Failed to update overtime item" });
+    }
+  });
+
+  app.delete("/api/overtime/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteOvertimeItem(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting overtime item:", error);
+      res.status(400).json({ error: "Failed to delete overtime item" });
     }
   });
 

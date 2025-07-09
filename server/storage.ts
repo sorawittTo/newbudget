@@ -10,7 +10,11 @@ import type {
   MasterRate,
   InsertMasterRate,
   BudgetItem,
-  InsertBudgetItem
+  InsertBudgetItem,
+  SpecialAssistItem,
+  InsertSpecialAssistItem,
+  OvertimeItem,
+  InsertOvertimeItem
 } from "../shared/schema.js";
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -38,6 +42,18 @@ export interface IStorage {
   getBudgetItems(): Promise<BudgetItem[]>;
   createBudgetItem(item: InsertBudgetItem): Promise<BudgetItem>;
   updateBudgetItem(id: number, item: Partial<InsertBudgetItem>): Promise<BudgetItem>;
+  
+  // Special Assistance methods
+  getSpecialAssistItems(year: number): Promise<SpecialAssistItem[]>;
+  createSpecialAssistItem(item: InsertSpecialAssistItem): Promise<SpecialAssistItem>;
+  updateSpecialAssistItem(id: number, item: Partial<InsertSpecialAssistItem>): Promise<SpecialAssistItem>;
+  deleteSpecialAssistItem(id: number): Promise<void>;
+  
+  // Overtime methods
+  getOvertimeItems(year: number): Promise<OvertimeItem[]>;
+  createOvertimeItem(item: InsertOvertimeItem): Promise<OvertimeItem>;
+  updateOvertimeItem(id: number, item: Partial<InsertOvertimeItem>): Promise<OvertimeItem>;
+  deleteOvertimeItem(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -118,6 +134,50 @@ export class DatabaseStorage implements IStorage {
       .where(eq(schema.budgetItems.id, id))
       .returning();
     return result[0];
+  }
+
+  // Special Assistance methods
+  async getSpecialAssistItems(year: number): Promise<SpecialAssistItem[]> {
+    return await db.select().from(schema.specialAssistItems).where(eq(schema.specialAssistItems.year, year));
+  }
+
+  async createSpecialAssistItem(item: InsertSpecialAssistItem): Promise<SpecialAssistItem> {
+    const result = await db.insert(schema.specialAssistItems).values(item).returning();
+    return result[0];
+  }
+
+  async updateSpecialAssistItem(id: number, item: Partial<InsertSpecialAssistItem>): Promise<SpecialAssistItem> {
+    const result = await db.update(schema.specialAssistItems)
+      .set({ ...item, updatedAt: new Date() })
+      .where(eq(schema.specialAssistItems.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteSpecialAssistItem(id: number): Promise<void> {
+    await db.delete(schema.specialAssistItems).where(eq(schema.specialAssistItems.id, id));
+  }
+
+  // Overtime methods
+  async getOvertimeItems(year: number): Promise<OvertimeItem[]> {
+    return await db.select().from(schema.overtimeItems).where(eq(schema.overtimeItems.year, year));
+  }
+
+  async createOvertimeItem(item: InsertOvertimeItem): Promise<OvertimeItem> {
+    const result = await db.insert(schema.overtimeItems).values(item).returning();
+    return result[0];
+  }
+
+  async updateOvertimeItem(id: number, item: Partial<InsertOvertimeItem>): Promise<OvertimeItem> {
+    const result = await db.update(schema.overtimeItems)
+      .set({ ...item, updatedAt: new Date() })
+      .where(eq(schema.overtimeItems.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteOvertimeItem(id: number): Promise<void> {
+    await db.delete(schema.overtimeItems).where(eq(schema.overtimeItems.id, id));
   }
 }
 

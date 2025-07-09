@@ -274,8 +274,47 @@ export const useBudgetData = () => {
         hotel: rates.hotel.toString()
       }));
       
+      // Save special assistance and overtime data
+      const allSpecialAssistItems = [];
+      const allOvertimeItems = [];
+      
+      // Collect all special assistance items from all years
+      for (const [year, data] of Object.entries(specialAssist1DataByYear)) {
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(item => {
+            allSpecialAssistItems.push({
+              year: parseInt(year),
+              item: item.item,
+              timesPerYear: item.timesPerYear,
+              days: item.days,
+              people: item.people,
+              rate: item.rate.toString(),
+              notes: data.notes || ''
+            });
+          });
+        }
+      }
+      
+      // Collect all overtime items from all years
+      for (const [year, data] of Object.entries(overtimeDataByYear)) {
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(item => {
+            allOvertimeItems.push({
+              year: parseInt(year),
+              item: item.item,
+              instances: item.instances,
+              days: item.days,
+              hours: item.hours,
+              people: item.people,
+              rate: item.rate ? item.rate.toString() : null,
+              salary: data.salary.toString()
+            });
+          });
+        }
+      }
+
       // Save all data
-      const responses = await Promise.all([
+      const requests = [
         // Save budget items
         fetch('/api/budget-items', {
           method: 'POST',
@@ -294,13 +333,38 @@ export const useBudgetData = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(masterRatesToSave)
         })
-      ]);
+      ];
+
+      // Add special assistance items if any
+      if (allSpecialAssistItems.length > 0) {
+        requests.push(
+          fetch('/api/special-assist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(allSpecialAssistItems)
+          })
+        );
+      }
+
+      // Add overtime items if any
+      if (allOvertimeItems.length > 0) {
+        requests.push(
+          fetch('/api/overtime', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(allOvertimeItems)
+          })
+        );
+      }
+
+      const responses = await Promise.all(requests);
       
       // Check if all requests were successful
       responses.forEach((response, index) => {
         if (!response.ok) {
-          const endpoints = ['budget-items', 'employees', 'master-rates'];
-          throw new Error(`Failed to save ${endpoints[index]}: ${response.status}`);
+          const endpoints = ['budget-items', 'employees', 'master-rates', 'special-assist', 'overtime'];
+          const endpoint = endpoints[index] || 'unknown';
+          throw new Error(`Failed to save ${endpoint}: ${response.status}`);
         }
       });
       
