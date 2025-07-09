@@ -19,7 +19,7 @@ import {
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { BudgetItem, Employee, MasterRates } from '../../types';
-import { formatCurrency, calculateTravelEmployees, calculateSpecialAssist, calculateFamilyVisit, calculateCompanyTrip, calculateManagerRotation } from '../../utils/calculations';
+import { formatCurrency, calculateTravelEmployees, calculateSpecialAssist, calculateFamilyVisit, calculateCompanyTrip, calculateManagerRotation, getRatesForEmployee } from '../../utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell, AreaChart, Area } from 'recharts';
 
 interface ModernDashboardProps {
@@ -27,6 +27,8 @@ interface ModernDashboardProps {
   masterRates: MasterRates;
   currentYear: number;
   nextYear: number;
+  specialAssist1DataByYear: Record<number, any>;
+  overtimeDataByYear: Record<number, any>;
   onNavigate: (tab: string) => void;
 }
 
@@ -73,6 +75,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   masterRates,
   currentYear,
   nextYear,
+  specialAssist1DataByYear,
+  overtimeDataByYear,
   onNavigate
 }) => {
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
@@ -101,22 +105,43 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const managerRotationData = calculateManagerRotation(employees, masterRates);
     const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate overtime - Mock data for now as we don't have overtime calculation exposed
-    const overtimeTotal = 250000; // Mock data
+    // Calculate overtime from real data
+    const overtimeData = overtimeDataByYear[currentYear] || { items: [], salary: 15000 };
+    const overtimeTotal = overtimeData.items.reduce((sum: number, item: any) => {
+      const rate = item.rate || overtimeData.salary / 210;
+      return sum + (item.instances * item.days * item.hours * item.people * rate);
+    }, 0);
+
+    // Calculate assistance data (เงินช่วยเหลืออื่นๆ)
+    const assistanceTotal = employees
+      .filter(emp => emp.status === 'มีสิทธิ์')
+      .reduce((sum, emp) => {
+        const rates = getRatesForEmployee(emp, masterRates);
+        const totalRent = (rates.rent || 0) * 12;
+        const totalMonthlyAssist = (rates.monthlyAssist || 0) * 12;
+        return sum + totalRent + totalMonthlyAssist;
+      }, 0);
+
+    // Calculate special assistance from real data
+    const specialAssistFormData = specialAssist1DataByYear[currentYear] || { items: [] };
+    const specialAssistCalculatedTotal = specialAssistFormData.items.reduce((sum: number, item: any) => {
+      return sum + (item.timesPerYear * item.days * item.people * item.rate);
+    }, 0);
     
     return {
       activeEmployees,
       employeeChange,
       totalEmployees: employees.length,
       travelTotal,
-      specialAssistTotal,
+      specialAssistTotal: specialAssistCalculatedTotal,
+      assistanceTotal,
       familyVisitTotal,
       companyTripTotal,
       managerRotationTotal,
       overtimeTotal,
-      totalExpenses: travelTotal + specialAssistTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
+      totalExpenses: travelTotal + specialAssistCalculatedTotal + assistanceTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
     };
-  }, [employees, masterRates, currentYear]);
+  }, [employees, masterRates, currentYear, specialAssist1DataByYear, overtimeDataByYear]);
 
   // Mock data for charts
   const employeeData = [
@@ -256,13 +281,13 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">เงินช่วยเหลืออื่นๆ</span>
-              <span className="font-semibold text-teal-600">{formatCurrency(0)}</span>
+              <span className="font-semibold text-teal-600">{formatCurrency(metrics.assistanceTotal)}</span>
             </div>
             <div className="border-t pt-3">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900">รวมเงินช่วยเหลือ</span>
                 <span className="font-bold text-lg text-emerald-600">
-                  {formatCurrency(metrics.specialAssistTotal)}
+                  {formatCurrency(metrics.specialAssistTotal + metrics.assistanceTotal)}
                 </span>
               </div>
             </div>
