@@ -117,12 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Pairing Logic Fix - Correct Odd Number Handling
-  * Fixed pairing algorithm to properly handle odd number of employees
-  * Changed loop condition from i < length to i < length - 1 to avoid pairing last person alone
-  * Odd-numbered employee (last in list) gets no symbol and receives full accommodation cost
-  * Ensures correct pairing behavior: 5 employees = 2 pairs + 1 single, not 3 pairs
-  * Addresses user issue: "เลือกจังหวัดปลายทางเป็น ขอนแก่น แล้วทำไมพิชิต ค่าที่พักยังเป็น 900"
+- July 09, 2025. Travel and Manager Rotation Tables Decoupled - Removed Shared Dependencies
+  * Removed workingDays dependency between travel (souvenir collection) and manager rotation tables
+  * ModernTravelCalculationTable now uses fixed values: 2 hotel nights, 3 per diem days
+  * ModernManagerRotationCalculationTable uses independent rotation settings parameters
+  * Updated calculateManagerRotation function to accept configurable parameters instead of workingDays
+  * Each table now operates independently with its own calculation logic
+  * Addresses user requirement: "ตารางช้อมูลค่าเดินทางรับของที่ระลึกและตารางข้อมูลหน้าเดินทางหมุนเวียน ผจศ. ไม่มีส่วนเกี่ยวข้องกัน ให้ลบการเชื่อมต่อ"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering

@@ -54,37 +54,28 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   // Filter for level 7 employees only
   const level7Employees = employees.filter(emp => emp.level === '7');
 
-  // Calculate manager rotation data - ผจศ rotation calculation
+  // Calculate manager rotation data - Independent ผจศ rotation calculation
   const managerRotationData = useMemo(() => {
     return level7Employees.map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
-      const workingDays = emp.workingDays || 1;
       
-      // ผจศ rotation calculation rules:
-      // 1 working day = 3 days per diem + 2 days accommodation  
-      // Each additional working day = +1 day per diem + +1 day accommodation
-      let perDiemDays: number;
-      let accommodationDays: number;
-      
-      if (workingDays === 1) {
-        perDiemDays = 3;
-        accommodationDays = 2;
-      } else {
-        perDiemDays = 3 + (workingDays - 1); // 3 days for first day + 1 day for each additional day
-        accommodationDays = 2 + (workingDays - 1); // 2 days for first day + 1 day for each additional day
-      }
+      // Independent ผจศ rotation calculation (not linked to travel table)
+      // Use rotation settings from local state instead of workingDays
+      const perDiemDays = rotationSettings.perDiemDays;
+      const accommodationDays = rotationSettings.hotelNights;
       
       const perDiemCost = (rates.perDiem || 0) * perDiemDays;
       const accommodationCost = (rates.hotel || 0) * accommodationDays;
       
-      // Travel costs (round trip)
-      const travelCost = (rates.travel || 0) * 2;
-      const taxiCost = (rates.local || 0) * 2;
+      // Travel costs using rotation settings
+      const travelCost = rotationSettings.flightCost;
+      const taxiCost = rotationSettings.taxiCost;
+      const busCost = rotationSettings.busCost;
       
       // Other vehicle costs (editable)
       const otherVehicleCost = emp.customTravelRates?.other || 0;
       
-      const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
+      const total = perDiemCost + accommodationCost + travelCost + taxiCost + busCost + otherVehicleCost;
       
       return {
         ...emp,
@@ -92,15 +83,15 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
         accommodationCost,
         travelCost,
         taxiCost,
+        busCost,
+        flightCost: travelCost, // Alias for compatibility
         otherVehicleCost,
         total,
-        busCost: 0, // No longer used
-        flightCost: 0, // No longer used
         perDiemDay: perDiemDays,
         hotelNight: accommodationDays
       } as ManagerRotationEmployee;
     });
-  }, [level7Employees, masterRates]);
+  }, [level7Employees, masterRates, rotationSettings]);
 
   const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
 

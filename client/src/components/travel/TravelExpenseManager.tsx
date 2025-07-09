@@ -132,7 +132,12 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         selectedEmployees.managerRotation.includes(emp.id) && emp.level === '7'
       ), 
       masterRates,
-      calcYear
+      calcYear,
+      3, // perDiemDays
+      2, // accommodationDays
+      3000, // flightCost
+      200, // taxiCost
+      600  // busCost
     ), [employees, selectedEmployees.managerRotation, masterRates, calcYear]
   );
 

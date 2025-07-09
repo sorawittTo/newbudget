@@ -54,16 +54,14 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
   const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, calcYear);
 
-  // Calculate employee cost function
+  // Calculate employee cost function - Independent travel calculation
   const calculateEmployeeCost = (employee: TravelEmployee) => {
     const rates = getRatesForEmployee(employee, masterRates);
-    const workingDays = employee.workingDays || 1;
     
-    // Calculate hotel nights and per diem days based on working days
-    // 1 working day = 2 hotel nights + 3 per diem days
-    // Each additional day adds 1 hotel night + 1 per diem day
-    const hotelNights = workingDays === 1 ? 2 : 2 + (workingDays - 1);
-    const perDiemDays = workingDays === 1 ? 3 : 3 + (workingDays - 1);
+    // Fixed calculation for travel expense (souvenir collection)
+    // Always 2 hotel nights and 3 per diem days regardless of working days
+    const hotelNights = 2;
+    const perDiemDays = 3;
     
     const hotel = hotelNights * (rates.hotel || 0);
     const perDiem = perDiemDays * (rates.perDiem || 0);

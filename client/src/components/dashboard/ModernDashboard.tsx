@@ -114,7 +114,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     
     // Calculate manager rotation - only level 7 employees
     const managerRotationEligible = employees.filter(emp => emp.level === '7');
-    const managerRotationData = calculateManagerRotation(managerRotationEligible, masterRates, currentYear);
+    const managerRotationData = calculateManagerRotation(managerRotationEligible, masterRates, currentYear, 3, 2, 3000, 200, 600);
     const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate overtime from real data

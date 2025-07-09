@@ -208,60 +208,43 @@ export const calculateCompanyTrip = (
 export const calculateManagerRotation = (
   employees: Employee[],
   masterRates: MasterRates,
-  calcYear: number = 2568
+  calcYear: number = 2568,
+  perDiemDays: number = 3,
+  accommodationDays: number = 2,
+  flightCost: number = 3000,
+  taxiCost: number = 200,
+  busCost: number = 600
 ): ManagerRotationEmployee[] => {
   return employees
     .filter(emp => emp.level === '7')
     .map(emp => {
-      const serviceYears = calcYear - emp.startYear;
       const rates = getRatesForEmployee(emp, masterRates);
-      const workingDays = emp.workingDays || 1;
       
-      // Manager rotation calculation rules:
-      // 1 working day = 3 days per diem + 2 days accommodation  
-      // Each additional working day = +1 day per diem + +1 day accommodation
-      let perDiemDays: number;
-      let accommodationDays: number;
+      // Independent manager rotation calculation with configurable parameters
+      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
+      const accommodationCost = (rates.hotel || 0) * accommodationDays;
       
-      if (workingDays === 1) {
-        perDiemDays = 3;
-        accommodationDays = 2;
-      } else {
-        perDiemDays = 3 + (workingDays - 1);
-        accommodationDays = 2 + (workingDays - 1);
-      }
-      
-      // Year-based calculation adjustments
-      let yearMultiplier = 1;
-      if (calcYear >= 2570) {
-        yearMultiplier = 1.15; // 15% increase for 2570 and beyond
-      } else if (calcYear >= 2569) {
-        yearMultiplier = 1.08; // 8% increase for 2569
-      }
-      
-      const perDiemCost = (rates.perDiem || 0) * perDiemDays * yearMultiplier;
-      const accommodationCost = (rates.hotel || 0) * accommodationDays * yearMultiplier;
-      
-      // Travel costs (round trip) with year adjustment
-      const travelCost = (rates.travel || 0) * 2 * yearMultiplier;
-      const taxiCost = (rates.local || 0) * 2 * yearMultiplier;
+      // Fixed costs based on parameters
+      const travelCost = flightCost;
+      const localCost = taxiCost;
+      const vehicleCost = busCost;
       
       // Other vehicle costs (editable)
-      const otherVehicleCost = (emp.customTravelRates?.other || 0) * yearMultiplier;
+      const otherVehicleCost = emp.customTravelRates?.other || 0;
       
-      const total = perDiemCost + accommodationCost + travelCost + taxiCost + otherVehicleCost;
+      const total = perDiemCost + accommodationCost + travelCost + localCost + vehicleCost + otherVehicleCost;
       
       return {
         ...emp,
         perDiemCost,
         accommodationCost,
         travelCost,
-        taxiCost,
+        taxiCost: localCost,
+        busCost: vehicleCost,
+        flightCost: travelCost,
         otherVehicleCost,
         total,
-        busCost: 0, // No longer used
-        flightCost: 0, // No longer used
-        totalTravel: travelCost + taxiCost + otherVehicleCost,
+        totalTravel: travelCost + localCost + vehicleCost + otherVehicleCost,
         perDiemDay: perDiemDays,
         hotelNight: accommodationDays
       } as ManagerRotationEmployee;
