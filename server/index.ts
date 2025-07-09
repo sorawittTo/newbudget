@@ -6,6 +6,23 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Add cache control headers to prevent caching issues
+app.use((req, res, next) => {
+  // Don't cache API responses
+  if (req.path.startsWith('/api/')) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+  // Don't cache static assets in development
+  if (process.env.NODE_ENV === 'development') {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

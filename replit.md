@@ -117,6 +117,19 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Added Cache Control System to Prevent Browser Caching Issues
+  * Added comprehensive cache control meta tags to client/index.html
+  * Implemented server-side cache control headers for API responses and static assets
+  * Created Service Worker (sw.js) for aggressive cache management
+  * Added cache-busting headers to prevent stale content on different machines
+  * System now forces fresh content loading without requiring redeployment
+  * Addresses user reported issue: "ถ้าไม่redeploy หน้าเว็บไม่ยอมเปลี่ยนเมื่อเข้าจากเครื่องอื่น"
+- July 09, 2025. Added Year Selection to Dashboard Display
+  * Added year selector (2568-2580) to Dashboard header section
+  * Integrated year selection with currentYear state management
+  * Updated ModernDashboard to receive onYearChange prop
+  * All expense calculations now update dynamically based on selected year
+  * Dashboard displays accurate year-based data for travel, assistance, and overtime expenses
 - July 09, 2025. Fixed Travel Expense Calculation Accuracy for Year-Based Data Display  
   * Corrected Dashboard travel expense calculations to use proper employee filtering criteria
   * Fixed calculateCompanyTrip function to use simplified logic matching table components
