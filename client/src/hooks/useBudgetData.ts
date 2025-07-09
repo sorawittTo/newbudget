@@ -122,7 +122,7 @@ export const useBudgetData = () => {
         // Set employees
         if (employees.length > 0) {
           const formattedEmployees = employees.map((emp: any) => ({
-            id: emp.employeeId || emp.employee_id || emp.id,
+            id: emp.employeeId || emp.employee_id || emp.id.toString(),
             name: emp.name,
             gender: emp.gender,
             startYear: emp.startYear || emp.start_year,
@@ -133,6 +133,14 @@ export const useBudgetData = () => {
             customTravelRates: emp.customTravelRates
           }));
           setEmployees(formattedEmployees);
+          
+          // Initialize employee selections with all employees from API
+          const allEmployeeIds = formattedEmployees.map(emp => emp.id);
+          setSelectedTravelEmployees(allEmployeeIds);
+          setSelectedSpecialAssistEmployees(allEmployeeIds);
+          setSelectedFamilyVisitEmployees(allEmployeeIds);
+          setSelectedCompanyTripEmployees(allEmployeeIds);
+          setSelectedManagerRotationEmployees(allEmployeeIds);
         } else {
           setEmployees([]);
         }
@@ -163,13 +171,7 @@ export const useBudgetData = () => {
         setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
 
-        // Initialize employee selections with all employees from API
-        const allEmployeeIds = employees.map(emp => emp.id);
-        setSelectedTravelEmployees(allEmployeeIds);
-        setSelectedSpecialAssistEmployees(allEmployeeIds);
-        setSelectedFamilyVisitEmployees(allEmployeeIds);
-        setSelectedCompanyTripEmployees(allEmployeeIds);
-        setSelectedManagerRotationEmployees(allEmployeeIds);
+        // Employee selections are now initialized above after formatting employees
       } catch (error) {
         console.error('Error loading data:', error);
         // Set empty data - force using database only
