@@ -54,41 +54,42 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   // Filter for level 7 employees only
   const level7Employees = employees.filter(emp => emp.level === '7');
 
-  // Calculate manager rotation data - Independent ผจศ rotation calculation
+  // Calculate manager rotation data - Dynamic calculation based on working days
   const managerRotationData = useMemo(() => {
     return level7Employees.map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
       
-      // Independent ผจศ rotation calculation (not linked to travel table)
-      // Use rotation settings from local state instead of workingDays
-      const perDiemDays = rotationSettings.perDiemDays;
-      const accommodationDays = rotationSettings.hotelNights;
+      // Dynamic calculation based on working days
+      const workingDays = emp.workingDays || 1;
+      const hotelNights = workingDays + 1; // Working days + 1 night
+      const perDiemDaysCalc = workingDays + 2; // Working days + 2 days (arrival + departure)
       
-      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
-      const accommodationCost = (rates.hotel || 0) * accommodationDays;
+      const perDiemCost = (rates.perDiem || 0) * perDiemDaysCalc;
+      const accommodationCost = (rates.hotel || 0) * hotelNights;
       
-      // Travel costs using rotation settings
-      const travelCost = rotationSettings.flightCost;
-      const taxiCost = rotationSettings.taxiCost;
-      const busCost = rotationSettings.busCost;
+      // Use rates from master rates table
+      const travelCost = rates.travel || 0;
+      const localCost = rates.local || 0;
+      const vehicleCost = rotationSettings.busCost;
       
       // Other vehicle costs (editable)
       const otherVehicleCost = emp.customTravelRates?.other || 0;
       
-      const total = perDiemCost + accommodationCost + travelCost + taxiCost + busCost + otherVehicleCost;
+      const total = perDiemCost + accommodationCost + travelCost + localCost + vehicleCost + otherVehicleCost;
       
       return {
         ...emp,
         perDiemCost,
         accommodationCost,
         travelCost,
-        taxiCost,
-        busCost,
-        flightCost: travelCost, // Alias for compatibility
+        taxiCost: localCost,
+        busCost: vehicleCost,
+        flightCost: travelCost,
         otherVehicleCost,
         total,
-        perDiemDay: perDiemDays,
-        hotelNight: accommodationDays
+        totalTravel: travelCost + localCost + vehicleCost + otherVehicleCost,
+        perDiemDay: perDiemDaysCalc,
+        hotelNight: hotelNights
       } as ManagerRotationEmployee;
     });
   }, [level7Employees, masterRates, rotationSettings]);
@@ -308,7 +309,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div>
                       <div className="font-semibold text-gray-900">{formatCurrency(emp.accommodationCost)}</div>
                       <div className="text-xs text-gray-500 mt-1">
-                        อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.hotelNight} วัน
+                        อัตรา {formatCurrency(getRatesForEmployee(emp, masterRates).hotel || 0)} x{emp.hotelNight} คืน
                       </div>
                     </div>
                   </td>
