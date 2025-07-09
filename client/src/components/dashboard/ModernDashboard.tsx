@@ -95,13 +95,21 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     
     // Calculate special assistance from real data
     const specialAssistCurrentYear = specialAssist1DataByYear[currentYear] || { items: [] };
+    console.log('Dashboard specialAssist1DataByYear:', specialAssist1DataByYear);
+    console.log('Dashboard specialAssistCurrentYear:', specialAssistCurrentYear);
+    console.log('Dashboard currentYear:', currentYear);
+    
     const specialAssistTotal = (specialAssistCurrentYear.items || []).reduce((sum, item) => {
       const timesPerYear = Number(item.timesPerYear) || 0;
       const days = Number(item.days) || 0;
       const people = Number(item.people) || 0;
       const rate = Number(item.rate) || 0;
-      return sum + (timesPerYear * days * people * rate);
+      const itemTotal = timesPerYear * days * people * rate;
+      console.log('Dashboard special assist item:', { item, timesPerYear, days, people, rate, itemTotal });
+      return sum + itemTotal;
     }, 0);
+    
+    console.log('Dashboard specialAssistTotal:', specialAssistTotal);
     
     // Calculate family visit - only eligible employees (status = มีสิทธิ์)
     const familyVisitEligible = employees.filter(emp => emp.status === 'มีสิทธิ์');
