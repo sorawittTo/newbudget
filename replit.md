@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Numbers from Assistance Navigation Tabs
+  * Completely removed employee and item count numbers from assistance navigation tabs per user request  
+  * Removed count property from tabs array in UnifiedSpecialAssistanceManager.tsx
+  * Removed count display element from tab button rendering
+  * Assistance navigation now has clean, minimal design without any numerical indicators
+  * All three assistance tabs (เงินช่วยเหลืออื่นๆ, เงินช่วยเหลือพิเศษ, ค่าล่วงเวลาวันหยุด) now show only icon and label
 - July 09, 2025. Fixed Travel Expense Display Names in Dashboard
   * Updated travel expense item names in Dashboard to match user requirements exactly
   * Changed "เดินทางปกติ" to "เดินทางรับของที่ระลึก" 

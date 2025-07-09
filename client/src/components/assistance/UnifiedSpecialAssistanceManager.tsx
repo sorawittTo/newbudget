@@ -89,9 +89,9 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   );
 
   const tabs = [
-    { id: 'assistance', label: 'เงินช่วยเหลืออื่นๆ', icon: <Heart className="w-5 h-5" />, count: eligibleEmployees.length },
-    { id: 'special', label: 'เงินช่วยเหลือพิเศษ', icon: <Banknote className="w-5 h-5" />, count: specialAssist1Data.items.length },
-    { id: 'overtime', label: 'ค่าล่วงเวลาวันหยุด', icon: <Clock className="w-5 h-5" />, count: overtimeData.items.length }
+    { id: 'assistance', label: 'เงินช่วยเหลืออื่นๆ', icon: <Heart className="w-5 h-5" /> },
+    { id: 'special', label: 'เงินช่วยเหลือพิเศษ', icon: <Banknote className="w-5 h-5" /> },
+    { id: 'overtime', label: 'ค่าล่วงเวลาวันหยุด', icon: <Clock className="w-5 h-5" /> }
   ];
 
   const handleSave = () => {
@@ -707,7 +707,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             >
               {tab.icon}
               <span>{tab.label}</span>
-              <span className="bg-white/20 text-xs px-2 py-1 rounded-full">{tab.count}</span>
             </button>
           ))}
         </div>
