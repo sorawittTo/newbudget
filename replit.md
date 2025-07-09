@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Numbers from Travel Navigation Tabs
+  * Completely removed employee count numbers from travel navigation tabs per user request
+  * Removed calculation logic for eligible employee counts in each travel type
+  * Simplified tab display to show only icon and label without numerical indicators
+  * Travel navigation now has clean, minimal design without any count displays
+  * Updated TravelExpenseManager.tsx to eliminate all count-related code
 - July 09, 2025. Fixed Travel Tab Number Display Issue
   * Fixed incorrect number display in travel expense navigation tabs
   * Updated calculation logic to show accurate eligible employee counts for each travel type

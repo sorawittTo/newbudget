@@ -127,34 +127,11 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
 
 
 
-  // Calculate eligible counts for each section
-  const travelEligibleCount = employees.filter(emp => 
-    selectedEmployees.travel.includes(emp.id)
-  ).length;
-  
-  const familyEligibleCount = employees.filter(emp => 
-    selectedEmployees.familyVisit.includes(emp.id) &&
-    emp.status === 'มีสิทธิ์' &&
-    emp.level !== 'ท้องถิ่น' && 
-    emp.visitProvince && 
-    emp.visitProvince.trim() !== '' &&
-    emp.visitProvince !== 'ขอนแก่น'
-  ).length;
-  
-  const companyEligibleCount = employees.filter(emp => 
-    selectedEmployees.companyTrip.includes(emp.id)
-  ).length;
-  
-  const managerEligibleCount = employees.filter(emp => 
-    selectedEmployees.managerRotation.includes(emp.id) && 
-    emp.level === '7'
-  ).length;
-
   const sections = [
-    { id: 'travel', label: 'เดินทางรับของที่ระลึก', icon: <Award className="w-5 h-5" />, count: travelEligibleCount },
-    { id: 'family', label: 'เดินทางเยี่ยมครอบครัว', icon: <Home className="w-5 h-5" />, count: familyEligibleCount },
-    { id: 'company', label: 'เดินทางร่วมงานวันพนักงาน', icon: <Users className="w-5 h-5" />, count: companyEligibleCount },
-    { id: 'manager', label: 'เดินทางหมุนเวียน ผจศ.', icon: <RotateCcw className="w-5 h-5" />, count: managerEligibleCount }
+    { id: 'travel', label: 'เดินทางรับของที่ระลึก', icon: <Award className="w-5 h-5" /> },
+    { id: 'family', label: 'เดินทางเยี่ยมครอบครัว', icon: <Home className="w-5 h-5" /> },
+    { id: 'company', label: 'เดินทางร่วมงานวันพนักงาน', icon: <Users className="w-5 h-5" /> },
+    { id: 'manager', label: 'เดินทางหมุนเวียน ผจศ.', icon: <RotateCcw className="w-5 h-5" /> }
   ];
 
   const renderTravelSection = () => {
@@ -317,14 +294,9 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
                   : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' 
               }}
             >
-              <div className="flex items-center justify-center gap-3 flex-col sm:flex-row">
-                <div className="flex items-center gap-2">
-                  {section.icon}
-                  <span className="text-sm font-semibold">{section.label}</span>
-                </div>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700">
-                  {section.count}
-                </span>
+              <div className="flex items-center justify-center gap-2">
+                {section.icon}
+                <span className="text-sm font-semibold">{section.label}</span>
               </div>
             </button>
           ))}
