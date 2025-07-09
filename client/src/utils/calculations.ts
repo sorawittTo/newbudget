@@ -52,8 +52,8 @@ export const calculateTravelEmployees = (
       const perDiemDays = 3;
       const hotel = hotelNights * (rates.hotel || 0);
       const perDiem = perDiemDays * (rates.perDiem || 0);
-      const travelRoundTrip = 2 * (rates.travel || 0);
-      const localRoundTrip = 2 * (rates.local || 0);
+      const travelRoundTrip = rates.travel || 0;
+      const localRoundTrip = rates.local || 0;
       const total = hotel + perDiem + travelRoundTrip + localRoundTrip;
       
       return {

@@ -63,8 +63,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
     
     const hotel = hotelNights * (rates.hotel || 0);
     const perDiem = perDiemDays * (rates.perDiem || 0);
-    const travelRoundTrip = 2 * (rates.travel || 0);
-    const localRoundTrip = 2 * (rates.local || 0);
+    const travelRoundTrip = rates.travel || 0;
+    const localRoundTrip = rates.local || 0;
     
     return {
       hotel,
@@ -194,8 +194,8 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                   <th className="px-4 py-3 text-center font-semibold">วันทำการ</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
-                  <th className="px-4 py-3 text-center font-semibold">ค่ารถโดยสาร/เที่ยว</th>
-                  <th className="px-4 py-3 text-center font-semibold">ค่ารถรับจ้าง/เที่ยว</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะประจำทาง<br />ศนร.-กทม. ไปกลับ</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะรับจ้าง<br />ขนส่ง-ที่พัก ไป-กลับ</th>
                   <th className="px-4 py-3 text-center font-semibold">รวมทั้งหมด</th>
                 </tr>
               </thead>
@@ -254,7 +254,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                               <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
                               {customSettings.showDetails && (
                                 <div className="text-xs text-gray-500 mt-1">
-                                  ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).travel || 0)}
+                                  ศนร.-กทม. ไปกลับ
                                 </div>
                               )}
                             </div>
@@ -266,7 +266,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                               <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
                               {customSettings.showDetails && (
                                 <div className="text-xs text-gray-500 mt-1">
-                                  ไป-กลับ × {formatCurrency(getRatesForEmployee(employee, masterRates).local || 0)}
+                                  ขนส่ง-ที่พัก ไป-กลับ
                                 </div>
                               )}
                             </div>

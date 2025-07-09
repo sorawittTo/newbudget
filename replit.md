@@ -117,6 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Updated Travel Expense Table Headers and Removed Trip Calculation Logic
+  * Changed "ค่ารถโดยสาร/เที่ยว" to "ค่าพาหนะประจำทาง ศนร.-กทม. ไปกลับ"
+  * Changed "ค่ารถรับจ้าง/เที่ยว" to "ค่าพาหนะรับจ้าง ขนส่ง-ที่พัก ไป-กลับ"
+  * Removed automatic x2 multiplication for round-trip calculations
+  * Now uses direct values from master rates table without additional calculations
+  * Updated detail descriptions to match master rates table terminology
+  * Travel expense calculations now reflect actual standard rates directly
 - July 09, 2025. Updated Master Rates Table Headers with Transport Details
   * Added line break and details to "ค่าพาหนะประจำทาง" header: "ศนร.-กทม. ไปกลับ"
   * Added line break and details to "ค่าพาหนะรับจ้าง" header: "ขนส่ง-ที่พัก ไป-กลับ"
