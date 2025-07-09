@@ -117,6 +117,14 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Manager Rotation Table Dynamic Calculation and Header Updates
+  * Updated manager rotation table to use dynamic calculation based on working days
+  * Hotel nights = working days + 1 (same as travel souvenir table)
+  * Per diem days = working days + 2 (same as travel souvenir table)
+  * Changed "ค่าเดินทาง" to "ค่าพาหนะประจำทาง ศนร.-กทม. ไปกลับ"
+  * Changed "ค่ารถรับจ้าง" to "ค่าพาหนะรับจ้าง ขนส่ง-ที่พัก ไป-กลับ"
+  * Now uses rates from master rates table for travel and local transport
+  * Applied to both ModernManagerRotationCalculationTable and utils/calculations.ts
 - July 09, 2025. Set Default Destination for Company Trip to Khon Kaen
   * Changed default destination from empty string to 'ขอนแก่น' in ModernCompanyTripCalculationTable
   * Trip settings now initialize with Khon Kaen as default destination

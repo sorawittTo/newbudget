@@ -223,13 +223,17 @@ export const calculateManagerRotation = (
     .map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
       
-      // Independent manager rotation calculation with configurable parameters
-      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
-      const accommodationCost = (rates.hotel || 0) * accommodationDays;
+      // Dynamic calculation based on working days
+      const workingDays = emp.workingDays || 1;
+      const hotelNights = workingDays + 1; // Working days + 1 night
+      const perDiemDaysCalc = workingDays + 2; // Working days + 2 days (arrival + departure)
       
-      // Fixed costs based on parameters
-      const travelCost = flightCost;
-      const localCost = taxiCost;
+      const perDiemCost = (rates.perDiem || 0) * perDiemDaysCalc;
+      const accommodationCost = (rates.hotel || 0) * hotelNights;
+      
+      // Use rates from master rates table
+      const travelCost = rates.travel || 0;
+      const localCost = rates.local || 0;
       const vehicleCost = busCost;
       
       // Other vehicle costs (editable)
@@ -248,8 +252,8 @@ export const calculateManagerRotation = (
         otherVehicleCost,
         total,
         totalTravel: travelCost + localCost + vehicleCost + otherVehicleCost,
-        perDiemDay: perDiemDays,
-        hotelNight: accommodationDays
+        perDiemDay: perDiemDaysCalc,
+        hotelNight: hotelNights
       } as ManagerRotationEmployee;
     });
 };

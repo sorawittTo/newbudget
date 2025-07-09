@@ -275,8 +275,8 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                   <th className="px-4 py-3 text-center font-semibold">วันทำการ</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
-                  <th className="px-4 py-3 text-center font-semibold">ค่าเดินทาง</th>
-                  <th className="px-4 py-3 text-center font-semibold">ค่ารถรับจ้าง</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะประจำทาง<br />ศนร.-กทม. ไปกลับ</th>
+                  <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะรับจ้าง<br />ขนส่ง-ที่พัก ไป-กลับ</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะอื่นๆ</th>
                   <th className="px-4 py-3 text-center font-semibold">รวมทั้งหมด</th>
                 </tr>
@@ -324,7 +324,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div>
                       <div className="font-semibold text-gray-900">{formatCurrency(emp.travelCost)}</div>
                       <div className="text-xs text-gray-500 mt-1">
-                        อัตรา {formatCurrency(emp.travelCost / 2)} x2
+                        ศนร.-กทม. ไปกลับ
                       </div>
                     </div>
                   </td>
@@ -332,7 +332,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                     <div>
                       <div className="font-semibold text-gray-900">{formatCurrency(emp.taxiCost)}</div>
                       <div className="text-xs text-gray-500 mt-1">
-                        อัตรา {formatCurrency(emp.taxiCost / 2)} x2
+                        ขนส่ง-ที่พัก ไป-กลับ
                       </div>
                     </div>
                   </td>
