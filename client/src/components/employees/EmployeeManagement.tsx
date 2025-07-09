@@ -233,7 +233,18 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     </td>
                   </tr>
                 ) : (
-                  employees.map((emp, index) => (
+                  employees
+                    .sort((a, b) => {
+                      // เรียงตามระดับจากสูงไปต่ำ (7 -> 6 -> 5.5 -> 5 -> 4.5 -> 4 -> 3)
+                      const levelA = parseFloat(a.level);
+                      const levelB = parseFloat(b.level);
+                      if (levelA !== levelB) {
+                        return levelB - levelA;
+                      }
+                      // ถ้าระดับเดียวกัน เรียงตามชื่อ
+                      return a.name.localeCompare(b.name, 'th');
+                    })
+                    .map((emp, index) => (
                     <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                       <td className="p-3">
                         <NeumorphismInput
