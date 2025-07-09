@@ -117,6 +117,14 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Travel Expense Calculation Accuracy for Year-Based Data Display  
+  * Corrected Dashboard travel expense calculations to use proper employee filtering criteria
+  * Fixed calculateCompanyTrip function to use simplified logic matching table components
+  * Updated calculateManagerRotation to use working days-based calculations
+  * Enhanced family visit calculations to filter eligible employees (non-local, non-Khon Kaen, with permission)
+  * All travel expense types now display accurate totals in Dashboard matching actual table data
+  * Verified souvenir collection travel expenses: 12,100 baht (2568), 18,900 baht (2569)
+  * System now properly updates all travel calculation tables when year selection changes
 - July 09, 2025. Fixed Dashboard Assistance and Overtime Display Names
   * Updated assistance section to show "เงินช่วยเหลือพิเศษ" instead of "ช่วยเหลือพิเศษ"
   * Changed "โครงการอื่นๆ" to "เงินช่วยเหลืออื่นๆ"
