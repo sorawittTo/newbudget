@@ -97,8 +97,9 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const specialAssistData = calculateSpecialAssist(employees, masterRates);
     const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate family visit - all employees (filtering done in component)
-    const familyVisitData = calculateFamilyVisit(employees, currentYear);
+    // Calculate family visit - only eligible employees (status = มีสิทธิ์)
+    const familyVisitEligible = employees.filter(emp => emp.status === 'มีสิทธิ์');
+    const familyVisitData = calculateFamilyVisit(familyVisitEligible, currentYear);
     const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate company trip - all employees with default destination 'ขอนแก่น' and busFare 600

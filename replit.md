@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Dashboard Travel Calculation Accuracy
+  * Fixed family visit calculation in Dashboard to match table filtering (only มีสิทธิ์ employees)
+  * Fixed company trip calculation to use correct destination and bus fare parameters
+  * Dashboard now shows accurate travel expense totals matching actual table calculations
+  * Travel expense calculations now properly filter eligible employees in both Dashboard and tables
 - July 09, 2025. Completely Separated Working Days Fields for Travel and Manager Rotation
   * Added separate travelWorkingDays field for travel expense table (souvenir collection)
   * Travel expense table uses travelWorkingDays: hotel nights = travelWorkingDays + 1, per diem days = travelWorkingDays + 2
