@@ -97,19 +97,12 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const specialAssistData = calculateSpecialAssist(employees, masterRates);
     const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate family visit - only eligible employees with proper filtering
-    const familyVisitEligible = employees.filter(emp => 
-      emp.status === 'มีสิทธิ์' &&
-      emp.level !== 'ท้องถิ่น' && 
-      emp.visitProvince && 
-      emp.visitProvince.trim() !== '' &&
-      emp.visitProvince !== 'ขอนแก่น'
-    );
-    const familyVisitData = calculateFamilyVisit(familyVisitEligible, currentYear);
+    // Calculate family visit - all employees (filtering done in component)
+    const familyVisitData = calculateFamilyVisit(employees, currentYear);
     const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate company trip - all employees
-    const companyTripData = calculateCompanyTrip(employees, masterRates, currentYear);
+    // Calculate company trip - all employees with default destination 'ขอนแก่น' and busFare 600
+    const companyTripData = calculateCompanyTrip(employees, masterRates, currentYear, 'ขอนแก่น', 600);
     const companyTripTotal = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate manager rotation - only level 7 employees
