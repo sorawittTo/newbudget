@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Employee, FamilyVisitEmployee } from '../../types';
 import { formatCurrency, calculateFamilyVisit } from '../../utils/calculations';
@@ -26,13 +26,22 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
 
   // Filter employees: only those with eligible status
-  const eligibleEmployees = employees.filter(emp => 
-    selectedEmployeeIds.includes(emp.id) &&
-    emp.status === 'มีสิทธิ์'
+  const eligibleEmployees = useMemo(() => 
+    employees.filter(emp => 
+      selectedEmployeeIds.includes(emp.id) &&
+      emp.status === 'มีสิทธิ์'
+    ), [employees, selectedEmployeeIds]
   );
   
-  const familyVisitData = calculateFamilyVisit(eligibleEmployees, calcYear);
-  const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
+  const familyVisitData = useMemo(() => 
+    calculateFamilyVisit(eligibleEmployees, calcYear), 
+    [eligibleEmployees, calcYear]
+  );
+  
+  const familyVisitTotal = useMemo(() => 
+    familyVisitData.reduce((sum, emp) => sum + emp.total, 0), 
+    [familyVisitData]
+  );
 
   // Statistics for display
   const stats = {

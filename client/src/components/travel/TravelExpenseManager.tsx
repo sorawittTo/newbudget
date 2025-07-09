@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
@@ -95,37 +95,45 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   };
 
 
-  // Calculate data for each section
-  const travelData = calculateTravelEmployees(
-    employees.filter(emp => selectedEmployees.travel.includes(emp.id)), 
-    masterRates, 
-    calcYear
+  // Calculate data for each section with useMemo to ensure updates when calcYear changes
+  const travelData = useMemo(() => 
+    calculateTravelEmployees(
+      employees.filter(emp => selectedEmployees.travel.includes(emp.id)), 
+      masterRates, 
+      calcYear
+    ), [employees, selectedEmployees.travel, masterRates, calcYear]
   );
   
-  const familyVisitData = calculateFamilyVisit(
-    employees.filter(emp => 
-      selectedEmployees.familyVisit.includes(emp.id) &&
-      emp.status === 'มีสิทธิ์' &&
-      emp.level !== 'ท้องถิ่น' && 
-      emp.visitProvince && 
-      emp.visitProvince.trim() !== '' &&
-      emp.visitProvince !== 'ขอนแก่น'
-    ),
-    calcYear
+  const familyVisitData = useMemo(() => 
+    calculateFamilyVisit(
+      employees.filter(emp => 
+        selectedEmployees.familyVisit.includes(emp.id) &&
+        emp.status === 'มีสิทธิ์' &&
+        emp.level !== 'ท้องถิ่น' && 
+        emp.visitProvince && 
+        emp.visitProvince.trim() !== '' &&
+        emp.visitProvince !== 'ขอนแก่น'
+      ),
+      calcYear
+    ), [employees, selectedEmployees.familyVisit, calcYear]
   );
   
-  const companyTripData = calculateCompanyTrip(
-    employees.filter(emp => selectedEmployees.companyTrip.includes(emp.id)), 
-    masterRates,
-    calcYear
+  const companyTripData = useMemo(() => 
+    calculateCompanyTrip(
+      employees.filter(emp => selectedEmployees.companyTrip.includes(emp.id)), 
+      masterRates,
+      calcYear
+    ), [employees, selectedEmployees.companyTrip, masterRates, calcYear]
   );
   
-  const managerRotationData = calculateManagerRotation(
-    employees.filter(emp => 
-      selectedEmployees.managerRotation.includes(emp.id) && emp.level === '7'
-    ), 
-    masterRates,
-    calcYear
+  const managerRotationData = useMemo(() => 
+    calculateManagerRotation(
+      employees.filter(emp => 
+        selectedEmployees.managerRotation.includes(emp.id) && emp.level === '7'
+      ), 
+      masterRates,
+      calcYear
+    ), [employees, selectedEmployees.managerRotation, masterRates, calcYear]
   );
 
 
