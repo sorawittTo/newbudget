@@ -453,9 +453,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     // Auto-update all items with default rate
                     const currentItems = overtimeData.items || [];
                     currentItems.forEach((item, index) => {
-                      if (!item.hourlyRate || item.hourlyRate === 0) { // Only update if no custom rate
-                        onUpdateOvertimeData(calcYear, 'items', index, 'hourlyRate', salary / 210);
-                      }
+                      onUpdateOvertimeData(calcYear, 'items', index, 'hourlyRate', salary / 210);
                     });
                   }}
                   className="w-full text-right"
