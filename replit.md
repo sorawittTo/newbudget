@@ -117,6 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Employee Sorting by Level - Reorganized Database Order
+  * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
+  * Updated employee IDs to start from 1 and maintain level-based ordering
+  * Repositioned พิชิต แจ่มศรี to ID 2 (level 7) from previous bottom position
+  * Within same level, employees sorted alphabetically by name
+  * All employee-related displays now show level-based hierarchy
+  * Database sequence reset to 16 for new employee additions
 - July 09, 2025. Fixed Company Trip Calculation System - Unified Functions and Enhanced Editing
   * Unified calculateCompanyTrip function to use consistent parameters (destination, busFare)
   * Fixed accommodation cost editing - now properly saves to customTravelRates.hotel
