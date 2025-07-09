@@ -93,9 +93,15 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const travelData = calculateTravelEmployees(employees, masterRates, currentYear);
     const travelTotal = travelData.reduce((sum, emp) => sum + emp.total, 0);
     
-    // Calculate special assistance - only eligible employees
-    const specialAssistData = calculateSpecialAssist(employees, masterRates);
-    const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
+    // Calculate special assistance from real data
+    const specialAssistCurrentYear = specialAssist1DataByYear[currentYear] || { items: [] };
+    const specialAssistTotal = (specialAssistCurrentYear.items || []).reduce((sum, item) => {
+      const timesPerYear = Number(item.timesPerYear) || 0;
+      const days = Number(item.days) || 0;
+      const people = Number(item.people) || 0;
+      const rate = Number(item.rate) || 0;
+      return sum + (timesPerYear * days * people * rate);
+    }, 0);
     
     // Calculate family visit - only eligible employees (status = มีสิทธิ์)
     const familyVisitEligible = employees.filter(emp => emp.status === 'มีสิทธิ์');
@@ -127,25 +133,19 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         const totalMonthlyAssist = (rates.monthlyAssist || 0) * 12;
         return sum + totalRent + totalMonthlyAssist;
       }, 0);
-
-    // Calculate special assistance from real data
-    const specialAssistFormData = specialAssist1DataByYear[currentYear] || { items: [] };
-    const specialAssistCalculatedTotal = specialAssistFormData.items.reduce((sum: number, item: any) => {
-      return sum + (item.timesPerYear * item.days * item.people * item.rate);
-    }, 0);
     
     return {
       activeEmployees,
       employeeChange,
       totalEmployees: employees.length,
       travelTotal,
-      specialAssistTotal: specialAssistCalculatedTotal,
+      specialAssistTotal,
       assistanceTotal,
       familyVisitTotal,
       companyTripTotal,
       managerRotationTotal,
       overtimeTotal,
-      totalExpenses: travelTotal + specialAssistCalculatedTotal + assistanceTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
+      totalExpenses: travelTotal + specialAssistTotal + assistanceTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
     };
   }, [employees, masterRates, currentYear, specialAssist1DataByYear, overtimeDataByYear]);
 
