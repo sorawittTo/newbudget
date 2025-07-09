@@ -214,7 +214,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <th className="px-4 py-3 text-center font-semibold">ระดับ</th>
                   <th className="px-4 py-3 text-center font-semibold">สถานะ</th>
                   <th className="px-4 py-3 text-left font-semibold">จังหวัดเยี่ยมบ้าน</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่ารถทัวร์</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่ารถเยี่ยมบ้าน</th>
                   <th className="px-4 py-3 text-center font-semibold">จัดการ</th>
                 </tr>
               </thead>

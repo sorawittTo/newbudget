@@ -203,7 +203,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <th className="px-4 py-3">ระดับ</th>
                 <th className="px-4 py-3 text-center">สถานะ</th>
                 <th className="px-4 py-3">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-4 py-3 text-right">ค่ารถทัวร์เยี่ยมบ้าน</th>
+                <th className="px-4 py-3 text-right">ค่ารถเยี่ยมบ้าน</th>
                 <th className="px-4 py-3 text-center">จัดการ</th>
               </tr>
             </thead>

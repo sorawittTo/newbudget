@@ -117,6 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Updated Field Names - Changed "ค่ารถทัวร์" to "ค่ารถเยี่ยมบ้าน" Throughout System
+  * Updated field display names in EmployeeManagement.tsx table header
+  * Updated field names in EmployeeTable.tsx component 
+  * Updated Excel export headers in excel.ts utility functions
+  * Updated ModernFamilyVisitCalculationTable.tsx column header
+  * All UI components now consistently use "ค่ารถเยี่ยมบ้าน" instead of "ค่ารถทัวร์"
+  * Database field name remains home_visit_bus_fare (unchanged for data consistency)
 - July 09, 2025. Employee Database Update - Updated All Employee Records with Real Data
   * Updated all 15 employee records with authentic data from user-provided file
   * Changed employee IDs from sequential format (42540xxx) to actual IDs (62539086, 52531175, etc.)

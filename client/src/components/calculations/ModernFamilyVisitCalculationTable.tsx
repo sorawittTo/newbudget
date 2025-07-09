@@ -209,7 +209,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">รหัสพนักงาน</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">ชื่อ-สกุล</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">จังหวัดเยี่ยมบ้าน</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่ารถทัวร์ไป-กลับ</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700">ค่ารถเยี่ยมบ้านไป-กลับ</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-700">จำนวนครั้ง</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-700">ยอดรวม (บาท)</th>
               </tr>

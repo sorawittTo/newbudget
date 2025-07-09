@@ -241,7 +241,7 @@ export const exportEmployeesToExcel = async (employees: Employee[]) => {
     'ระดับ',
     'สถานะ',
     'จังหวัดที่เยี่ยม',
-    'ค่าโดยสารรถบัส'
+    'ค่ารถเยี่ยมบ้าน'
   ];
 
   worksheet.getRow(2).values = headers;
