@@ -156,7 +156,8 @@ export const useBudgetData = () => {
             travel: parseFloat(rate.travel),
             local: parseFloat(rate.local),
             perDiem: parseFloat(rate.perDiem),
-            hotel: parseFloat(rate.hotel)
+            hotel: parseFloat(rate.hotel),
+            souvenirAllowance: parseFloat(rate.souvenirAllowance)
           };
         });
         

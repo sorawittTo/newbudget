@@ -16,7 +16,8 @@ export const getRatesForEmployee = (employee: Employee, masterRates: MasterRates
     travel: 0,
     local: 0,
     perDiem: 0,
-    hotel: 0
+    hotel: 0,
+    souvenirAllowance: 0
   };
   
   const baseRates = masterRates[employee.level] || defaultRates;
@@ -29,6 +30,7 @@ export const getRatesForEmployee = (employee: Employee, masterRates: MasterRates
       perDiem: employee.customTravelRates.perDiem ?? baseRates.perDiem,
       travel: employee.customTravelRates.travel ?? baseRates.travel,
       local: employee.customTravelRates.local ?? baseRates.local,
+      souvenirAllowance: employee.customTravelRates.souvenirAllowance ?? baseRates.souvenirAllowance,
     };
   }
   
@@ -53,7 +55,8 @@ export const calculateTravelEmployees = (
       const perDiem = perDiemDays * (rates.perDiem || 0);
       const travelRoundTrip = 2 * (rates.travel || 0);
       const localRoundTrip = 2 * (rates.local || 0);
-      const total = hotel + perDiem + travelRoundTrip + localRoundTrip;
+      const souvenirAllowance = rates.souvenirAllowance || 0;
+      const total = hotel + perDiem + travelRoundTrip + localRoundTrip + souvenirAllowance;
       
       return {
         ...emp,
@@ -61,6 +64,7 @@ export const calculateTravelEmployees = (
         perDiem,
         travelRoundTrip,
         localRoundTrip,
+        souvenirAllowance,
         total,
         hotelNights,
         perDiemDays

@@ -23,6 +23,7 @@ export const employees = pgTable("employees", {
     perDiem?: number;
     travel?: number;
     local?: number;
+    souvenirAllowance?: number;
   }>(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -35,10 +36,11 @@ export const masterRates = pgTable("master_rates", {
   rent: decimal("rent", { precision: 10, scale: 2 }).notNull(),
   monthlyAssist: decimal("monthly_assist", { precision: 10, scale: 2 }).notNull(),
   lumpSum: decimal("lump_sum", { precision: 10, scale: 2 }).notNull(),
-  travel: decimal("travel", { precision: 10, scale: 2 }).notNull(),
-  local: decimal("local", { precision: 10, scale: 2 }).notNull(),
+  travel: decimal("travel", { precision: 10, scale: 2 }).notNull(), // ค่ารถโดยสาร/เที่ยว
+  local: decimal("local", { precision: 10, scale: 2 }).notNull(), // ค่ารถรับจ้าง/เที่ยว
   perDiem: decimal("per_diem", { precision: 10, scale: 2 }).notNull(),
   hotel: decimal("hotel", { precision: 10, scale: 2 }).notNull(),
+  souvenirAllowance: decimal("souvenir_allowance", { precision: 10, scale: 2 }).notNull(), // ค่าซื้อของเหมาจ่าย
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -23,6 +23,7 @@ export interface Employee {
     perDiem?: number;
     travel?: number;
     local?: number;
+    souvenirAllowance?: number;
   };
 }
 
@@ -32,10 +33,11 @@ export interface MasterRates {
     rent: number;
     monthlyAssist: number;
     lumpSum: number;
-    travel: number;
-    local: number;
+    travel: number; // ค่ารถโดยสาร/เที่ยว
+    local: number; // ค่ารถรับจ้าง/เที่ยว
     perDiem: number;
     hotel: number;
+    souvenirAllowance: number; // ค่าซื้อของเหมาจ่าย
   };
 }
 
@@ -45,6 +47,7 @@ export interface TravelEmployee extends Employee {
   perDiem: number;
   travelRoundTrip: number;
   localRoundTrip: number;
+  souvenirAllowance: number;
   total: number;
   hotelNights: number;
   perDiemDays: number;
