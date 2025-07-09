@@ -424,3 +424,10 @@ Preferred communication style: Simple, everyday language.
 - Only make changes when specifically requested by the user
 - System requires Edit button to be clicked before data can be modified
 - All sections must have exactly three buttons: Edit, Save, and Export
+
+**CRITICAL Analysis Requirements:**
+- Always analyze thoroughly before making changes: "วิเคราะห์ให้ละเอียดก่อนทำ"
+- Test all cases including edge cases with real data from database
+- Analyze all related components and algorithms comprehensively
+- Never make assumptions - verify with actual testing and evidence
+- Document step-by-step analysis and testing results before implementing changes
