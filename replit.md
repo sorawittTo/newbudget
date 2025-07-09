@@ -117,6 +117,14 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Overtime Calculation System - Empty Fields and Proper Data Loading
+  * Fixed overtime calculation by properly loading database data with parseFloat() conversion
+  * Changed overtime item initialization to start with empty fields instead of default values
+  * New items now start with empty strings/zeros: item='', days=0, hours=0, people=0
+  * Fixed data type conversion issue where database rate values were strings instead of numbers
+  * Added comprehensive data loading for special assistance and overtime items from database
+  * Overtime calculation now uses correct formula: (salary ÷ 210) × people × days × hours
+  * System displays empty table cells when not in edit mode for cleaner user experience
 - July 09, 2025. Fixed Critical UnifiedSpecialAssistanceManager Syntax Error
   * Fixed major syntax error in UnifiedSpecialAssistanceManager.tsx causing application crash
   * Completely rebuilt component with proper structure to eliminate duplicate return statements

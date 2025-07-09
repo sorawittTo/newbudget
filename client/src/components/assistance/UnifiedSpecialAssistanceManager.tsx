@@ -485,10 +485,10 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => {
                   const newIndex = (overtimeData.items || []).length;
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', 'รายการใหม่');
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 1);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 8);
-                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 1);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'item', '');
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'days', 0);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'hours', 0);
+                  onUpdateOvertimeData(calcYear, 'items', newIndex, 'people', 0);
                   onUpdateOvertimeData(calcYear, 'items', newIndex, 'rate', overtimeData.salary / 210);
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
@@ -515,7 +515,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-bold text-slate-700">{item.item}</span>
+                      <span className="font-bold text-slate-700">{item.item || ''}</span>
                     </div>
                   )}
                 </div>
@@ -531,7 +531,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                      <span className="font-bold text-emerald-700">{item.days}</span>
+                      <span className="font-bold text-emerald-700">{item.days || ''}</span>
                     </div>
                   )}
                 </div>
@@ -547,7 +547,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-purple-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-purple-200/30">
-                      <span className="font-bold text-purple-700">{item.hours}</span>
+                      <span className="font-bold text-purple-700">{item.hours || ''}</span>
                     </div>
                   )}
                 </div>
@@ -563,7 +563,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     />
                   ) : (
                     <div className="h-10 flex items-center justify-center bg-yellow-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-yellow-200/30">
-                      <span className="font-bold text-yellow-700">{item.people}</span>
+                      <span className="font-bold text-yellow-700">{item.people || ''}</span>
                     </div>
                   )}
                 </div>
