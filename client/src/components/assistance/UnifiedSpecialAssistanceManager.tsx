@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
-import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../../types';
-import { NeumorphismInput } from '../ui/NeumorphismInput';
-import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
 import { 
   Heart, 
   Banknote, 
   Clock, 
-  Save, 
   Edit3, 
+  Save, 
+  FileText, 
   Check, 
   ChevronLeft, 
-  ChevronRight, 
-  Plus, 
-  Trash2, 
+  ChevronRight,
   Calculator,
-  FileText,
-  Info
+  Plus,
+  Trash2
 } from 'lucide-react';
+import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../../types';
+import { getRatesForEmployee, formatCurrency } from '../../utils/calculations';
+import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { exportSpecialAssistanceToExcel } from '../../utils/excel';
 
 interface UnifiedSpecialAssistanceManagerProps {
@@ -52,8 +51,8 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   onUpdateOvertimeData,
   onSave
 }) => {
-  const [activeTab, setActiveTab] = useState<'assistance' | 'special' | 'overtime'>('assistance');
   const [editMode, setEditMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<'assistance' | 'special' | 'overtime'>('assistance');
   const [customMonths, setCustomMonths] = useState<Record<string, number>>({});
   const [customLumpSum, setCustomLumpSum] = useState<Record<string, number>>({});
   const [customPurchaseAllowance, setCustomPurchaseAllowance] = useState<Record<string, number>>({});
@@ -65,9 +64,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
       console.error('Error exporting special assistance data:', error);
     }
   };
-
-  const yearCE = calcYear - 543;
-  const holidays = holidaysData[yearCE] || [];
 
   // Helper functions for assistance tab
   const getMonthsForEmployee = (empId: string) => customMonths[empId] || 12;
@@ -181,7 +177,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                       <NeumorphismInput
                         type="text"
                         min="0"
-                        
                         value={purchaseAllowance}
                         onChange={(e) => handlePurchaseAllowanceChange(emp.id, parseFloat(e.target.value) || 0)}
                         className="w-full text-right"
@@ -237,229 +232,251 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
     </div>
   );
 
-  const renderSpecialTab = () => (
-    <div className="space-y-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="p-6 border-b border-slate-200/50">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <h3 className="text-lg font-bold text-slate-800">รายการเงินช่วยเหลือพิเศษ</h3>
-              <div className="flex items-center gap-3">
-                <Calculator className="w-5 h-5 text-blue-600" />
-                <div className="text-right">
-                  <div className="text-xl font-bold text-blue-900">
-                    {formatCurrency(
-                      (specialAssist1Data.items || []).reduce((sum, item) => {
-                        const timesPerYear = item.timesPerYear || 0;
-                        const days = item.days || 0;
-                        const people = item.people || 0;
-                        const rate = item.rate || 0;
-                        return sum + (timesPerYear * days * people * rate);
-                      }, 0)
+  const renderSpecialTab = () => {
+    console.log('renderSpecialTab - specialAssist1Data:', specialAssist1Data);
+    console.log('renderSpecialTab - specialAssist1Data.items:', specialAssist1Data.items);
+    
+    return (
+      <div className="space-y-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+          <div className="p-6 border-b border-slate-200/50">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <h3 className="text-lg font-bold text-slate-800">รายการเงินช่วยเหลือพิเศษ</h3>
+                <div className="flex items-center gap-3">
+                  <Calculator className="w-5 h-5 text-blue-600" />
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-blue-900">
+                      {formatCurrency(
+                        (specialAssist1Data.items || []).reduce((sum, item) => {
+                          const timesPerYear = Number(item.timesPerYear) || 0;
+                          const days = Number(item.days) || 0;
+                          const people = Number(item.people) || 0;
+                          const rate = Number(item.rate) || 0;
+                          console.log('Special assist calculation:', { item, timesPerYear, days, people, rate, total: timesPerYear * days * people * rate });
+                          return sum + (timesPerYear * days * people * rate);
+                        }, 0)
+                      )}
+                    </div>
+                    <div className="text-xs text-slate-600">ยอดรวมทั้งหมด</div>
+                  </div>
+                </div>
+              </div>
+              {editMode && (
+                <button
+                  onClick={() => {
+                    const newIndex = (specialAssist1Data.items || []).length;
+                    onUpdateSpecialAssist1Item(calcYear, newIndex, 'item', 'รายการใหม่');
+                    onUpdateSpecialAssist1Item(calcYear, newIndex, 'timesPerYear', 1);
+                    onUpdateSpecialAssist1Item(calcYear, newIndex, 'days', 1);
+                    onUpdateSpecialAssist1Item(calcYear, newIndex, 'people', 1);
+                    onUpdateSpecialAssist1Item(calcYear, newIndex, 'rate', 0);
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  เพิ่มรายการ
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="p-6 space-y-4">
+            {(specialAssist1Data.items || []).map((item, index) => (
+              <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
+                <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
+                  <div className="md:col-span-3">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="text"
+                        value={item.item}
+                        onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
+                        className="w-full"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                        <span className="font-bold text-slate-700">{item.item}</span>
+                      </div>
                     )}
                   </div>
-                  <div className="text-xs text-slate-600">ยอดรวมทั้งหมด</div>
-                </div>
-              </div>
-            </div>
-            {editMode && (
-              <button
-                onClick={() => {
-                  const newIndex = (specialAssist1Data.items || []).length;
-                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'item', 'รายการใหม่');
-                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'timesPerYear', 1);
-                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'days', 1);
-                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'people', 1);
-                  onUpdateSpecialAssist1Item(calcYear, newIndex, 'rate', 0);
-                }}
-                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                เพิ่มรายการ
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="p-6 space-y-4">
-          {(specialAssist1Data.items || []).map((item, index) => (
-            <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
-                <div className="md:col-span-3">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.item}
-                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'item', e.target.value)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.item}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง/ปี</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.timesPerYear}
-                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.timesPerYear}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.days}
-                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.days}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.people}
-                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.people}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา (บาท)</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.rate}
-                      onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{formatCurrency(item.rate)}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex flex-col justify-between">
+                  
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
-                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                      <span className="font-bold text-emerald-700">{formatCurrency((item.timesPerYear || 0) * (item.days || 0) * (item.people || 0) * (item.rate || 0))}</span>
-                    </div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง/ปี</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="text"
+                        value={item.timesPerYear}
+                        onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'timesPerYear', parseInt(e.target.value) || 0)}
+                        className="w-full text-center"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-blue-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-blue-200/30">
+                        <span className="font-bold text-blue-700">{item.timesPerYear}</span>
+                      </div>
+                    )}
                   </div>
-                  {editMode && (
-                    <button
-                      onClick={() => {
-                        if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
-                          const items = (specialAssist1Data.items || []).filter((_, i) => i !== index);
-                          items.forEach((item, i) => {
-                            Object.entries(item).forEach(([key, value]) => {
-                              onUpdateSpecialAssist1Item(calcYear, i, key, value);
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">วัน</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="text"
+                        value={item.days}
+                        onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'days', parseInt(e.target.value) || 0)}
+                        className="w-full text-center"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                        <span className="font-bold text-emerald-700">{item.days}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">คน</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="text"
+                        value={item.people}
+                        onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'people', parseInt(e.target.value) || 0)}
+                        className="w-full text-center"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-purple-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-purple-200/30">
+                        <span className="font-bold text-purple-700">{item.people}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา</label>
+                    {editMode ? (
+                      <NeumorphismInput
+                        type="text"
+                        value={item.rate}
+                        onChange={(e) => onUpdateSpecialAssist1Item(calcYear, index, 'rate', parseFloat(e.target.value) || 0)}
+                        className="w-full text-right"
+                      />
+                    ) : (
+                      <div className="h-10 flex items-center justify-center bg-yellow-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-yellow-200/30">
+                        <span className="font-bold text-yellow-700">{formatCurrency(item.rate)}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex flex-col justify-between">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">ยอดรวม</label>
+                      <div className="h-10 flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-blue-200/50">
+                        <span className="font-bold text-lg text-blue-900">
+                          {formatCurrency(item.timesPerYear * item.days * item.people * item.rate)}
+                        </span>
+                      </div>
+                    </div>
+                    {editMode && (
+                      <button
+                        onClick={() => {
+                          if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
+                            const currentItems = specialAssist1Data.items || [];
+                            const newItems = currentItems.filter((_, i) => i !== index);
+                            
+                            // Clear all items first
+                            currentItems.forEach((_, i) => {
+                              Object.keys(currentItems[i]).forEach(key => {
+                                onUpdateSpecialAssist1Item(calcYear, i, key, undefined);
+                              });
                             });
-                          });
-                        }
-                      }}
-                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
+                            
+                            // Add back the remaining items
+                            newItems.forEach((item, i) => {
+                              Object.entries(item).forEach(([key, value]) => {
+                                onUpdateSpecialAssist1Item(calcYear, i, key, value);
+                              });
+                            });
+                          }
+                        }}
+                        className="w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200 mt-2"
+                        disabled={(specialAssist1Data.items || []).length <= 1}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-
-      </div>
-
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="p-6 border-b border-slate-200/50">
-          <div className="flex items-center gap-3">
-            <FileText className="w-5 h-5 text-slate-600" />
-            <h3 className="text-lg font-bold text-slate-800">หมายเหตุ</h3>
+            ))}
           </div>
-        </div>
-        <div className="p-6">
-          {editMode ? (
-            <textarea
-              value={specialAssist1Data.notes}
-              onChange={(e) => onUpdateSpecialAssist1Notes(calcYear, e.target.value)}
-              className="w-full h-32 p-4 bg-slate-50/80 border-0 rounded-xl shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:ring-0 text-slate-700 placeholder-slate-500 resize-none"
-              placeholder="เพิ่มหมายเหตุเพิ่มเติม..."
-            />
-          ) : (
-            <div className="min-h-32 p-4 bg-slate-50/80 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-              <span className="text-slate-700">{specialAssist1Data.notes || 'ไม่มีหมายเหตุ'}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
 
-  const renderOvertimeTab = () => (
-    <div className="space-y-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-bold text-slate-800 mb-2">เงินเดือนอ้างอิง</h3>
-            <p className="text-sm text-slate-600">เงินเดือนที่ใช้ในการคำนวณค่าล่วงเวลา</p>
-          </div>
-          <div className="w-64">
+          {/* Notes Section */}
+          <div className="p-6 border-t border-slate-200/50">
+            <label className="block text-sm font-medium text-slate-700 mb-2">หมายเหตุ</label>
             {editMode ? (
               <NeumorphismInput
                 type="text"
-                value={overtimeData.salary}
-                onChange={(e) => {
-                  const newSalary = parseFloat(e.target.value) || 0;
-                  onUpdateOvertimeData(calcYear, 'salary', newSalary);
-                  
-                  // Update all item rates that are using default calculation
-                  const newRate = newSalary / 210;
-                  (overtimeData.items || []).forEach((item, index) => {
-                    if (!item.rate || item.rate === (overtimeData.salary / 210)) {
-                      onUpdateOvertimeData(calcYear, 'items', index, 'rate', newRate);
-                    }
-                  });
-                }}
-                className="w-full text-lg font-bold text-right"
-                placeholder="0"
+                value={specialAssist1Data.notes || ''}
+                onChange={(e) => onUpdateSpecialAssist1Notes(calcYear, e.target.value)}
+                className="w-full"
+                placeholder="ระบุหมายเหตุเพิ่มเติม..."
               />
             ) : (
-              <div className="h-12 flex items-center justify-center bg-slate-100 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                <span className="text-lg font-bold text-slate-700">{formatCurrency(overtimeData.salary)}</span>
+              <div className="min-h-10 p-4 bg-slate-50/80 rounded-xl shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
+                <span className="text-slate-700">{specialAssist1Data.notes || 'ไม่มีหมายเหตุ'}</span>
               </div>
             )}
           </div>
         </div>
       </div>
+    );
+  };
 
+  const renderOvertimeTab = () => (
+    <div className="space-y-6">
+      {/* Salary Input */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
+        <div className="p-6 border-b border-slate-200/50">
+          <h3 className="text-lg font-bold text-slate-800">เงินเดือนฐาน</h3>
+          <p className="text-sm text-slate-600 mt-1">สำหรับคำนวณอัตราค่าล่วงเวลา</p>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">เงินเดือน</label>
+              {editMode ? (
+                <NeumorphismInput
+                  type="text"
+                  value={overtimeData.salary}
+                  onChange={(e) => {
+                    const salary = parseFloat(e.target.value) || 0;
+                    onUpdateOvertimeData(calcYear, 'salary', salary);
+                    
+                    // Auto-update all items with default rate
+                    const currentItems = overtimeData.items || [];
+                    currentItems.forEach((item, index) => {
+                      if (!item.rate || item.rate === 0) { // Only update if no custom rate
+                        onUpdateOvertimeData(calcYear, 'items', index, 'rate', salary / 210);
+                      }
+                    });
+                  }}
+                  className="w-full text-right"
+                />
+              ) : (
+                <div className="h-10 flex items-center justify-center bg-blue-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-blue-200/30">
+                  <span className="font-bold text-blue-700">{formatCurrency(overtimeData.salary)}</span>
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อวัน)</label>
+              <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                <span className="font-bold text-emerald-700">{formatCurrency(overtimeData.salary / 210)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Overtime Items */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
         <div className="p-6 border-b border-slate-200/50">
           <div className="flex justify-between items-center">
@@ -487,7 +504,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
         <div className="p-6 space-y-4">
           {(overtimeData.items || []).map((item, index) => (
             <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
-              <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-2">รายการ</label>
                   {editMode ? (
@@ -496,11 +513,26 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                       value={item.item}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'item', e.target.value)}
                       className="w-full"
-                      placeholder="ระบุรายการ..."
                     />
                   ) : (
                     <div className="h-10 flex items-center px-3 bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.item}</span>
+                      <span className="font-bold text-slate-700">{item.item}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ครั้ง</label>
+                  {editMode ? (
+                    <NeumorphismInput
+                      type="text"
+                      value={item.instances}
+                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'instances', parseInt(e.target.value) || 0)}
+                      className="w-full text-center"
+                    />
+                  ) : (
+                    <div className="h-10 flex items-center justify-center bg-blue-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-blue-200/30">
+                      <span className="font-bold text-blue-700">{item.instances}</span>
                     </div>
                   )}
                 </div>
@@ -512,27 +544,27 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                       type="text"
                       value={item.days}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'days', parseInt(e.target.value) || 0)}
-                      className="w-full"
+                      className="w-full text-center"
                     />
                   ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.days}</span>
+                    <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
+                      <span className="font-bold text-emerald-700">{item.days}</span>
                     </div>
                   )}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">ชั่วโมง</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ชม.</label>
                   {editMode ? (
                     <NeumorphismInput
                       type="text"
                       value={item.hours}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'hours', parseInt(e.target.value) || 0)}
-                      className="w-full"
+                      className="w-full text-center"
                     />
                   ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.hours}</span>
+                    <div className="h-10 flex items-center justify-center bg-purple-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-purple-200/30">
+                      <span className="font-bold text-purple-700">{item.hours}</span>
                     </div>
                   )}
                 </div>
@@ -544,46 +576,27 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                       type="text"
                       value={item.people}
                       onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'people', parseInt(e.target.value) || 0)}
-                      className="w-full"
+                      className="w-full text-center"
                     />
                   ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{item.people}</span>
+                    <div className="h-10 flex items-center justify-center bg-yellow-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-yellow-200/30">
+                      <span className="font-bold text-yellow-700">{item.people}</span>
                     </div>
                   )}
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">อัตรา/ชม.</label>
-                  {editMode ? (
-                    <NeumorphismInput
-                      type="text"
-                      value={item.rate || (overtimeData.salary / 210)}
-                      onChange={(e) => onUpdateOvertimeData(calcYear, 'items', index, 'rate', parseFloat(e.target.value) || 0)}
-                      className="w-full"
-                    />
-                  ) : (
-                    <div className="h-10 flex items-center justify-center bg-slate-100 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-slate-200/30">
-                      <span className="font-medium text-slate-700">{formatCurrency(item.rate || (overtimeData.salary / 210))}</span>
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">ยอดรวม</label>
+                    <div className="h-10 flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-blue-200/50">
+                      <span className="font-bold text-lg text-blue-900">
+                        {formatCurrency(item.instances * item.days * item.hours * item.people * (item.rate || 0))}
+                      </span>
                     </div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
-                  <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                    <span className="font-bold text-emerald-700">{formatCurrency(item.days * item.hours * item.people * (item.rate || (overtimeData.salary / 210)))}</span>
                   </div>
-                </div>
-                
-                <div className="flex items-end justify-center">
                   {editMode && (
                     <button
                       onClick={() => {
-                        if ((overtimeData.items || []).length <= 1) {
-                          alert('ต้องมีอย่างน้อย 1 รายการ');
-                          return;
-                        }
                         if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
                           const currentItems = overtimeData.items || [];
                           const newItems = currentItems.filter((_, i) => i !== index);
@@ -640,8 +653,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
           )}
         </div>
       </div>
-
-
     </div>
   );
 
