@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Updated Master Rates Table Headers with Transport Details
+  * Added line break and details to "ค่าพาหนะประจำทาง" header: "ศนร.-กทม. ไปกลับ"
+  * Added line break and details to "ค่าพาหนะรับจ้าง" header: "ขนส่ง-ที่พัก ไป-กลับ"
+  * Master rates table now shows more specific transport information for clarity
+  * Headers now provide context about transport routes and coverage
 - July 09, 2025. Removed Souvenir Allowance Column from Travel Expense Table
   * Removed "ค่าซื้อของเหมาจ่าย" column from travel expense calculation table
   * Updated calculateTravelEmployees function to exclude souvenirAllowance from total calculation

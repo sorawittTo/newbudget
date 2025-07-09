@@ -440,8 +440,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <th className="px-4 py-3 text-right font-semibold">ค่าเช่าบ้าน</th>
                   <th className="px-4 py-3 text-right font-semibold">เงินช่วยเหลือรายเดือน</th>
                   <th className="px-4 py-3 text-right font-semibold">ค่าซื้อของเหมาจ่าย</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะประจำทาง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะรับจ้าง</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะประจำทาง<br />ศนร.-กทม. ไปกลับ</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะรับจ้าง<br />ขนส่ง-ที่พัก ไป-กลับ</th>
                   <th className="px-4 py-3 text-right font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-right font-semibold">ค่าที่พัก</th>
                 </tr>
