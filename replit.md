@@ -117,6 +117,16 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Employee Database Update - Updated All Employee Records with Real Data
+  * Updated all 15 employee records with authentic data from user-provided file
+  * Changed employee IDs from sequential format (42540xxx) to actual IDs (62539086, 52531175, etc.)
+  * Updated personal information: gender changes (อุณารักษ์, สมควร from ชาย to หญิง)
+  * Updated start years: พีรนุช (2540→2531), อุณารักษ์ (2541→2538), สมควร (2542→2538), etc.
+  * Updated visit provinces: พัทธดนย์ (ขอนแก่น→พิษณุโลก), วิชาญ (ขอนแก่น→เชียงใหม่)
+  * Updated bus fares: พัทธดนย์ (0→1200), วิชาญ (0→1200), สรวิชญ์ (0→600), etc.
+  * Updated status: Inactive employees now marked as 'หมดสิทธิ์' (อุณารักษ์, สมควร, สรวิชญ์, สงวน, คมสันติ, พิชิต)
+  * Employee sorting maintained: level 7→6→5.5→5→4.5→3 with alphabetical sub-sorting
+  * Database now contains accurate employee information matching organizational records
 - July 09, 2025. Travel and Manager Rotation Tables Decoupled - Removed Shared Dependencies
   * Removed workingDays dependency between travel (souvenir collection) and manager rotation tables
   * ModernTravelCalculationTable now uses fixed values: 2 hotel nights, 3 per diem days
