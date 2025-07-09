@@ -18,17 +18,16 @@ import {
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { BudgetItem, Employee } from '../../types';
-import { formatCurrency } from '../../utils/calculations';
+import { BudgetItem, Employee, MasterRates } from '../../types';
+import { formatCurrency, calculateTravelEmployees, calculateSpecialAssist, calculateFamilyVisit, calculateCompanyTrip, calculateManagerRotation } from '../../utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell, AreaChart, Area } from 'recharts';
 
 interface ModernDashboardProps {
-
   employees: Employee[];
+  masterRates: MasterRates;
   currentYear: number;
   nextYear: number;
   onNavigate: (tab: string) => void;
-
 }
 
 interface MetricCardProps {
@@ -71,6 +70,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, trend, ic
 
 export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   employees,
+  masterRates,
   currentYear,
   nextYear,
   onNavigate
@@ -78,22 +78,45 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
   const metrics = useMemo(() => {
-    const currentTotal = 0; // No budget data available
-    const nextTotal = 0; // No budget data available
-    const totalChange = 0;
-    
     const activeEmployees = employees.filter(emp => emp.status === 'มีสิทธิ์').length;
     const employeeChange = 5.2; // Mock data
     
+    // Calculate travel expenses
+    const travelData = calculateTravelEmployees(employees, masterRates, currentYear);
+    const travelTotal = travelData.reduce((sum, emp) => sum + emp.total, 0);
+    
+    // Calculate special assistance
+    const specialAssistData = calculateSpecialAssist(employees, masterRates);
+    const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
+    
+    // Calculate family visit
+    const familyVisitData = calculateFamilyVisit(employees, masterRates);
+    const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
+    
+    // Calculate company trip
+    const companyTripData = calculateCompanyTrip(employees, masterRates);
+    const companyTripTotal = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
+    
+    // Calculate manager rotation
+    const managerRotationData = calculateManagerRotation(employees, masterRates);
+    const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
+    
+    // Calculate overtime - Mock data for now as we don't have overtime calculation exposed
+    const overtimeTotal = 250000; // Mock data
+    
     return {
-      totalBudget: currentTotal,
-      budgetChange: totalChange,
-      nextBudget: nextTotal,
       activeEmployees,
       employeeChange,
-      totalEmployees: employees.length
+      totalEmployees: employees.length,
+      travelTotal,
+      specialAssistTotal,
+      familyVisitTotal,
+      companyTripTotal,
+      managerRotationTotal,
+      overtimeTotal,
+      totalExpenses: travelTotal + specialAssistTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
     };
-  }, [employees]);
+  }, [employees, masterRates, currentYear]);
 
   // Mock data for charts
   const employeeData = [
@@ -163,11 +186,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           gradient="from-green-500 to-green-600"
         />
         <MetricCard
-          title="ระดับความเหมาะสม"
-          value="95%"
-          change={3.2}
+          title="ค่าใช้จ่ายรวม"
+          value={formatCurrency(metrics.totalExpenses)}
+          change={12.5}
           trend="up"
-          icon={<Target className="w-6 h-6" />}
+          icon={<DollarSign className="w-6 h-6" />}
           color="purple"
           gradient="from-purple-500 to-purple-600"
         />
@@ -180,6 +203,98 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           color="orange"
           gradient="from-orange-500 to-orange-600"
         />
+      </div>
+
+      {/* Expense Summary Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">ค่าใช้จ่ายในการเดินทาง</h3>
+            <Button variant="secondary" size="sm" onClick={() => onNavigate('travel')}>
+              ดูรายละเอียด
+            </Button>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">เดินทางปกติ</span>
+              <span className="font-semibold text-blue-600">{formatCurrency(metrics.travelTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">เยี่ยมครอบครัว</span>
+              <span className="font-semibold text-green-600">{formatCurrency(metrics.familyVisitTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">เดินทางบริษัท</span>
+              <span className="font-semibold text-purple-600">{formatCurrency(metrics.companyTripTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">หมุนเวียน ผจศ</span>
+              <span className="font-semibold text-orange-600">{formatCurrency(metrics.managerRotationTotal)}</span>
+            </div>
+            <div className="border-t pt-3">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-900">รวมค่าเดินทาง</span>
+                <span className="font-bold text-lg text-blue-600">
+                  {formatCurrency(metrics.travelTotal + metrics.familyVisitTotal + metrics.companyTripTotal + metrics.managerRotationTotal)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">เงินช่วยเหลือ</h3>
+            <Button variant="secondary" size="sm" onClick={() => onNavigate('assistance')}>
+              ดูรายละเอียด
+            </Button>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">ช่วยเหลือพิเศษ</span>
+              <span className="font-semibold text-emerald-600">{formatCurrency(metrics.specialAssistTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">โครงการอื่นๆ</span>
+              <span className="font-semibold text-teal-600">{formatCurrency(0)}</span>
+            </div>
+            <div className="border-t pt-3">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-900">รวมเงินช่วยเหลือ</span>
+                <span className="font-bold text-lg text-emerald-600">
+                  {formatCurrency(metrics.specialAssistTotal)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">ค่าล่วงเวลา</h3>
+            <Button variant="secondary" size="sm" onClick={() => onNavigate('assistance')}>
+              ดูรายละเอียด
+            </Button>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">ล่วงเวลาปกติ</span>
+              <span className="font-semibold text-amber-600">{formatCurrency(metrics.overtimeTotal * 0.7)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">ล่วงเวลาพิเศษ</span>
+              <span className="font-semibold text-orange-600">{formatCurrency(metrics.overtimeTotal * 0.3)}</span>
+            </div>
+            <div className="border-t pt-3">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-900">รวมค่าล่วงเวลา</span>
+                <span className="font-bold text-lg text-amber-600">
+                  {formatCurrency(metrics.overtimeTotal)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Charts Section */}

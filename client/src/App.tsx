@@ -131,6 +131,7 @@ function App() {
         return (
           <ModernDashboard
             employees={employees}
+            masterRates={masterRates}
             currentYear={currentYear}
             nextYear={nextYear}
             onNavigate={setActiveTab}
@@ -223,6 +224,7 @@ function App() {
         return (
           <ModernDashboard
             employees={employees}
+            masterRates={masterRates}
             currentYear={currentYear}
             nextYear={nextYear}
             onNavigate={setActiveTab}
