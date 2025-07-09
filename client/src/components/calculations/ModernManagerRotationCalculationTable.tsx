@@ -52,22 +52,31 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   // Filter for level 7 employees only
   const level7Employees = employees.filter(emp => emp.level === '7');
 
-  // Calculate manager rotation data - similar to company trip calculation
+  // Calculate manager rotation data - ผจศ rotation calculation
   const managerRotationData = useMemo(() => {
     return level7Employees.map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
+      const workingDays = emp.workingDays || 1;
       
-      // Calculate per diem cost (similar to company trip)
-      const perDiemCost = (rates.perDiem || 0) * (emp.workingDays || 1);
+      // ผจศ rotation calculation rules:
+      // 1 working day = 3 days per diem + 2 days accommodation  
+      // Each additional working day = +1 day per diem + +1 day accommodation
+      let perDiemDays: number;
+      let accommodationDays: number;
       
-      // Calculate accommodation cost (similar to company trip)
-      // Level 7 gets single room, like in company trip
-      const accommodationCost = (rates.hotel || 0) * (emp.workingDays || 1);
+      if (workingDays === 1) {
+        perDiemDays = 3;
+        accommodationDays = 2;
+      } else {
+        perDiemDays = 3 + (workingDays - 1); // 3 days for first day + 1 day for each additional day
+        accommodationDays = 2 + (workingDays - 1); // 2 days for first day + 1 day for each additional day
+      }
       
-      // Calculate travel cost from master rates x2 (round trip)
+      const perDiemCost = (rates.perDiem || 0) * perDiemDays;
+      const accommodationCost = (rates.hotel || 0) * accommodationDays;
+      
+      // Travel costs (round trip)
       const travelCost = (rates.travel || 0) * 2;
-      
-      // Calculate taxi cost from master rates local x2 (round trip)
       const taxiCost = (rates.local || 0) * 2;
       
       // Other vehicle costs (editable)
@@ -85,8 +94,8 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
         total,
         busCost: 0, // No longer used
         flightCost: 0, // No longer used
-        perDiemDay: emp.workingDays || 1,
-        hotelNight: emp.workingDays || 1
+        perDiemDay: perDiemDays,
+        hotelNight: accommodationDays
       } as ManagerRotationEmployee;
     });
   }, [level7Employees, masterRates]);
