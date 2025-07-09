@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage.js";
-import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema } from "../shared/schema.js";
+import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema, insertOvertimeItemSchema } from "../shared/schema.js";
 
 // Log utility
 function log(message: string, source = "api") {
@@ -235,6 +235,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating budget item:", error);
       res.status(400).json({ error: "Failed to update budget item" });
+    }
+  });
+
+  // Overtime Items routes
+  app.get("/api/overtime-items", async (req, res) => {
+    try {
+      const items = await storage.getOvertimeItems();
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching overtime items:", error);
+      res.status(500).json({ error: "Failed to fetch overtime items" });
+    }
+  });
+
+  app.post("/api/overtime-items", async (req, res) => {
+    try {
+      const data = req.body;
+      if (Array.isArray(data)) {
+        const items = [];
+        for (const itemData of data) {
+          try {
+            const validatedData = insertOvertimeItemSchema.parse(itemData);
+            const created = await storage.createOvertimeItem(validatedData);
+            items.push(created);
+          } catch (singleError) {
+            console.error(`Error processing overtime item:`, singleError);
+          }
+        }
+        res.status(201).json(items);
+      } else {
+        const validatedData = insertOvertimeItemSchema.parse(data);
+        const item = await storage.createOvertimeItem(validatedData);
+        res.status(201).json(item);
+      }
+    } catch (error) {
+      console.error("Error creating overtime item:", error);
+      res.status(400).json({ error: "Invalid overtime item data" });
     }
   });
 

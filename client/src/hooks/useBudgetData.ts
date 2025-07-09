@@ -93,16 +93,18 @@ export const useBudgetData = () => {
     const loadData = async () => {
       try {
         // Load data from database
-        const [budgetResponse, employeesResponse, masterRatesResponse] = await Promise.all([
+        const [budgetResponse, employeesResponse, masterRatesResponse, overtimeResponse] = await Promise.all([
           fetch('/api/budget-items'),
           fetch('/api/employees'),
-          fetch('/api/master-rates')
+          fetch('/api/master-rates'),
+          fetch('/api/overtime-items')
         ]);
         
-        const [budgetItems, employees, masterRatesArray] = await Promise.all([
+        const [budgetItems, employees, masterRatesArray, overtimeItems] = await Promise.all([
           budgetResponse.json(),
           employeesResponse.json(),
-          masterRatesResponse.json()
+          masterRatesResponse.json(),
+          overtimeResponse.json()
         ]);
         
         // Transform budget items to match frontend format
@@ -178,6 +180,27 @@ export const useBudgetData = () => {
         setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
         
+        // Transform overtime items by year
+        const overtimeByYear: Record<number, any> = {};
+        if (overtimeItems && overtimeItems.length > 0) {
+          overtimeItems.forEach((item: any) => {
+            if (!overtimeByYear[item.year]) {
+              overtimeByYear[item.year] = {
+                salary: parseFloat(item.salary) || 15000,
+                items: [],
+                notes: ''
+              };
+            }
+            overtimeByYear[item.year].items.push({
+              item: item.item,
+              days: item.days || 0,
+              hours: item.hours || 0,
+              people: item.people || 0,
+              hourlyRate: parseFloat(item.rate) || (parseFloat(item.salary) || 15000) / 210
+            });
+          });
+        }
+        
         // Initialize special assistance data for current year (2569)
         const currentYear = 2569;
         const specialAssistData = {
@@ -186,15 +209,20 @@ export const useBudgetData = () => {
         };
         setSpecialAssist1DataByYear(prev => ({ ...prev, [currentYear]: specialAssistData }));
         
-        // Initialize overtime data for current year (2569)
-        const overtimeData = {
-          salary: 15000,
-          items: [
-            { item: '', days: 0, hours: 0, people: 0, hourlyRate: 15000 / 210 }
-          ],
-          notes: ''
-        };
-        setOvertimeDataByYear(prev => ({ ...prev, [currentYear]: overtimeData }));
+        // Set overtime data from database or initialize defaults
+        if (Object.keys(overtimeByYear).length > 0) {
+          setOvertimeDataByYear(overtimeByYear);
+        } else {
+          // Initialize overtime data for current year (2569)
+          const overtimeData = {
+            salary: 15000,
+            items: [
+              { item: '', days: 0, hours: 0, people: 0, hourlyRate: 15000 / 210 }
+            ],
+            notes: ''
+          };
+          setOvertimeDataByYear(prev => ({ ...prev, [currentYear]: overtimeData }));
+        }
 
         // Employee selections are now initialized above after formatting employees
       } catch (error) {
@@ -296,6 +324,24 @@ export const useBudgetData = () => {
         hotel: rates.hotel.toString()
       }));
       
+      // Prepare overtime items for saving
+      const overtimeItemsToSave: any[] = [];
+      Object.entries(overtimeDataByYear).forEach(([year, data]) => {
+        data.items.forEach(item => {
+          if (item.item && item.item.trim()) { // Only save non-empty items
+            overtimeItemsToSave.push({
+              year: parseInt(year),
+              item: item.item,
+              days: item.days || 0,
+              hours: item.hours || 0,
+              people: item.people || 0,
+              rate: item.hourlyRate?.toString() || '0',
+              salary: data.salary?.toString() || '15000'
+            });
+          }
+        });
+      });
+
       // Save all data
       const responses = await Promise.all([
         // Save budget items
@@ -315,13 +361,19 @@ export const useBudgetData = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(masterRatesToSave)
+        }),
+        // Save overtime items
+        fetch('/api/overtime-items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(overtimeItemsToSave)
         })
       ]);
       
       // Check if all requests were successful
       responses.forEach((response, index) => {
         if (!response.ok) {
-          const endpoints = ['budget-items', 'employees', 'master-rates'];
+          const endpoints = ['budget-items', 'employees', 'master-rates', 'overtime-items'];
           throw new Error(`Failed to save ${endpoints[index]}: ${response.status}`);
         }
       });
