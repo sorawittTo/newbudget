@@ -65,15 +65,13 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
     const perDiem = perDiemDays * (rates.perDiem || 0);
     const travelRoundTrip = 2 * (rates.travel || 0);
     const localRoundTrip = 2 * (rates.local || 0);
-    const souvenirAllowance = rates.souvenirAllowance || 0;
     
     return {
       hotel,
       perDiem,
       travel: travelRoundTrip,
       local: localRoundTrip,
-      souvenirAllowance,
-      total: hotel + perDiem + travelRoundTrip + localRoundTrip + souvenirAllowance,
+      total: hotel + perDiem + travelRoundTrip + localRoundTrip,
       hotelNights,
       perDiemDays
     };
@@ -198,7 +196,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่ารถโดยสาร/เที่ยว</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่ารถรับจ้าง/เที่ยว</th>
-                  <th className="px-4 py-3 text-center font-semibold">ค่าซื้อของเหมาจ่าย</th>
                   <th className="px-4 py-3 text-center font-semibold">รวมทั้งหมด</th>
                 </tr>
               </thead>
@@ -275,16 +272,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                             </div>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right">
-                          {globalEditMode ? renderEditableCell(employee.id, 'customTravelRates.souvenirAllowance', costs.souvenirAllowance, 'number') : (
-                            <div>
-                              <div className="font-semibold text-gray-900">{formatCurrency(costs.souvenirAllowance)}</div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                เหมาจ่าย {formatCurrency(getRatesForEmployee(employee, masterRates).souvenirAllowance || 0)}
-                              </div>
-                            </div>
-                          )}
-                        </td>
+
                         <td className="px-4 py-3 text-right">
                           <div className="font-bold text-lg text-indigo-600">{formatCurrency(costs.total)}</div>
                         </td>

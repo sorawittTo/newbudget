@@ -54,8 +54,7 @@ export const calculateTravelEmployees = (
       const perDiem = perDiemDays * (rates.perDiem || 0);
       const travelRoundTrip = 2 * (rates.travel || 0);
       const localRoundTrip = 2 * (rates.local || 0);
-      const souvenirAllowance = rates.souvenirAllowance || 0;
-      const total = hotel + perDiem + travelRoundTrip + localRoundTrip + souvenirAllowance;
+      const total = hotel + perDiem + travelRoundTrip + localRoundTrip;
       
       return {
         ...emp,
@@ -63,7 +62,6 @@ export const calculateTravelEmployees = (
         perDiem,
         travelRoundTrip,
         localRoundTrip,
-        souvenirAllowance,
         total,
         hotelNights,
         perDiemDays

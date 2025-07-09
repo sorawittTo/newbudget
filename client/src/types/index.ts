@@ -46,7 +46,6 @@ export interface TravelEmployee extends Employee {
   perDiem: number;
   travelRoundTrip: number;
   localRoundTrip: number;
-  souvenirAllowance: number;
   total: number;
   hotelNights: number;
   perDiemDays: number;

@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Removed Souvenir Allowance Column from Travel Expense Table
+  * Removed "ค่าซื้อของเหมาจ่าย" column from travel expense calculation table
+  * Updated calculateTravelEmployees function to exclude souvenirAllowance from total calculation
+  * Updated TravelEmployee interface to remove souvenirAllowance field
+  * Updated ModernTravelCalculationTable to remove souvenirAllowance column display
+  * Travel expense calculations now only include: hotel, per diem, travel, and local transportation
 - July 09, 2025. Updated Field Names - Changed "ค่ารถทัวร์" to "ค่ารถเยี่ยมบ้าน" Throughout System
   * Updated field display names in EmployeeManagement.tsx table header
   * Updated field names in EmployeeTable.tsx component 
