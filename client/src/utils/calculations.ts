@@ -48,10 +48,10 @@ export const calculateTravelEmployees = (
     .filter(emp => eligibleServiceYears.includes(emp.serviceYears))
     .map(emp => {
       const rates = getRatesForEmployee(emp, masterRates);
-      // Dynamic calculation based on working days for travel table
-      const workingDays = emp.workingDays || 1;
-      const hotelNights = workingDays + 1; // Working days + 1 night
-      const perDiemDays = workingDays + 2; // Working days + 2 days
+      // Dynamic calculation based on travel working days (separate from manager rotation)
+      const travelWorkingDays = emp.travelWorkingDays || 1;
+      const hotelNights = travelWorkingDays + 1; // Travel working days + 1 night
+      const perDiemDays = travelWorkingDays + 2; // Travel working days + 2 days
       const hotel = hotelNights * (rates.hotel || 0);
       const perDiem = perDiemDays * (rates.perDiem || 0);
       const travelRoundTrip = rates.travel || 0;
