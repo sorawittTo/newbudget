@@ -120,11 +120,10 @@ Changelog:
 - July 09, 2025. Fixed Company Trip Calculation System - Unified Functions and Enhanced Editing
   * Unified calculateCompanyTrip function to use consistent parameters (destination, busFare)
   * Fixed accommodation cost editing - now properly saves to customTravelRates.hotel
-  * Added year multiplier display in bus fare calculation (1.0 for 2568, 1.05 for 2569, 1.1 for 2570+)
   * Enhanced editing system with proper onBlur save functionality
   * Removed duplicate calculation logic - now uses single calculateCompanyTrip function
   * Fixed accommodation editing to work with individual employee records
-  * Bus fare now shows year-adjusted values in display
+  * Removed year multiplier system - now uses simple calculation: busFare × 2
 - July 09, 2025. Removed Service Year Bonus from Family Visit Calculations
   * Removed multiplier calculation based on service years (20+ years: 1.1x, 30+ years: 1.2x)
   * Simplified family visit calculation to: 4 × roundTripFare (no bonus)

@@ -196,7 +196,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="font-medium text-gray-900">{formatCurrency((tripSettings.busFare * 2) * (calcYear >= 2570 ? 1.1 : calcYear >= 2569 ? 1.05 : 1))}</span>
+                    <span className="font-medium text-gray-900">{formatCurrency(tripSettings.busFare * 2)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm text-gray-600">{emp.note}</div>

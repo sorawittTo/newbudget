@@ -141,16 +141,8 @@ export const calculateCompanyTrip = (
       }
     }
     
-    // Year-based calculation adjustments
-    let yearMultiplier = 1;
-    if (calcYear >= 2570) {
-      yearMultiplier = 1.1; // 10% increase for 2570 and beyond
-    } else if (calcYear >= 2569) {
-      yearMultiplier = 1.05; // 5% increase for 2569
-    }
-    
-    const busFareTotal = busFare * 2 * yearMultiplier; // Round trip with year adjustment
-    const total = busFareTotal + (accommodationCost * yearMultiplier);
+    const busFareTotal = busFare * 2; // Round trip
+    const total = busFareTotal + accommodationCost;
     
     return {
       ...emp,
