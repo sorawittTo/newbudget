@@ -117,12 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Level 7 Single Room Fix - Excluded from Pairing Logic
-  * Fixed pairing logic to exclude level 7 employees from room sharing calculations
-  * Level 7 employees now always get single rooms without affecting pairing of other employees
-  * Updated genderCounts to exclude level 7 employees from pairing calculations
-  * Pairing symbols only assigned to non-level 7 employees who share rooms
-  * Addresses user requirement: "บอกว่าระดับ 7 พักคนเดียวเสมอ"
+- July 09, 2025. Company Trip Single Room Logic Fix - Proper Full Cost for Unpaired Employees
+  * Fixed accommodation cost calculation to give full cost when employee has no pair symbol
+  * Removed incorrect sameGenderCount logic that was causing wrong calculations
+  * Now uses pair symbol presence to determine shared vs single room accommodation
+  * Employees without pair symbols get full accommodation cost as intended
+  * Addresses user requirement: "ก็บอกแล้วว่าถ้าไม่มีคู่ให้ได้ค่าทีพักเต็ม"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering

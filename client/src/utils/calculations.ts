@@ -178,18 +178,17 @@ export const calculateCompanyTrip = (
         accommodationCost = rates.hotel || 0;
         note = 'พักคนเดียว';
       } else {
-        // Check if this employee has a pair of same gender
-        const sameGenderCount = genderCounts[emp.gender] || 0;
+        // Check if this employee has a pair symbol (means they share a room)
         const pairSymbol = employeePairSymbols[emp.id];
         
-        if (sameGenderCount === 1) {
+        if (pairSymbol) {
+          // Has pair, share accommodation cost
+          accommodationCost = (rates.hotel || 0) / 2;
+          note = `${pairSymbol} พักคู่ (${emp.gender})`;
+        } else {
           // No pair available, gets full accommodation cost
           accommodationCost = rates.hotel || 0;
           note = `ไม่มีคู่ - พักคนเดียว`;
-        } else {
-          // Has pair, share accommodation cost
-          accommodationCost = (rates.hotel || 0) / 2;
-          note = pairSymbol ? `${pairSymbol} พักคู่ (${emp.gender})` : `พักคู่ (${emp.gender})`;
         }
       }
     }
