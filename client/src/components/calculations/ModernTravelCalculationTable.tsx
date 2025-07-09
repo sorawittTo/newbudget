@@ -62,37 +62,11 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
       return a.name.localeCompare(b.name, 'th');
     });
 
-  // Calculate employee cost function - Independent travel calculation
-  const calculateEmployeeCost = (employee: TravelEmployee) => {
-    const rates = getRatesForEmployee(employee, masterRates);
-    
-    // Dynamic calculation based on working days
-    // Hotel nights and per diem days increase with working days
-    const workingDays = employee.workingDays || 1;
-    const hotelNights = workingDays + 1; // Working days + 1 night
-    const perDiemDays = workingDays + 2; // Working days + 2 days (arrival + departure)
-    
-    const hotel = hotelNights * (rates.hotel || 0);
-    const perDiem = perDiemDays * (rates.perDiem || 0);
-    const travelRoundTrip = rates.travel || 0;
-    const localRoundTrip = rates.local || 0;
-    
-    return {
-      hotel,
-      perDiem,
-      travel: travelRoundTrip,
-      local: localRoundTrip,
-      total: hotel + perDiem + travelRoundTrip + localRoundTrip,
-      hotelNights,
-      perDiemDays
-    };
-  };
-
   // Statistics calculation
   const statistics = useMemo(() => {
     const totalEmployees = selectedEmployees.length;
     const eligibleEmployees = travelEmployees.length;
-    const totalCost = travelEmployees.reduce((sum, emp) => sum + calculateEmployeeCost(emp).total, 0);
+    const totalCost = travelEmployees.reduce((sum, emp) => sum + emp.total, 0);
     const avgCostPerEmployee = eligibleEmployees > 0 ? totalCost / eligibleEmployees : 0;
     
     return {
@@ -213,8 +187,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
               <tbody>
                 <AnimatePresence>
                   {travelEmployees.map((employee, index) => {
-                    const costs = calculateEmployeeCost(employee);
-                    
                     return (
                       <motion.tr
                         key={employee.id}
@@ -241,23 +213,23 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
-                            <div className="font-semibold text-gray-900">{formatCurrency(costs.hotel)}</div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(employee.hotel)}</div>
                             <div className="text-xs text-gray-500 mt-1">
-                              {costs.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
+                              {employee.hotelNights} คืน × {formatCurrency(getRatesForEmployee(employee, masterRates).hotel || 0)}
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
-                            <div className="font-semibold text-gray-900">{formatCurrency(costs.perDiem)}</div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(employee.perDiem)}</div>
                             <div className="text-xs text-gray-500 mt-1">
-                              {costs.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
+                              {employee.perDiemDays} วัน × {formatCurrency(getRatesForEmployee(employee, masterRates).perDiem || 0)}
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
-                            <div className="font-semibold text-gray-900">{formatCurrency(costs.travel)}</div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(employee.travelRoundTrip)}</div>
                             {customSettings.showDetails && (
                               <div className="text-xs text-gray-500 mt-1">
                                 ศนร.-กทม. ไปกลับ
@@ -267,7 +239,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
-                            <div className="font-semibold text-gray-900">{formatCurrency(costs.local)}</div>
+                            <div className="font-semibold text-gray-900">{formatCurrency(employee.localRoundTrip)}</div>
                             {customSettings.showDetails && (
                               <div className="text-xs text-gray-500 mt-1">
                                 ขนส่ง-ที่พัก ไป-กลับ
@@ -277,7 +249,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                         </td>
 
                         <td className="px-4 py-3 text-right">
-                          <div className="font-bold text-lg text-indigo-600">{formatCurrency(costs.total)}</div>
+                          <div className="font-bold text-lg text-indigo-600">{formatCurrency(employee.total)}</div>
                         </td>
                       </motion.tr>
                     );
