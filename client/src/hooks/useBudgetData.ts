@@ -177,6 +177,24 @@ export const useBudgetData = () => {
         setSpecialAssist1DataByYear({});
         setOvertimeDataByYear({});
         setHolidaysData(holidaysByYear);
+        
+        // Initialize special assistance data for current year (2569)
+        const currentYear = 2569;
+        const specialAssistData = {
+          items: JSON.parse(JSON.stringify(defaultSpecialAssist1Data)),
+          notes: ''
+        };
+        setSpecialAssist1DataByYear(prev => ({ ...prev, [currentYear]: specialAssistData }));
+        
+        // Initialize overtime data for current year (2569)
+        const overtimeData = {
+          salary: 15000,
+          items: [
+            { item: '', days: 0, hours: 0, people: 0, hourlyRate: 15000 / 210 }
+          ],
+          notes: ''
+        };
+        setOvertimeDataByYear(prev => ({ ...prev, [currentYear]: overtimeData }));
 
         // Employee selections are now initialized above after formatting employees
       } catch (error) {
