@@ -117,12 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Accommodation Logic Simplified - Direct Province Comparison
-  * Simplified accommodation eligibility to direct comparison: visitProvince !== destination
-  * Removed trim() operations that were causing issues with empty strings
-  * Accommodation eligibility now based purely on province difference, not empty value handling
-  * All employees with different visitProvince from destination get accommodation rights
-  * Addresses user requirement: "ไม่ต้องสนใจค่าว่าง แค่จังหวัดที่เยี่ยม ไม่ตรงกับจังหวัดปลายทางก็พอ"
+- July 09, 2025. Company Trip Level 7 Single Room Fix - Excluded from Pairing Logic
+  * Fixed pairing logic to exclude level 7 employees from room sharing calculations
+  * Level 7 employees now always get single rooms without affecting pairing of other employees
+  * Updated genderCounts to exclude level 7 employees from pairing calculations
+  * Pairing symbols only assigned to non-level 7 employees who share rooms
+  * Addresses user requirement: "บอกว่าระดับ 7 พักคนเดียวเสมอ"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering

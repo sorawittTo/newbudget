@@ -126,7 +126,9 @@ export const calculateCompanyTrip = (
   );
   
   const genderCounts = eligibleEmployees.reduce((acc, emp) => {
-    acc[emp.gender] = (acc[emp.gender] || 0) + 1;
+    if (emp.level !== '7') {  // Don't count level 7 employees in pairing calculations
+      acc[emp.gender] = (acc[emp.gender] || 0) + 1;
+    }
     return acc;
   }, {} as Record<string, number>);
   
@@ -135,12 +137,14 @@ export const calculateCompanyTrip = (
   const genderPairs: Record<string, string[]> = {};
   let symbolIndex = 0;
   
-  // Group eligible employees by gender for pairing
+  // Group eligible employees by gender for pairing (exclude level 7 as they get single rooms)
   eligibleEmployees.forEach(emp => {
-    if (!genderPairs[emp.gender]) {
-      genderPairs[emp.gender] = [];
+    if (emp.level !== '7') {  // Level 7 employees get single rooms, don't include in pairing
+      if (!genderPairs[emp.gender]) {
+        genderPairs[emp.gender] = [];
+      }
+      genderPairs[emp.gender].push(emp.id);
     }
-    genderPairs[emp.gender].push(emp.id);
   });
   
   // Assign symbols to pairs
