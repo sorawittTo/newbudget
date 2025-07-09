@@ -151,15 +151,14 @@ export const calculateCompanyTrip = (
   const employeePairSymbols: Record<string, string> = {};
   Object.entries(genderPairs).forEach(([gender, employeeIds]) => {
     if (employeeIds.length > 1) {
-      // Create pairs for this gender
-      for (let i = 0; i < employeeIds.length; i += 2) {
+      // Create pairs for this gender - only assign symbols to complete pairs
+      for (let i = 0; i < employeeIds.length - 1; i += 2) {
         const symbol = pairSymbols[symbolIndex % pairSymbols.length];
         employeePairSymbols[employeeIds[i]] = symbol;
-        if (i + 1 < employeeIds.length) {
-          employeePairSymbols[employeeIds[i + 1]] = symbol;
-        }
+        employeePairSymbols[employeeIds[i + 1]] = symbol;
         symbolIndex++;
       }
+      // Note: If odd number, the last person gets no symbol (single room)
     }
   });
   
