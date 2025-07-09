@@ -228,12 +228,12 @@ function App() {
           <ModernDashboard
             employees={employees}
             masterRates={masterRates}
-            currentYear={currentYear}
+            currentYear={calcYear}
             nextYear={nextYear}
             specialAssist1DataByYear={specialAssist1DataByYear}
             overtimeDataByYear={overtimeDataByYear}
             onNavigate={setActiveTab}
-            onYearChange={setCurrentYear}
+            onYearChange={setCalcYear}
           />
         );
     }
