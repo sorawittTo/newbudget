@@ -95,10 +95,12 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     
     // Calculate special assistance from real data
     const specialAssistCurrentYear = specialAssist1DataByYear[currentYear] || { items: [] };
+    console.log('Dashboard specialAssist1DataByYear ALL KEYS:', Object.keys(specialAssist1DataByYear));
     console.log('Dashboard specialAssist1DataByYear:', JSON.stringify(specialAssist1DataByYear, null, 2));
     console.log('Dashboard specialAssistCurrentYear:', JSON.stringify(specialAssistCurrentYear, null, 2));
     console.log('Dashboard currentYear:', currentYear);
     console.log('Dashboard specialAssistCurrentYear.items:', specialAssistCurrentYear.items);
+    console.log('Dashboard specialAssistCurrentYear.items.length:', specialAssistCurrentYear.items?.length);
     
     const specialAssistTotal = (specialAssistCurrentYear.items || []).reduce((sum, item) => {
       const timesPerYear = Number(item.timesPerYear) || 0;

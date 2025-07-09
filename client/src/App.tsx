@@ -224,6 +224,8 @@ function App() {
         );
 
       default:
+        console.log('App.tsx - Passing specialAssist1DataByYear to Dashboard:', JSON.stringify(specialAssist1DataByYear, null, 2));
+        console.log('App.tsx - calcYear:', calcYear);
         return (
           <ModernDashboard
             employees={employees}

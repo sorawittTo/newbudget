@@ -37,7 +37,12 @@ export const useBudgetData = () => {
         items: JSON.parse(JSON.stringify(defaultSpecialAssist1Data)),
         notes: ''
       };
-      setSpecialAssist1DataByYear(prev => ({ ...prev, [year]: newData }));
+      console.log('useBudgetData - Creating new data for year:', year, 'Data:', newData);
+      setSpecialAssist1DataByYear(prev => {
+        const updated = { ...prev, [year]: newData };
+        console.log('useBudgetData - Updated specialAssist1DataByYear:', updated);
+        return updated;
+      });
       return newData;
     }
     return specialAssist1DataByYear[year];
