@@ -8,6 +8,7 @@ import { Card } from '../ui/Card';
 interface ModernFamilyVisitCalculationTableProps {
   employees: Employee[];
   selectedEmployeeIds: string[];
+  calcYear: number;
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
   globalEditMode?: boolean;
@@ -16,6 +17,7 @@ interface ModernFamilyVisitCalculationTableProps {
 export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalculationTableProps> = ({
   employees,
   selectedEmployeeIds,
+  calcYear,
   onSave,
   onUpdateEmployee,
   globalEditMode = false
@@ -29,7 +31,7 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
     emp.status === 'มีสิทธิ์'
   );
   
-  const familyVisitData = calculateFamilyVisit(eligibleEmployees);
+  const familyVisitData = calculateFamilyVisit(eligibleEmployees, calcYear);
   const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
 
   // Statistics for display

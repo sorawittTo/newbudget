@@ -44,7 +44,6 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   onUpdateEmployee,
   globalEditMode = false
 }) => {
-  const [currentCalcYear, setCurrentCalcYear] = useState(calcYear);
   const [customSettings, setCustomSettings] = useState({
     hotelNights: 2,
     perDiemDays: 3,
@@ -53,7 +52,7 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
   });
 
   const selectedEmployees = employees.filter(emp => selectedEmployeeIds.includes(emp.id));
-  const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, currentCalcYear);
+  const travelEmployees = calculateTravelEmployees(selectedEmployees, masterRates, calcYear);
 
   // Calculate employee cost function
   const calculateEmployeeCost = (employee: TravelEmployee) => {

@@ -94,15 +94,15 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     const specialAssistTotal = specialAssistData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate family visit
-    const familyVisitData = calculateFamilyVisit(employees, masterRates);
+    const familyVisitData = calculateFamilyVisit(employees, currentYear);
     const familyVisitTotal = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate company trip
-    const companyTripData = calculateCompanyTrip(employees, masterRates);
+    const companyTripData = calculateCompanyTrip(employees, masterRates, currentYear);
     const companyTripTotal = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate manager rotation
-    const managerRotationData = calculateManagerRotation(employees, masterRates);
+    const managerRotationData = calculateManagerRotation(employees, masterRates, currentYear);
     const managerRotationTotal = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
     
     // Calculate overtime from real data

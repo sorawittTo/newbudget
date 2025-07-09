@@ -97,7 +97,8 @@ export const calculateSpecialAssist = (
 };
 
 export const calculateFamilyVisit = (
-  employees: Employee[]
+  employees: Employee[],
+  calcYear?: number
 ): FamilyVisitEmployee[] => {
   return employees.map(emp => {
     const roundTripFare = (emp.homeVisitBusFare || 0) * 2; // One way fare x 2 = round trip
@@ -113,7 +114,8 @@ export const calculateFamilyVisit = (
 
 export const calculateCompanyTrip = (
   employees: Employee[],
-  masterRates: MasterRates
+  masterRates: MasterRates,
+  calcYear?: number
 ): CompanyTripEmployee[] => {
   const busFare = 600; // Base bus fare
   const results: CompanyTripEmployee[] = [];
@@ -243,7 +245,8 @@ export const calculateCompanyTrip = (
 
 export const calculateManagerRotation = (
   employees: Employee[],
-  masterRates: MasterRates
+  masterRates: MasterRates,
+  calcYear?: number
 ): ManagerRotationEmployee[] => {
   return employees
     .filter(emp => emp.level === '7')

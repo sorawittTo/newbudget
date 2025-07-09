@@ -10,6 +10,7 @@ interface ModernManagerRotationCalculationTableProps {
   employees: Employee[];
   masterRates: MasterRates;
   selectedEmployeeIds: string[];
+  calcYear: number;
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
   globalEditMode?: boolean;
@@ -35,6 +36,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
   employees,
   masterRates,
   selectedEmployeeIds,
+  calcYear,
   onSave,
   onUpdateEmployee,
   globalEditMode = false

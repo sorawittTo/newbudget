@@ -10,6 +10,7 @@ interface ModernCompanyTripCalculationTableProps {
   employees: Employee[];
   masterRates: MasterRates;
   selectedEmployeeIds: string[];
+  calcYear: number;
   onSave: () => void;
   onUpdateEmployee: (index: number, employee: Employee) => void;
   globalEditMode?: boolean;
@@ -24,6 +25,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
   employees,
   masterRates,
   selectedEmployeeIds,
+  calcYear,
   onSave,
   onUpdateEmployee,
   globalEditMode = false

@@ -110,19 +110,22 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
       emp.visitProvince && 
       emp.visitProvince.trim() !== '' &&
       emp.visitProvince !== 'ขอนแก่น'
-    )
+    ),
+    calcYear
   );
   
   const companyTripData = calculateCompanyTrip(
     employees.filter(emp => selectedEmployees.companyTrip.includes(emp.id)), 
-    masterRates
+    masterRates,
+    calcYear
   );
   
   const managerRotationData = calculateManagerRotation(
     employees.filter(emp => 
       selectedEmployees.managerRotation.includes(emp.id) && emp.level === '7'
     ), 
-    masterRates
+    masterRates,
+    calcYear
   );
 
 
@@ -153,6 +156,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
       <ModernFamilyVisitCalculationTable
         employees={employees}
         selectedEmployeeIds={selectedEmployees.familyVisit}
+        calcYear={calcYear}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
         globalEditMode={globalEditMode}
@@ -166,6 +170,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         employees={employees}
         masterRates={masterRates}
         selectedEmployeeIds={selectedEmployees.companyTrip}
+        calcYear={calcYear}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
         globalEditMode={globalEditMode}
@@ -179,6 +184,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
         employees={employees}
         masterRates={masterRates}
         selectedEmployeeIds={selectedEmployees.managerRotation}
+        calcYear={calcYear}
         onSave={onSave}
         onUpdateEmployee={onUpdateEmployee}
         globalEditMode={globalEditMode}
