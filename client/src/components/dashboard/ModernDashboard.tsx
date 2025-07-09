@@ -216,19 +216,19 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">เดินทางปกติ</span>
+              <span className="text-sm text-gray-600">เดินทางรับของที่ระลึก</span>
               <span className="font-semibold text-blue-600">{formatCurrency(metrics.travelTotal)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">เยี่ยมครอบครัว</span>
+              <span className="text-sm text-gray-600">เดินทางเยี่ยมครอบครัว</span>
               <span className="font-semibold text-green-600">{formatCurrency(metrics.familyVisitTotal)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">เดินทางบริษัท</span>
+              <span className="text-sm text-gray-600">เดินทางร่วมงานวันพนักงาน</span>
               <span className="font-semibold text-purple-600">{formatCurrency(metrics.companyTripTotal)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">หมุนเวียน ผจศ</span>
+              <span className="text-sm text-gray-600">เดินทางหมุนเวียน ผจศ.</span>
               <span className="font-semibold text-orange-600">{formatCurrency(metrics.managerRotationTotal)}</span>
             </div>
             <div className="border-t pt-3">
