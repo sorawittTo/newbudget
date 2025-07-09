@@ -18,12 +18,15 @@ export const employees = pgTable("employees", {
   status: text("status").default('มีสิทธิ์'), // 'มีสิทธิ์' | 'หมดสิทธิ์'
   visitProvince: text("visit_province").notNull(),
   homeVisitBusFare: decimal("home_visit_bus_fare", { precision: 10, scale: 2 }).default('0'),
+  workingDays: integer("working_days").default(1),
+  travelWorkingDays: integer("travel_working_days").default(1),
   customTravelRates: json("custom_travel_rates").$type<{
     hotel?: number;
     perDiem?: number;
     travel?: number;
     local?: number;
     souvenirAllowance?: number;
+    other?: number;
   }>(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

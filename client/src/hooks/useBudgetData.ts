@@ -135,6 +135,8 @@ export const useBudgetData = () => {
             status: emp.status,
             visitProvince: emp.visitProvince || emp.visit_province || '',
             homeVisitBusFare: parseFloat(emp.homeVisitBusFare || emp.home_visit_bus_fare || 0),
+            workingDays: emp.workingDays || emp.working_days || 1,
+            travelWorkingDays: emp.travelWorkingDays || emp.travel_working_days || 1,
             customTravelRates: emp.customTravelRates
           }));
           setEmployees(formattedEmployees);
@@ -258,6 +260,8 @@ export const useBudgetData = () => {
         status: emp.status || 'มีสิทธิ์',
         visitProvince: emp.visitProvince,
         homeVisitBusFare: emp.homeVisitBusFare.toString(),
+        workingDays: emp.workingDays || 1,
+        travelWorkingDays: emp.travelWorkingDays || 1,
         customTravelRates: emp.customTravelRates || null
       }));
       
