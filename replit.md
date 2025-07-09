@@ -117,6 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Critical UnifiedSpecialAssistanceManager Syntax Error
+  * Fixed major syntax error in UnifiedSpecialAssistanceManager.tsx causing application crash
+  * Completely rebuilt component with proper structure to eliminate duplicate return statements
+  * Maintained all existing functionality including total calculation and debugging features
+  * Application now runs successfully with proper frontend-backend communication
+  * Special assistance total calculation system remains intact with console logging
 - July 09, 2025. Added Special Assistance Total Summary
   * Added total amount summary footer to special assistance tab (เงินช่วยเหลือพิเศษ)
   * Shows calculated total from all special assistance items: timesPerYear × days × people × rate
