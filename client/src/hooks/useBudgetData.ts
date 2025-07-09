@@ -150,14 +150,13 @@ export const useBudgetData = () => {
         masterRatesArray.forEach((rate: any) => {
           masterRatesObj[rate.level] = {
             position: rate.position,
-            rent: parseFloat(rate.rent),
-            monthlyAssist: parseFloat(rate.monthlyAssist),
-            lumpSum: parseFloat(rate.lumpSum),
-            travel: parseFloat(rate.travel),
-            local: parseFloat(rate.local),
-            perDiem: parseFloat(rate.perDiem),
-            hotel: parseFloat(rate.hotel),
-            souvenirAllowance: parseFloat(rate.souvenirAllowance)
+            rent: parseFloat(rate.rent || 0),
+            monthlyAssist: parseFloat(rate.monthlyAssist || rate.monthly_assist || 0),
+            travel: parseFloat(rate.travel || 0),
+            local: parseFloat(rate.local || 0),
+            perDiem: parseFloat(rate.perDiem || rate.per_diem || 0),
+            hotel: parseFloat(rate.hotel || 0),
+            souvenirAllowance: parseFloat(rate.souvenirAllowance || rate.souvenir_allowance || 0)
           };
         });
         
