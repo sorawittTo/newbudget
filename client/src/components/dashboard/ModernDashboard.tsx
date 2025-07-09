@@ -30,6 +30,7 @@ interface ModernDashboardProps {
   specialAssist1DataByYear: Record<number, any>;
   overtimeDataByYear: Record<number, any>;
   onNavigate: (tab: string) => void;
+  onYearChange: (year: number) => void;
 }
 
 interface MetricCardProps {
@@ -77,9 +78,12 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   nextYear,
   specialAssist1DataByYear,
   overtimeDataByYear,
-  onNavigate
+  onNavigate,
+  onYearChange
 }) => {
   const [activeTimeRange, setActiveTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
+  
+  const yearOptions = [2568, 2569, 2570, 2571, 2572, 2573, 2574, 2575, 2576, 2577, 2578, 2579, 2580];
 
   const metrics = useMemo(() => {
     const activeEmployees = employees.filter(emp => emp.status === 'มีสิทธิ์').length;
@@ -182,19 +186,21 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           <h1 className="text-3xl font-bold text-gray-900">DASHBOARD</h1>
           <p className="text-gray-600 mt-1">ภาพรวมระบบจัดการพนักงาน ณ วันที่ {new Date().toLocaleDateString('th-TH')}</p>
         </div>
-        <div className="flex gap-2">
-
-          {(['7d', '30d', '90d', '1y'] as const).map((range) => (
-            <Button
-              key={range}
-              variant={activeTimeRange === range ? 'primary' : 'secondary'}
-              size="sm"
-              onClick={() => setActiveTimeRange(range)}
-              className="min-w-[60px]"
-            >
-              {range}
-            </Button>
-          ))}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-600 font-medium">ปีงบประมาณ:</span>
+          <div className="flex gap-2">
+            {yearOptions.map((year) => (
+              <Button
+                key={year}
+                variant={currentYear === year ? 'primary' : 'secondary'}
+                size="sm"
+                onClick={() => onYearChange(year)}
+                className="min-w-[70px]"
+              >
+                {year}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 

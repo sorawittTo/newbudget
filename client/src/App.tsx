@@ -137,6 +137,7 @@ function App() {
             specialAssist1DataByYear={specialAssist1DataByYear}
             overtimeDataByYear={overtimeDataByYear}
             onNavigate={setActiveTab}
+            onYearChange={setCurrentYear}
           />
         );
 
@@ -229,7 +230,10 @@ function App() {
             masterRates={masterRates}
             currentYear={currentYear}
             nextYear={nextYear}
+            specialAssist1DataByYear={specialAssist1DataByYear}
+            overtimeDataByYear={overtimeDataByYear}
             onNavigate={setActiveTab}
+            onYearChange={setCurrentYear}
           />
         );
     }
