@@ -120,6 +120,16 @@ export const calculateCompanyTrip = (
   destination: string = '',
   busFare: number = 600
 ): CompanyTripEmployee[] => {
+  // Filter eligible employees and count by gender
+  const eligibleEmployees = employees.filter(emp => 
+    emp.visitProvince.trim() !== destination.trim()
+  );
+  
+  const genderCounts = eligibleEmployees.reduce((acc, emp) => {
+    acc[emp.gender] = (acc[emp.gender] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
   return employees.map(emp => {
     const rates = getRatesForEmployee(emp, masterRates);
     
@@ -135,9 +145,18 @@ export const calculateCompanyTrip = (
         accommodationCost = rates.hotel || 0;
         note = 'พักคนเดียว';
       } else {
-        // Others share rooms by gender (cost divided by 2)
-        accommodationCost = (rates.hotel || 0) / 2;
-        note = `พักคู่ (${emp.gender})`;
+        // Check if this employee has a pair of same gender
+        const sameGenderCount = genderCounts[emp.gender] || 0;
+        
+        if (sameGenderCount === 1) {
+          // No pair available, gets full accommodation cost
+          accommodationCost = rates.hotel || 0;
+          note = `ไม่มีคู่ - พักคนเดียว`;
+        } else {
+          // Has pair, share accommodation cost
+          accommodationCost = (rates.hotel || 0) / 2;
+          note = `พักคู่ (${emp.gender})`;
+        }
       }
     }
     
