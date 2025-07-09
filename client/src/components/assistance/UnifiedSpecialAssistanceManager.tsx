@@ -249,8 +249,12 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                 <div className="text-right">
                   <div className="text-xl font-bold text-blue-900">
                     {formatCurrency(
-                      specialAssist1Data.items.reduce((sum, item) => {
-                        return sum + (item.timesPerYear * item.days * item.people * item.rate);
+                      (specialAssist1Data.items || []).reduce((sum, item) => {
+                        const timesPerYear = item.timesPerYear || 0;
+                        const days = item.days || 0;
+                        const people = item.people || 0;
+                        const rate = item.rate || 0;
+                        return sum + (timesPerYear * days * people * rate);
                       }, 0)
                     )}
                   </div>
@@ -261,7 +265,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             {editMode && (
               <button
                 onClick={() => {
-                  const newIndex = specialAssist1Data.items.length;
+                  const newIndex = (specialAssist1Data.items || []).length;
                   onUpdateSpecialAssist1Item(calcYear, newIndex, 'item', 'รายการใหม่');
                   onUpdateSpecialAssist1Item(calcYear, newIndex, 'timesPerYear', 1);
                   onUpdateSpecialAssist1Item(calcYear, newIndex, 'days', 1);
@@ -278,7 +282,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
         </div>
 
         <div className="p-6 space-y-4">
-          {specialAssist1Data.items.map((item, index) => (
+          {(specialAssist1Data.items || []).map((item, index) => (
             <div key={index} className="bg-slate-50/80 rounded-xl p-4 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] border border-slate-200/30">
               <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
                 <div className="md:col-span-3">
@@ -365,14 +369,14 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">รวม</label>
                     <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
-                      <span className="font-bold text-emerald-700">{formatCurrency(item.timesPerYear * item.days * item.people * item.rate)}</span>
+                      <span className="font-bold text-emerald-700">{formatCurrency((item.timesPerYear || 0) * (item.days || 0) * (item.people || 0) * (item.rate || 0))}</span>
                     </div>
                   </div>
                   {editMode && (
                     <button
                       onClick={() => {
                         if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
-                          const items = specialAssist1Data.items.filter((_, i) => i !== index);
+                          const items = (specialAssist1Data.items || []).filter((_, i) => i !== index);
                           items.forEach((item, i) => {
                             Object.entries(item).forEach(([key, value]) => {
                               onUpdateSpecialAssist1Item(calcYear, i, key, value);
