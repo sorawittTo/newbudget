@@ -375,6 +375,29 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             </div>
           ))}
         </div>
+
+        {/* Summary Footer */}
+        <div className="p-6 border-t border-slate-200/50 bg-gradient-to-r from-slate-100/50 to-blue-100/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Calculator className="w-6 h-6 text-blue-600" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-800">ยอดรวมทั้งหมด</h3>
+                <p className="text-sm text-slate-600">รายการเงินช่วยเหลือพิเศษ</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold text-blue-900">
+                {formatCurrency(
+                  specialAssist1Data.items.reduce((sum, item) => {
+                    return sum + (item.timesPerYear * item.days * item.people * item.rate);
+                  }, 0)
+                )}
+              </div>
+              <div className="text-sm text-slate-600">บาท</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">

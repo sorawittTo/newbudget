@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Added Special Assistance Total Summary
+  * Added total amount summary footer to special assistance tab (เงินช่วยเหลือพิเศษ)
+  * Shows calculated total from all special assistance items: timesPerYear × days × people × rate
+  * Displays prominently with blue color scheme to match tab theme
+  * Provides clear total amount visibility for special assistance calculations
 - July 09, 2025. Fixed Dashboard Travel Calculation Accuracy
   * Fixed family visit calculation in Dashboard to match table filtering (only มีสิทธิ์ employees)
   * Fixed company trip calculation to use correct destination and bus fare parameters
