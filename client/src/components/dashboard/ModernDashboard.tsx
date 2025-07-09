@@ -91,7 +91,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     
     // Calculate travel expenses - only eligible employees (service years 20, 25, 30, 35, 40)
     const travelData = calculateTravelEmployees(employees, masterRates, currentYear);
-    const travelTotal = travelData.reduce((sum, emp) => sum + emp.total, 0);
+    const travelTotal = travelData.reduce((sum, emp) => sum + (isNaN(emp.total) ? 0 : emp.total), 0);
     
     // Calculate special assistance from real data
     const specialAssistCurrentYear = specialAssist1DataByYear[currentYear] || { items: [] };
@@ -109,7 +109,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       const rate = Number(item.rate) || 0;
       const itemTotal = timesPerYear * days * people * rate;
       console.log('Dashboard special assist item:', { item, timesPerYear, days, people, rate, itemTotal });
-      return sum + itemTotal;
+      return sum + (isNaN(itemTotal) ? 0 : itemTotal);
     }, 0);
     
     console.log('Dashboard specialAssistTotal:', specialAssistTotal);
@@ -131,8 +131,9 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     // Calculate overtime from real data
     const overtimeData = overtimeDataByYear[currentYear] || { items: [], salary: 15000 };
     const overtimeTotal = overtimeData.items.reduce((sum: number, item: any) => {
-      const rate = item.rate || overtimeData.salary / 210;
-      return sum + (item.instances * item.days * item.hours * item.people * rate);
+      const hourlyRate = item.hourlyRate || overtimeData.salary / 210;
+      const itemTotal = (item.people || 0) * (item.days || 0) * (item.hours || 0) * hourlyRate;
+      return sum + (isNaN(itemTotal) ? 0 : itemTotal);
     }, 0);
 
     // Calculate assistance data (เงินช่วยเหลืออื่นๆ)
@@ -156,7 +157,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       companyTripTotal,
       managerRotationTotal,
       overtimeTotal,
-      totalExpenses: travelTotal + specialAssistTotal + assistanceTotal + familyVisitTotal + companyTripTotal + managerRotationTotal + overtimeTotal
+      totalExpenses: (travelTotal || 0) + (specialAssistTotal || 0) + (assistanceTotal || 0) + (familyVisitTotal || 0) + (companyTripTotal || 0) + (managerRotationTotal || 0) + (overtimeTotal || 0)
     };
   }, [employees, masterRates, currentYear, specialAssist1DataByYear, overtimeDataByYear]);
 
