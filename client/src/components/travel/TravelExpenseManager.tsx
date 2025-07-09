@@ -105,6 +105,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
   const familyVisitData = calculateFamilyVisit(
     employees.filter(emp => 
       selectedEmployees.familyVisit.includes(emp.id) &&
+      emp.status === 'มีสิทธิ์' &&
       emp.level !== 'ท้องถิ่น' && 
       emp.visitProvince && 
       emp.visitProvince.trim() !== '' &&
@@ -126,11 +127,34 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
 
 
 
+  // Calculate eligible counts for each section
+  const travelEligibleCount = employees.filter(emp => 
+    selectedEmployees.travel.includes(emp.id)
+  ).length;
+  
+  const familyEligibleCount = employees.filter(emp => 
+    selectedEmployees.familyVisit.includes(emp.id) &&
+    emp.status === 'มีสิทธิ์' &&
+    emp.level !== 'ท้องถิ่น' && 
+    emp.visitProvince && 
+    emp.visitProvince.trim() !== '' &&
+    emp.visitProvince !== 'ขอนแก่น'
+  ).length;
+  
+  const companyEligibleCount = employees.filter(emp => 
+    selectedEmployees.companyTrip.includes(emp.id)
+  ).length;
+  
+  const managerEligibleCount = employees.filter(emp => 
+    selectedEmployees.managerRotation.includes(emp.id) && 
+    emp.level === '7'
+  ).length;
+
   const sections = [
-    { id: 'travel', label: 'เดินทางรับของที่ระลึก', icon: <Award className="w-5 h-5" />, count: travelData.length },
-    { id: 'family', label: 'เดินทางเยี่ยมครอบครัว', icon: <Home className="w-5 h-5" />, count: familyVisitData.length },
-    { id: 'company', label: 'เดินทางร่วมงานวันพนักงาน', icon: <Users className="w-5 h-5" />, count: companyTripData.length },
-    { id: 'manager', label: 'เดินทางหมุนเวียน ผจศ.', icon: <RotateCcw className="w-5 h-5" />, count: managerRotationData.length }
+    { id: 'travel', label: 'เดินทางรับของที่ระลึก', icon: <Award className="w-5 h-5" />, count: travelEligibleCount },
+    { id: 'family', label: 'เดินทางเยี่ยมครอบครัว', icon: <Home className="w-5 h-5" />, count: familyEligibleCount },
+    { id: 'company', label: 'เดินทางร่วมงานวันพนักงาน', icon: <Users className="w-5 h-5" />, count: companyEligibleCount },
+    { id: 'manager', label: 'เดินทางหมุนเวียน ผจศ.', icon: <RotateCcw className="w-5 h-5" />, count: managerEligibleCount }
   ];
 
   const renderTravelSection = () => {

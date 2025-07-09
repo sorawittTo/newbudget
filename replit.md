@@ -117,6 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Fixed Travel Tab Number Display Issue
+  * Fixed incorrect number display in travel expense navigation tabs
+  * Updated calculation logic to show accurate eligible employee counts for each travel type
+  * Family visit tab now shows only eligible employees (not local, not Khon Kaen, has permission)
+  * Manager rotation tab now shows only level 7 employees who are selected
+  * All travel navigation tabs now display correct employee counts based on selection and eligibility criteria
+  * Enhanced user experience with accurate information display in travel expense management
 - July 08, 2025. Fixed Edit Mode Bypass Issue in Employee Management
   * Fixed critical issue where employee data could be edited without clicking Edit button first
   * Added disabled={!globalEditMode} to ALL input fields in EmployeeManagement.tsx
