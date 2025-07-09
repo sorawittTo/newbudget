@@ -117,13 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Completely Decoupled Travel and Manager Rotation Tables
-  * Removed workingDays dependency from travel expense table (souvenir collection)
-  * Travel expense table now uses fixed values: 2 hotel nights, 3 per diem days
-  * Manager rotation table uses dynamic calculation based on workingDays
-  * Updated calculateTravelEmployees to use fixed values instead of workingDays
-  * Both tables now operate completely independently with separate calculation logic
-  * Addresses user requirement: travel and manager rotation tables should not be connected
+- July 09, 2025. Restored Dynamic Working Days Calculation for Travel Table
+  * Added workingDays field back to travel expense table (souvenir collection) with edit capability
+  * Travel expense table now uses dynamic calculation: hotel nights = workingDays + 1, per diem days = workingDays + 2
+  * Manager rotation table continues to use same dynamic calculation logic
+  * Both tables now use consistent dynamic calculation based on individual working days
+  * User can edit working days in both tables independently
+  * 1 working day = 2 hotel nights + 3 per diem days, each additional day adds 1 night and 1 day
 - July 09, 2025. Removed Fixed Bus Cost from Manager Rotation Table
   * Removed default bus cost (600 baht) from manager rotation calculation
   * Total now calculated without fixed vehicle cost: perDiemCost + accommodationCost + travelCost + localCost + otherVehicleCost

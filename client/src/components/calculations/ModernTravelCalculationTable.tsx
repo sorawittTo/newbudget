@@ -207,7 +207,9 @@ export const ModernTravelCalculationTable: React.FC<ModernTravelCalculationTable
                           <span className="font-medium text-gray-900">{employee.serviceYears} ปี</span>
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <span className="font-medium text-gray-900">1 วัน</span>
+                          {globalEditMode ? renderEditableCell(employee.id, 'workingDays', employee.workingDays || 1, 'number') : (
+                            <span className="font-medium text-gray-900">{employee.workingDays || 1} วัน</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div>
