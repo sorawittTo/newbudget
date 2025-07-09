@@ -120,8 +120,9 @@ export const calculateCompanyTrip = (
   destination: string = '',
   busFare: number = 600
 ): CompanyTripEmployee[] => {
-  // Filter eligible employees and count by gender
+  // Filter eligible employees: must have "มีสิทธิ์" status and province doesn't match destination
   const eligibleEmployees = employees.filter(emp => 
+    (emp as any).status === 'มีสิทธิ์' &&
     emp.visitProvince.trim() !== destination.trim()
   );
   
@@ -133,8 +134,10 @@ export const calculateCompanyTrip = (
   return employees.map(emp => {
     const rates = getRatesForEmployee(emp, masterRates);
     
-    // Check if eligible for accommodation (province doesn't match destination)
-    const isEligibleForAccommodation = emp.visitProvince.trim() !== destination.trim();
+    // Check if eligible for accommodation (must have "มีสิทธิ์" status and province doesn't match destination)
+    const isEligibleForAccommodation = 
+      (emp as any).status === 'มีสิทธิ์' &&
+      emp.visitProvince.trim() !== destination.trim();
     
     let accommodationCost = 0;
     let note = 'ไม่มีสิทธิ์ค่าที่พัก';
