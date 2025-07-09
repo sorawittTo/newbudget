@@ -34,7 +34,17 @@ export const ModernFamilyVisitCalculationTable: React.FC<ModernFamilyVisitCalcul
   );
   
   const familyVisitData = useMemo(() => 
-    calculateFamilyVisit(eligibleEmployees, calcYear), 
+    calculateFamilyVisit(eligibleEmployees, calcYear)
+      .sort((a, b) => {
+        // Sort by level (7 -> 6 -> 5.5 -> 5 -> 4.5 -> 4 -> 3)
+        const levelA = parseFloat(a.level);
+        const levelB = parseFloat(b.level);
+        if (levelA !== levelB) {
+          return levelB - levelA; // Descending order
+        }
+        // If same level, sort alphabetically by name
+        return a.name.localeCompare(b.name, 'th');
+      }), 
     [eligibleEmployees, calcYear]
   );
   

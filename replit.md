@@ -117,6 +117,11 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Level-Based Sorting in Family Visit Travel Table
+  * Added employee sorting by level in descending order (7→6→5.5→5→4.5→4→3)
+  * Within same level, employees sorted alphabetically by name
+  * Applied to ModernFamilyVisitCalculationTable for consistent hierarchy display
+  * Family visit travel table now shows employees in level-based order matching other calculation tables
 - July 09, 2025. Dynamic Hotel and Per Diem Calculation Based on Working Days
   * Changed from fixed values (2 hotel nights, 3 per diem days) to dynamic calculation
   * Hotel nights = working days + 1 (for overnight stay)
