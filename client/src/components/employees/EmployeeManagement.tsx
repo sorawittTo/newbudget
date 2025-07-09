@@ -428,11 +428,11 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <th className="px-4 py-3 text-center font-semibold">ระดับ</th>
                   <th className="px-4 py-3 text-right font-semibold">ค่าเช่าบ้าน</th>
                   <th className="px-4 py-3 text-right font-semibold">เงินช่วยเหลือรายเดือน</th>
-                  <th className="px-4 py-3 text-right font-semibold">เงินก้อน</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าเดินทาง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าท้องถิ่น</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าซื้อของเหมาจ่าย</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะประจำทาง</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าพาหนะรับจ้าง</th>
                   <th className="px-4 py-3 text-right font-semibold">ค่าเบี้ยเลี้ยง</th>
-                  <th className="px-4 py-3 text-right font-semibold">ค่าโรงแรม</th>
+                  <th className="px-4 py-3 text-right font-semibold">ค่าที่พัก</th>
                 </tr>
               </thead>
               <tbody>
@@ -447,7 +447,10 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   </tr>
                 ) : (
                   levelOptions.map((level) => {
-                    const rate = masterRates[level];
+                    const rate = masterRates[level] || {
+                      position: '', rent: 0, monthlyAssist: 0, souvenirAllowance: 0, 
+                      travel: 0, local: 0, perDiem: 0, hotel: 0
+                    };
                     return (
                       <tr key={level} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                         <td className="p-3">
@@ -485,8 +488,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         <td className="p-3 text-right">
                           <NeumorphismInput
                             type="text"
-                            value={rate.lumpSum}
-                            onChange={(e) => onUpdateMasterRate(level, 'lumpSum', parseFloat(e.target.value) || 0)}
+                            value={rate.souvenirAllowance}
+                            onChange={(e) => onUpdateMasterRate(level, 'souvenirAllowance', parseFloat(e.target.value) || 0)}
                             placeholder="0"
                             disabled={!globalEditMode}
                           />
