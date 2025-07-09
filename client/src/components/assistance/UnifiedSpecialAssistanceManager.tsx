@@ -618,6 +618,28 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             </div>
           ))}
         </div>
+        
+        {/* Total Summary Section */}
+        <div className="p-6 border-t border-slate-200/50 bg-gradient-to-r from-red-50 to-pink-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-red-100 shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff]">
+                <Calculator className="w-5 h-5 text-red-600" />
+              </div>
+              <h3 className="text-lg font-bold text-red-800">ยอดรวมค่าล่วงเวลา</h3>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-red-900">
+                {formatCurrency(
+                  (overtimeData.items || []).reduce((total, item) => 
+                    total + (item.people || 0) * (item.days || 0) * (item.hours || 0) * (item.hourlyRate || 0), 0
+                  )
+                )}
+              </div>
+              <p className="text-sm text-red-600 mt-1">รวมทั้งหมด {(overtimeData.items || []).length} รายการ</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Notes Section */}
