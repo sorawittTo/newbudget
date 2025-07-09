@@ -30,14 +30,13 @@ export interface Employee {
 export interface MasterRates {
   [level: string]: {
     position: string;
-    rent: number;
-    monthlyAssist: number;
-    lumpSum: number;
-    travel: number; // ค่ารถโดยสาร/เที่ยว
-    local: number; // ค่ารถรับจ้าง/เที่ยว
-    perDiem: number;
-    hotel: number;
+    rent: number; // ค่าเช่าบ้าน
+    monthlyAssist: number; // ค่าช่วยเหลือรายเดือน
     souvenirAllowance: number; // ค่าซื้อของเหมาจ่าย
+    travel: number; // ค่าพาหนะประจำทาง
+    local: number; // ค่าพาหนะรับจ้าง
+    perDiem: number; // ค่าเบี้ยเลี้ยง
+    hotel: number; // ค่าที่พัก
   };
 }
 

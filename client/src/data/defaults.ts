@@ -3,13 +3,13 @@ import { BudgetItem, Employee, MasterRates, SpecialAssistItem, Holiday } from '.
 export const defaultBudgetItems: BudgetItem[] = [];
 
 export const defaultMasterRates: MasterRates = {
-  '7': { position: 'ผู้บริหารส่วน', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
-  '6': { position: 'ผู้บริหารทีม', rent: 9500, monthlyAssist: 6250, lumpSum: 8000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
-  '5.5': { position: 'เจ้าหน้าที่ชำนาญงาน (ควบ)', rent: 9500, monthlyAssist: 6250, lumpSum: 6000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
-  '5': { position: 'เจ้าหน้าที่ชำนาญงาน', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
-  '4.5': { position: 'เจ้าหน้าที่ (ควบ)', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
-  '4': { position: 'เจ้าหน้าที่', rent: 8000, monthlyAssist: 5500, lumpSum: 6000, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
-  '3': { position: 'พนักงานปฏิบัติการ', rent: 6500, monthlyAssist: 4750, lumpSum: 5000, travel: 300, local: 250, perDiem: 450, hotel: 1800 }
+  '7': { position: 'ผู้บริหารส่วน', rent: 9500, monthlyAssist: 6250, souvenirAllowance: 1000, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+  '6': { position: 'ผู้บริหารทีม', rent: 9500, monthlyAssist: 6250, souvenirAllowance: 800, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+  '5.5': { position: 'เจ้าหน้าที่ชำนาญงาน (ควบ)', rent: 9500, monthlyAssist: 6250, souvenirAllowance: 750, travel: 300, local: 250, perDiem: 500, hotel: 2100 },
+  '5': { position: 'เจ้าหน้าที่ชำนาญงาน', rent: 8000, monthlyAssist: 5500, souvenirAllowance: 750, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+  '4.5': { position: 'เจ้าหน้าที่ (ควบ)', rent: 8000, monthlyAssist: 5500, souvenirAllowance: 700, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+  '4': { position: 'เจ้าหน้าที่', rent: 8000, monthlyAssist: 5500, souvenirAllowance: 700, travel: 300, local: 250, perDiem: 450, hotel: 1800 },
+  '3': { position: 'พนักงานปฏิบัติการ', rent: 6500, monthlyAssist: 4750, souvenirAllowance: 650, travel: 300, local: 250, perDiem: 450, hotel: 1800 }
 };
 
 // Employee data now loaded from database only - no default fallback

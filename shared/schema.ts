@@ -33,14 +33,13 @@ export const masterRates = pgTable("master_rates", {
   id: serial("id").primaryKey(),
   level: text("level").notNull().unique(),
   position: text("position").notNull(),
-  rent: decimal("rent", { precision: 10, scale: 2 }).notNull(),
-  monthlyAssist: decimal("monthly_assist", { precision: 10, scale: 2 }).notNull(),
-  lumpSum: decimal("lump_sum", { precision: 10, scale: 2 }).notNull(),
-  travel: decimal("travel", { precision: 10, scale: 2 }).notNull(), // ค่ารถโดยสาร/เที่ยว
-  local: decimal("local", { precision: 10, scale: 2 }).notNull(), // ค่ารถรับจ้าง/เที่ยว
-  perDiem: decimal("per_diem", { precision: 10, scale: 2 }).notNull(),
-  hotel: decimal("hotel", { precision: 10, scale: 2 }).notNull(),
+  rent: decimal("rent", { precision: 10, scale: 2 }).notNull(), // ค่าเช่าบ้าน
+  monthlyAssist: decimal("monthly_assist", { precision: 10, scale: 2 }).notNull(), // ค่าช่วยเหลือรายเดือน
   souvenirAllowance: decimal("souvenir_allowance", { precision: 10, scale: 2 }).notNull(), // ค่าซื้อของเหมาจ่าย
+  travel: decimal("travel", { precision: 10, scale: 2 }).notNull(), // ค่าพาหนะประจำทาง
+  local: decimal("local", { precision: 10, scale: 2 }).notNull(), // ค่าพาหนะรับจ้าง
+  perDiem: decimal("per_diem", { precision: 10, scale: 2 }).notNull(), // ค่าเบี้ยเลี้ยง
+  hotel: decimal("hotel", { precision: 10, scale: 2 }).notNull(), // ค่าที่พัก
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

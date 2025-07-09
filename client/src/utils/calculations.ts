@@ -12,12 +12,11 @@ export const getRatesForEmployee = (employee: Employee, masterRates: MasterRates
     position: 'ไม่ระบุ',
     rent: 0,
     monthlyAssist: 0,
-    lumpSum: 0,
+    souvenirAllowance: 0,
     travel: 0,
     local: 0,
     perDiem: 0,
-    hotel: 0,
-    souvenirAllowance: 0
+    hotel: 0
   };
   
   const baseRates = masterRates[employee.level] || defaultRates;
@@ -85,8 +84,8 @@ export const calculateSpecialAssist = (
       const rates = getRatesForEmployee(emp, masterRates);
       const totalRent = (rates.rent || 0) * 12;
       const totalMonthlyAssist = (rates.monthlyAssist || 0) * 12;
-      const lumpSum = rates.lumpSum || 0;
-      const total = totalRent + totalMonthlyAssist; // Remove lump sum from total calculation
+      const lumpSum = 0; // Remove lump sum from new schema
+      const total = totalRent + totalMonthlyAssist;
       
       return {
         ...emp,

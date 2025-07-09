@@ -52,7 +52,7 @@ export const ModernSpecialAssistCalculationTable: React.FC<ModernSpecialAssistCa
       const months = getMonthsForEmployee(emp.id);
       const totalRent = rates.rent * months;
       const totalMonthlyAssist = rates.monthlyAssist * months;
-      const lumpSum = getLumpSumForEmployee(emp.id) || rates.lumpSum;
+      const lumpSum = getLumpSumForEmployee(emp.id) || 0;
       return sum + totalRent + totalMonthlyAssist + lumpSum;
     }, 0);
 
@@ -181,7 +181,7 @@ export const ModernSpecialAssistCalculationTable: React.FC<ModernSpecialAssistCa
                 const months = getMonthsForEmployee(emp.id);
                 const totalRent = rates.rent * months;
                 const totalMonthlyAssist = rates.monthlyAssist * months;
-                const lumpSum = getLumpSumForEmployee(emp.id) || rates.lumpSum;
+                const lumpSum = getLumpSumForEmployee(emp.id) || 0;
                 const grandTotal = totalRent + totalMonthlyAssist + lumpSum;
 
                 return (
