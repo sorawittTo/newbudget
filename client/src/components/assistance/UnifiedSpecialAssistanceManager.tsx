@@ -590,7 +590,19 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     <label className="block text-sm font-medium text-slate-700 mb-2">ยอดรวม</label>
                     <div className="h-10 flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-blue-200/50">
                       <span className="font-bold text-lg text-blue-900">
-                        {formatCurrency(item.instances * item.days * item.hours * item.people * (item.rate || 0))}
+                        {(() => {
+                          const total = item.instances * item.days * item.hours * item.people * (item.rate || 0);
+                          console.log('Overtime calculation:', {
+                            item: item.item,
+                            instances: item.instances,
+                            days: item.days,
+                            hours: item.hours,
+                            people: item.people,
+                            rate: item.rate,
+                            total: total
+                          });
+                          return formatCurrency(total);
+                        })()}
                       </span>
                     </div>
                   </div>
