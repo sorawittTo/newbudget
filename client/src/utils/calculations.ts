@@ -182,11 +182,11 @@ export const calculateCompanyTrip = (
         const pairSymbol = employeePairSymbols[emp.id];
         
         if (pairSymbol) {
-          // Has pair, share accommodation cost
+          // Has pair, share accommodation cost using own standard rate divided by 2
           accommodationCost = (rates.hotel || 0) / 2;
           note = `${pairSymbol} พักคู่ (${emp.gender})`;
         } else {
-          // No pair available, gets full accommodation cost
+          // No pair available, gets full accommodation cost using own standard rate
           accommodationCost = rates.hotel || 0;
           note = `ไม่มีคู่ - พักคนเดียว`;
         }

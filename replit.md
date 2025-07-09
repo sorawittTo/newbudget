@@ -117,12 +117,12 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- July 09, 2025. Company Trip Single Room Logic Fix - Proper Full Cost for Unpaired Employees
-  * Fixed accommodation cost calculation to give full cost when employee has no pair symbol
-  * Removed incorrect sameGenderCount logic that was causing wrong calculations
-  * Now uses pair symbol presence to determine shared vs single room accommodation
-  * Employees without pair symbols get full accommodation cost as intended
-  * Addresses user requirement: "ก็บอกแล้วว่าถ้าไม่มีคู่ให้ได้ค่าทีพักเต็ม"
+- July 09, 2025. Company Trip Individual Rate Calculation - Own Standard Rate Division
+  * Clarified accommodation cost calculation uses each employee's own standard rate
+  * Paired employees get their own standard hotel rate divided by 2
+  * Single employees get their own full standard hotel rate
+  * Ensures fair calculation based on individual employee level rates
+  * Addresses user requirement: "การพักคู่ ค่าที่พักที่ได้ ให้ใช้ค่าที่พักมาตรฐานของตัวเอง หาร สอง"
 - July 09, 2025. Employee Sorting by Level - Reorganized Database Order
   * Reorganized all employee records to sort by level (highest to lowest): 7 → 6 → 5.5
   * Updated employee IDs to start from 1 and maintain level-based ordering
