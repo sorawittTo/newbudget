@@ -117,6 +117,13 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Dynamic Hotel and Per Diem Calculation Based on Working Days
+  * Changed from fixed values (2 hotel nights, 3 per diem days) to dynamic calculation
+  * Hotel nights = working days + 1 (for overnight stay)
+  * Per diem days = working days + 2 (arrival + working days + departure)
+  * When working days increase by 1, both hotel nights and per diem days increase by 1
+  * Applied to both ModernTravelCalculationTable and utils/calculations.ts
+  * Travel expense calculations now accurately reflect actual working day requirements
 - July 09, 2025. Removed Footer and Added Level-Based Sorting in Travel Expense Table
   * Removed Summary Card footer from travel expense table (ModernTravelCalculationTable)
   * Added employee sorting by level in descending order (7→6→5.5→5→4.5→4→3)
