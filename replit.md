@@ -117,6 +117,10 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- July 09, 2025. Set Default Destination for Company Trip to Khon Kaen
+  * Changed default destination from empty string to 'ขอนแก่น' in ModernCompanyTripCalculationTable
+  * Trip settings now initialize with Khon Kaen as default destination
+  * Improves user experience by providing meaningful default value
 - July 09, 2025. Level-Based Sorting in Family Visit Travel Table
   * Added employee sorting by level in descending order (7→6→5.5→5→4.5→4→3)
   * Within same level, employees sorted alphabetically by name

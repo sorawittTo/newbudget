@@ -31,7 +31,7 @@ export const ModernCompanyTripCalculationTable: React.FC<ModernCompanyTripCalcul
   globalEditMode = false
 }) => {
   const [tripSettings, setTripSettings] = useState<TripSettings>({
-    destination: '',
+    destination: 'ขอนแก่น',
     busFare: 600
   });
   const [editingValues, setEditingValues] = useState<Record<string, any>>({});
