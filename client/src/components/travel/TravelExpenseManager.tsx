@@ -290,97 +290,31 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
       </div>
 
       
-      {/* Section Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {sections.map((section) => {
-          let data, total, description;
-          
-          switch (section.id) {
-            case 'travel':
-              data = travelData;
-              total = travelData.reduce((sum, emp) => sum + emp.total, 0);
-              description = "คำนวณค่าเดินทางรับของที่ระลึกสำหรับพนักงานที่มีอายุงาน 20, 25, 30, 35, 40 ปี";
-              break;
-            case 'family':
-              data = familyVisitData;
-              total = familyVisitData.reduce((sum, emp) => sum + emp.total, 0);
-              description = "คำนวณค่าเดินทางเยี่ยมครอบครัวสำหรับพนักงานที่มีสถานะ 'มีสิทธิ์'";
-              break;
-            case 'company':
-              data = companyTripData;
-              total = companyTripData.reduce((sum, emp) => sum + emp.total, 0);
-              description = "คำนวณค่าเดินทางร่วมงานวันพนักงานสำหรับพนักงานทุกคน";
-              break;
-            case 'manager':
-              data = managerRotationData;
-              total = managerRotationData.reduce((sum, emp) => sum + emp.total, 0);
-              description = "คำนวณค่าเดินทางหมุนเวียนสำหรับพนักงานระดับ 7 (ผู้จัดการศูนย์)";
-              break;
-            default:
-              data = [];
-              total = 0;
-              description = "";
-          }
-          
-          return (
-            <motion.div
+      {/* Section Navigation */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-white to-slate-50" style={{ boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' }}>
+        <nav className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {sections.map((section) => (
+            <button
               key={section.id}
-              whileHover={{ scale: 1.02 }}
-              className={`p-6 rounded-2xl cursor-pointer transition-all duration-300 ${
+              onClick={() => setActiveSection(section.id as any)}
+              className={`p-4 rounded-2xl font-medium transition-all duration-300 ${
                 activeSection === section.id
-                  ? 'bg-gradient-to-br from-blue-100 to-indigo-100 border-2 border-blue-200'
-                  : 'bg-gradient-to-br from-white to-slate-50 hover:from-blue-50 hover:to-indigo-50'
+                  ? 'bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 border-2 border-blue-200'
+                  : 'bg-white/80 text-slate-600 hover:text-blue-600 hover:bg-blue-50/80'
               }`}
               style={{ 
                 boxShadow: activeSection === section.id 
                   ? 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' 
-                  : '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff' 
+                  : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff' 
               }}
-              onClick={() => setActiveSection(section.id as any)}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-3 rounded-xl ${
-                  activeSection === section.id 
-                    ? 'bg-blue-200 text-blue-700' 
-                    : 'bg-slate-100 text-slate-600'
-                }`}>
-                  {section.icon}
-                </div>
-                <div className="flex-1">
-                  <h3 className={`font-bold text-lg ${
-                    activeSection === section.id ? 'text-blue-700' : 'text-slate-800'
-                  }`}>
-                    {section.label}
-                  </h3>
-                </div>
+              <div className="flex items-center justify-center gap-2">
+                {section.icon}
+                <span className="text-sm font-semibold">{section.label}</span>
               </div>
-              
-              <p className={`text-sm mb-4 ${
-                activeSection === section.id ? 'text-blue-600' : 'text-slate-600'
-              }`}>
-                {description}
-              </p>
-              
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Users className={`w-4 h-4 ${
-                    activeSection === section.id ? 'text-blue-600' : 'text-slate-500'
-                  }`} />
-                  <span className={`text-sm font-medium ${
-                    activeSection === section.id ? 'text-blue-600' : 'text-slate-600'
-                  }`}>
-                    {data.length} คน
-                  </span>
-                </div>
-                <div className={`font-bold text-lg ${
-                  activeSection === section.id ? 'text-blue-700' : 'text-slate-800'
-                }`}>
-                  {formatCurrency(total)}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+            </button>
+          ))}
+        </nav>
       </div>
 
       {/* Content */}
