@@ -73,7 +73,6 @@ export const overtimeItems = pgTable("overtime_items", {
   id: serial("id").primaryKey(),
   year: integer("year").notNull(),
   item: text("item").notNull(),
-  instances: integer("instances").default(1),
   days: integer("days").default(1),
   hours: integer("hours").default(8),
   people: integer("people").default(1),

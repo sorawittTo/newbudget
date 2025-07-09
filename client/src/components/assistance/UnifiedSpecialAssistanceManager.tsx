@@ -450,7 +450,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     const salary = parseFloat(e.target.value) || 0;
                     onUpdateOvertimeData(calcYear, 'salary', salary);
                     
-                    // Auto-update all items with default rate (per day)
+                    // Auto-update all items with default rate (per hour)
                     const currentItems = overtimeData.items || [];
                     currentItems.forEach((item, index) => {
                       if (!item.rate || item.rate === 0) { // Only update if no custom rate
@@ -467,7 +467,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อวัน)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">อัตราค่าล่วงเวลา (ต่อชั่วโมง)</label>
               <div className="h-10 flex items-center justify-center bg-emerald-50 rounded-lg shadow-[inset_2px_2px_4px_#d1d5db,inset_-2px_-2px_4px_#ffffff] border border-emerald-200/30">
                 <span className="font-bold text-emerald-700">{formatCurrency(overtimeData.salary / 210)}</span>
               </div>

@@ -79,7 +79,7 @@ export const useBudgetData = () => {
       const newData = {
         salary: 15000,
         items: [
-          { item: 'รายการใหม่', instances: 1, days: 1, hours: 8, people: 1, rate: (15000 / 210) / 8 }
+          { item: 'รายการใหม่', days: 1, hours: 8, people: 1, rate: 15000 / 210 }
         ],
         notes: ''
       };
@@ -302,7 +302,6 @@ export const useBudgetData = () => {
             allOvertimeItems.push({
               year: parseInt(year),
               item: item.item,
-              instances: item.instances,
               days: item.days,
               hours: item.hours,
               people: item.people,

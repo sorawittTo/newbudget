@@ -102,7 +102,6 @@ export interface SpecialAssistData {
 
 export interface OvertimeItem {
   item: string;
-  instances: number;
   days: number;
   hours: number;
   people: number;
