@@ -272,7 +272,7 @@ export const ModernManagerRotationCalculationTable: React.FC<ModernManagerRotati
                 <tr>
                   <th className="px-4 py-3 text-left font-semibold">รหัสพนักงาน</th>
                   <th className="px-4 py-3 text-left font-semibold">ชื่อ-นามสกุล</th>
-                  <th className="px-4 py-3 text-center font-semibold">วันทำการ</th>
+                  <th className="px-4 py-3 text-center font-semibold">จำนวนวัน</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าที่พัก</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าเบี้ยเลี้ยง</th>
                   <th className="px-4 py-3 text-center font-semibold">ค่าพาหนะประจำทาง<br />ศนร.-กทม. ไปกลับ</th>
