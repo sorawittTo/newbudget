@@ -574,12 +574,12 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                     <div className="h-10 flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] border border-blue-200/50">
                       <span className="font-bold text-lg text-blue-900">
                         {(() => {
-                          const total = item.days * item.hours * item.people * (item.rate || 0);
+                          const total = item.people * item.hours * item.days * (item.rate || 0);
                           console.log('Overtime calculation:', {
                             item: item.item,
-                            days: item.days,
-                            hours: item.hours,
                             people: item.people,
+                            hours: item.hours,
+                            days: item.days,
                             rate: item.rate,
                             total: total
                           });
@@ -620,6 +620,30 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Overtime Total Summary */}
+      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-blue-200/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-2xl bg-blue-100 shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff]">
+              <Calculator className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-blue-900">ยอดรวมค่าล่วงเวลาทั้งหมด</h3>
+              <p className="text-sm text-blue-700">คำนวณจาก: คน × ชั่วโมง × วัน × อัตราต่อชั่วโมง</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-3xl font-bold text-blue-900">
+              {formatCurrency(
+                (overtimeData.items || []).reduce((sum, item) => 
+                  sum + (item.people * item.hours * item.days * (item.rate || 0)), 0
+                )
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
