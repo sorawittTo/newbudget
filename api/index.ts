@@ -30,10 +30,19 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 // Export handler for Vercel
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  return new Promise((resolve) => {
-    // Convert Vercel request to Express request
-    app(req as any, res as any, () => {
-      resolve(undefined);
+  // Set Content-Type for API responses
+  if (!res.headersSent) {
+    res.setHeader('Content-Type', 'application/json');
+  }
+  
+  return new Promise((resolve, reject) => {
+    app(req as any, res as any, (err: any) => {
+      if (err) {
+        console.error('Handler error:', err);
+        reject(err);
+      } else {
+        resolve(undefined);
+      }
     });
   });
 }
