@@ -1,9 +1,8 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "module": "ESNext",
+    "module": "CommonJS",
     "target": "ES2022",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": false,
     "allowJs": true,
     "checkJs": false,
@@ -12,7 +11,15 @@
     "noEmit": false,
     "outDir": "dist",
     "declaration": false,
-    "sourceMap": false
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "baseUrl": ".",
+    "types": ["node"],
+    "paths": {
+      "@shared/*": ["./shared/*"]
+    }
   },
   "include": ["api/**/*", "server/**/*", "shared/**/*"],
   "exclude": ["node_modules", "client/**/*", "dist/**/*", "**/*.test.ts"]
