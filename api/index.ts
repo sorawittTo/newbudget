@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
-import { registerRoutes } from '../server/routes.js';
+import { registerRoutes } from '../server/routes';
 
 // Create Express app for serverless
 const app = express();

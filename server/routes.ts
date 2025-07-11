@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage.js";
-import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema, insertOvertimeItemSchema } from "../shared/schema.js";
+import { storage } from "./storage";
+import { insertEmployeeSchema, insertMasterRateSchema, insertBudgetItemSchema, insertOvertimeItemSchema } from "../shared/schema";
 
 // Log utility
 function log(message: string, source = "api") {

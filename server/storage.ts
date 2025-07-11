@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
-import * as schema from "../shared/schema.js";
+import * as schema from "../shared/schema";
 import type { 
   User, 
   InsertUser, 
@@ -15,7 +15,7 @@ import type {
   InsertSpecialAssistItem,
   OvertimeItem,
   InsertOvertimeItem
-} from "../shared/schema.js";
+} from "../shared/schema";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });
