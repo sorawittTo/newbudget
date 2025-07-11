@@ -1,35 +1,19 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
     "moduleResolution": "node",
-    "lib": ["ES2020"],
-    "outDir": "./dist",
-    "rootDir": ".",
-    "strict": true,
+    "module": "ESNext",
+    "target": "ES2022",
+    "allowImportingTsExtensions": false,
+    "allowJs": true,
+    "checkJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "outDir": "dist",
     "declaration": false,
-    "sourceMap": false,
-    "removeComments": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["./shared/*"]
-    },
-    "types": ["node"]
+    "sourceMap": false
   },
-  "include": [
-    "server/**/*",
-    "shared/**/*",
-    "api/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "client",
-    "dist",
-    "**/*.test.ts"
-  ]
+  "include": ["api/**/*", "server/**/*", "shared/**/*"],
+  "exclude": ["node_modules", "client/**/*", "dist/**/*", "**/*.test.ts"]
 }
