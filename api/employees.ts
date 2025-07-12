@@ -1,7 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { DatabaseStorage } from '../server/storage';
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
+import * as schema from "../shared/schema";
 
-const storage = new DatabaseStorage();
+const sql = neon(process.env.DATABASE_URL || process.env.NEON_DATABASE_URL!);
+const db = drizzle(sql, { schema });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -21,21 +25,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     switch (req.method) {
       case 'GET':
-        const employees = await storage.getEmployees();
+        const employees = await db.select().from(schema.employees);
         return res.status(200).json(employees);
       
       case 'POST':
         if (Array.isArray(req.body)) {
           // Bulk operations
-          const results = [];
-          for (const employeeData of req.body) {
-            const result = await storage.createEmployee(employeeData);
-            results.push(result);
-          }
+          const results = await db.insert(schema.employees).values(req.body).returning();
           return res.status(201).json(results);
         } else {
           // Single employee
-          const employee = await storage.createEmployee(req.body);
+          const [employee] = await db.insert(schema.employees).values(req.body).returning();
           return res.status(201).json(employee);
         }
       

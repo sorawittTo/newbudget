@@ -1,7 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { DatabaseStorage } from '../server/storage';
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
+import * as schema from "../shared/schema";
 
-const storage = new DatabaseStorage();
+const sql = neon(process.env.DATABASE_URL || process.env.NEON_DATABASE_URL!);
+const db = drizzle(sql, { schema });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -17,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     switch (req.method) {
       case 'GET':
-        const overtimeItems = await storage.getOvertimeItems();
+        const overtimeItems = await db.select().from(schema.overtimeItems);
         return res.status(200).json(overtimeItems);
       
       case 'POST':
