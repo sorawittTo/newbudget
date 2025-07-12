@@ -19,6 +19,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Check database URL
+    const dbUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
+    if (!dbUrl) {
+      return res.status(500).json({
+        error: 'Database URL not configured',
+        env: Object.keys(process.env).filter(key => key.includes('DATABASE') || key.includes('NEON'))
+      });
+    }
+    
     switch (req.method) {
       case 'GET':
         const masterRates = await db.select().from(schema.masterRates);
