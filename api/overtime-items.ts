@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { DatabaseStorage } from './server-storage';
+import { DatabaseStorage } from '../server/storage';
 
 const storage = new DatabaseStorage();
 
