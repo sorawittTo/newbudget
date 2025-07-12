@@ -1,0 +1,65 @@
+[14:15:20.448] Running build in Washington, D.C., USA (East) – iad1
+[14:15:20.449] Build machine configuration: 2 cores, 8 GB
+[14:15:20.484] Cloning github.com/wasanaraya/budget-final (Branch: main, Commit: c9240bc)
+[14:15:20.608] Previous build caches not available
+[14:15:20.774] Cloning completed: 290.000ms
+[14:15:21.095] Running "vercel build"
+[14:15:21.536] Vercel CLI 44.3.0
+[14:15:22.123] > Installing Builder: @vercel/node@3.2.18
+[14:15:33.514] Running "install" command: `npm install`...
+[14:15:36.112] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[14:15:36.365] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[14:15:36.366] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[14:15:36.367] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[14:15:36.875] npm warn deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
+[14:15:37.556] npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+[14:15:38.470] npm warn deprecated fstream@1.0.12: This package is no longer supported.
+[14:15:39.214] npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+[14:15:39.229] npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+[14:15:45.587] 
+[14:15:45.588] added 673 packages, and audited 674 packages in 12s
+[14:15:45.588] 
+[14:15:45.588] 76 packages are looking for funding
+[14:15:45.588]   run `npm fund` for details
+[14:15:45.626] 
+[14:15:45.627] 12 vulnerabilities (1 low, 8 moderate, 3 high)
+[14:15:45.627] 
+[14:15:45.627] To address issues that do not require attention, run:
+[14:15:45.627]   npm audit fix
+[14:15:45.627] 
+[14:15:45.628] To address all issues possible (including breaking changes), run:
+[14:15:45.628]   npm audit fix --force
+[14:15:45.628] 
+[14:15:45.628] Some issues need review, and may require choosing
+[14:15:45.629] a different dependency.
+[14:15:45.629] 
+[14:15:45.629] Run `npm audit` for details.
+[14:15:45.910] 
+[14:15:45.910] > rest-express@1.0.0 build
+[14:15:45.911] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[14:15:45.911] 
+[14:15:46.168] [36mvite v5.4.14 [32mbuilding for production...[36m[39m
+[14:15:46.218] transforming...
+[14:15:46.474] Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+[14:15:46.475]   npx update-browserslist-db@latest
+[14:15:46.475]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[14:15:56.674] [32m✓[39m 2730 modules transformed.
+[14:15:57.644] rendering chunks...
+[14:15:57.665] computing gzip size...
+[14:15:57.711] [2m../dist/public/[22m[32mindex.html                 [39m[1m[2m    1.54 kB[22m[1m[22m[2m │ gzip:   0.68 kB[22m
+[14:15:57.711] [2m../dist/public/[22m[2massets/[22m[35mindex-DlMz10a_.css  [39m[1m[2m   43.90 kB[22m[1m[22m[2m │ gzip:   6.94 kB[22m
+[14:15:57.711] [2m../dist/public/[22m[2massets/[22m[36mindex-qDGtxNnm.js   [39m[1m[33m1,759.95 kB[39m[22m[2m │ gzip: 497.91 kB[22m
+[14:15:57.712] [33m
+[14:15:57.712] (!) Some chunks are larger than 500 kB after minification. Consider:
+[14:15:57.712] - Using dynamic import() to code-split the application
+[14:15:57.712] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[14:15:57.712] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[14:15:57.713] [32m✓ built in 11.52s[39m
+[14:15:57.773] 
+[14:15:57.774]   dist/index.js  24.2kb
+[14:15:57.774] 
+[14:15:57.774] ⚡ Done in 6ms
+[14:15:57.812] Error: Found invalid Node.js Version: "22.x". Please set Node.js Version to 20.x in your Project Settings to use Node.js 20.
+[14:15:57.812] Learn More: http://vercel.link/node-version
+[14:15:58.088] 
+[14:16:00.586] Exiting build container
