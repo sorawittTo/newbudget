@@ -12,8 +12,5 @@
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
-  ],
-  "engines": {
-    "node": "20.x"
-  }
+  ]
 }
