@@ -56,7 +56,6 @@ const navigationItems: NavigationItem[] = [
     color: 'text-blue-600',
     gradient: 'from-blue-500 to-blue-600'
   },
-
   {
     id: 'employees',
     label: 'พนักงาน',
@@ -82,28 +81,12 @@ const navigationItems: NavigationItem[] = [
     gradient: 'from-pink-500 to-pink-600'
   },
   {
-    id: 'budget',
-    label: 'การจัดการงบประมาณประจำปี',
-    icon: <Banknote className="w-5 h-5" />,
-    description: 'จัดการงบประมาณรายจ่าย',
-    color: 'text-green-600',
-    gradient: 'from-green-500 to-green-600'
-  },
-  {
     id: 'workdays',
     label: 'วันทำงาน',
     icon: <Calendar className="w-5 h-5" />,
     description: 'จัดการวันหยุด',
     color: 'text-indigo-600',
     gradient: 'from-indigo-500 to-indigo-600'
-  },
-  {
-    id: 'reports',
-    label: 'รายงาน',
-    icon: <FileText className="w-5 h-5" />,
-    description: 'สรุปและรายงาน',
-    color: 'text-teal-600',
-    gradient: 'from-teal-500 to-teal-600'
   }
 ];
 

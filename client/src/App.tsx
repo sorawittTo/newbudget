@@ -80,9 +80,7 @@ function App() {
     }
   }, [saveAllData, showToast]);
 
-  const handleExportBudget = useCallback(() => {
-    showToast('ฟังก์ชันส่งออกงบประมาณถูกปิดใช้งาน เนื่องจากระบบได้ถูกปรับเป็นระบบจัดการพนักงาน', 'error');
-  }, [showToast]);
+
 
   const handleExportEmployees = useCallback(() => {
     try {
@@ -195,13 +193,7 @@ function App() {
           />
         );
 
-      case 'budget':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">งบประมาณ</h2>
-            <p className="text-gray-600">ระบบงบประมาณถูกปิดใช้งาน เนื่องจากระบบได้ถูกปรับเป็นระบบจัดการพนักงาน</p>
-          </div>
-        );
+
 
       case 'workdays':
         return (
@@ -215,13 +207,7 @@ function App() {
           />
         );
 
-      case 'reports':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">รายงานสรุป</h2>
-            <p className="text-gray-600">ระบบรายงานจะพัฒนาต่อไป</p>
-          </div>
-        );
+
 
       default:
         console.log('App.tsx - Passing specialAssist1DataByYear to Dashboard:', JSON.stringify(specialAssist1DataByYear, null, 2));
@@ -255,7 +241,7 @@ function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onSave={handleSave}
-        onExport={handleExportBudget}
+        onExport={handleExportEmployees}
         onImport={() => document.getElementById('import-file')?.click()}
         onRefresh={() => window.location.reload()}
       >
