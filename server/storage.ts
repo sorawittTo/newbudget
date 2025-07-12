@@ -17,7 +17,7 @@ import type {
   InsertOvertimeItem
 } from "../shared/schema";
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = neon(process.env.DATABASE_URL || process.env.NEON_DATABASE_URL!);
 const db = drizzle(sql, { schema });
 
 export interface IStorage {

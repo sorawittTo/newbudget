@@ -15,6 +15,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Log environment for debugging
+    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+    console.log('NEON_DATABASE_URL exists:', !!process.env.NEON_DATABASE_URL);
+    
     switch (req.method) {
       case 'GET':
         const employees = await storage.getEmployees();
@@ -41,6 +45,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error details:', error?.message || error);
+    return res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: error?.message || 'Unknown error',
+      hasDB: !!process.env.DATABASE_URL || !!process.env.NEON_DATABASE_URL
+    });
   }
 }
