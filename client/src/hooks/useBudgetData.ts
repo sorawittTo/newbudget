@@ -92,12 +92,13 @@ export const useBudgetData = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load data from database
+        // Load data from database with cache-busting
+        const timestamp = new Date().getTime();
         const [budgetResponse, employeesResponse, masterRatesResponse, overtimeResponse] = await Promise.all([
-          fetch('/api/budget-items'),
-          fetch('/api/employees'),
-          fetch('/api/master-rates'),
-          fetch('/api/overtime-items')
+          fetch(`/api/budget-items?_t=${timestamp}`),
+          fetch(`/api/employees?_t=${timestamp}`),
+          fetch(`/api/master-rates?_t=${timestamp}`),
+          fetch(`/api/overtime-items?_t=${timestamp}`)
         ]);
         
         const [budgetItems, employees, masterRatesArray, overtimeItems] = await Promise.all([
@@ -284,6 +285,7 @@ export const useBudgetData = () => {
     try {
       console.log('Saving data to Neon PostgreSQL...');
       console.log('Current overtimeDataByYear:', overtimeDataByYear);
+      console.log('Current employees count:', employees.length);
       
       // Save budget items
       const budgetItemsToSave = budgetData.filter(item => !item.type).map(item => ({
