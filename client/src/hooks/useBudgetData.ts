@@ -296,14 +296,14 @@ export const useBudgetData = () => {
       
       // Save employees - transform to database format
       const employeesToSave = employees.map(emp => ({
-        employeeId: emp.id,
+        employeeId: emp.employeeId || emp.id, // Use employeeId if available, fallback to id
         name: emp.name,
         gender: emp.gender,
         startYear: emp.startYear,
         level: emp.level,
         status: emp.status || 'มีสิทธิ์',
-        visitProvince: emp.visitProvince,
-        homeVisitBusFare: emp.homeVisitBusFare.toString(),
+        visitProvince: emp.visitProvince || '',
+        homeVisitBusFare: (emp.homeVisitBusFare || 0).toString(),
         workingDays: emp.workingDays || 1,
         travelWorkingDays: emp.travelWorkingDays || 1,
         customTravelRates: emp.customTravelRates || null

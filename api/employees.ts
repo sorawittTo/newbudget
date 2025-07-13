@@ -35,8 +35,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       case 'POST':
         if (Array.isArray(req.body)) {
-          // Bulk operations
-          const results = await db.insert(schema.employees).values(req.body).returning();
+          // Bulk operations - handle upsert logic
+          const results = [];
+          for (const empData of req.body) {
+            try {
+              // Check if employee exists by employeeId
+              const existing = await db.select().from(schema.employees).where(eq(schema.employees.employeeId, empData.employeeId)).limit(1);
+              
+              if (existing.length > 0) {
+                // Update existing employee
+                const [updated] = await db.update(schema.employees)
+                  .set({
+                    name: empData.name,
+                    gender: empData.gender,
+                    startYear: empData.startYear,
+                    level: empData.level,
+                    status: empData.status || 'มีสิทธิ์',
+                    visitProvince: empData.visitProvince || '',
+                    homeVisitBusFare: empData.homeVisitBusFare || '0',
+                    workingDays: empData.workingDays || 1,
+                    travelWorkingDays: empData.travelWorkingDays || 1,
+                    customTravelRates: empData.customTravelRates || null,
+                    updatedAt: new Date()
+                  })
+                  .where(eq(schema.employees.id, existing[0].id))
+                  .returning();
+                results.push(updated);
+              } else {
+                // Create new employee
+                const [created] = await db.insert(schema.employees).values({
+                  employeeId: empData.employeeId,
+                  name: empData.name,
+                  gender: empData.gender,
+                  startYear: empData.startYear,
+                  level: empData.level,
+                  status: empData.status || 'มีสิทธิ์',
+                  visitProvince: empData.visitProvince || '',
+                  homeVisitBusFare: empData.homeVisitBusFare || '0',
+                  workingDays: empData.workingDays || 1,
+                  travelWorkingDays: empData.travelWorkingDays || 1,
+                  customTravelRates: empData.customTravelRates || null
+                }).returning();
+                results.push(created);
+              }
+            } catch (singleError) {
+              console.error(`Error processing employee ${empData.name}:`, singleError);
+              // Continue with other employees
+            }
+          }
           return res.status(201).json(results);
         } else {
           // Single employee
