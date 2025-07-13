@@ -39,6 +39,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/employees", async (req, res) => {
     try {
       const employees = await storage.getEmployees();
+      console.log(`Fetched ${employees.length} employees from database`);
       res.json(employees);
     } catch (error) {
       console.error("Error fetching employees:", error);
