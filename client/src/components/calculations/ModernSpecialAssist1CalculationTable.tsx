@@ -224,10 +224,13 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
         </div>
         <div className="p-6">
           <textarea
+            id={`special-assist-notes-${calcYear}`}
+            name={`special-assist-notes-${calcYear}`}
             value={specialAssist1Data.notes}
             onChange={(e) => onUpdateNotes(calcYear, e.target.value)}
             className="w-full h-32 p-4 bg-slate-50/80 border-0 rounded-xl shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] focus:outline-none focus:ring-0 text-slate-700 placeholder-slate-500 resize-none"
             placeholder="เพิ่มหมายเหตุเพิ่มเติม..."
+            aria-label={`หมายเหตุเงินช่วยเหลือพิเศษ ปี ${calcYear}`}
           />
         </div>
       </div>
