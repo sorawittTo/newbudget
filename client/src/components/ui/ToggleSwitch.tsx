@@ -22,6 +22,8 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
     lg: 'toggle-switch-lg'
   };
 
+  const toggleId = `toggle-switch-${Math.random().toString(36).substr(2, 9)}`;
+
   return (
     <div className={`toggle-switch-wrapper ${className}`}>
       {label && (
@@ -30,12 +32,15 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       <div className={`switch-container ${sizeClasses[size]}`}>
         <input
           className="toggle-checkbox"
-          id={`toggle-switch-${Math.random().toString(36).substr(2, 9)}`}
+          id={toggleId}
           type="checkbox"
           checked={isActive}
-          onChange={(e) => onToggle(e.target.checked)}
+          onChange={(e) => {
+            console.log('Toggle switch changed:', e.target.checked);
+            onToggle(e.target.checked);
+          }}
         />
-        <label className="switch" htmlFor={`toggle-switch-${Math.random().toString(36).substr(2, 9)}`}>
+        <label className="switch" htmlFor={toggleId}>
           <div className="toggle">
             <div className="led"></div>
           </div>
