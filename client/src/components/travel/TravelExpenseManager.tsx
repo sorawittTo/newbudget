@@ -4,13 +4,13 @@ import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
+import { SaveButton } from '../ui/SaveButton';
 import { ModernTravelCalculationTable } from '../calculations/ModernTravelCalculationTable';
 import { 
   Car, 
   Home, 
   Users, 
   RotateCcw, 
-  Save,
   ChevronLeft,
   ChevronRight,
   Calculator,
@@ -265,13 +265,10 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
                 label="แก้ไข"
                 size="md"
               />
-              <Button 
+              <SaveButton 
                 onClick={onSave}
-                className="neumorphism-button px-6 py-3"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                บันทึก
-              </Button>
+                size="md"
+              />
               <Button 
                 onClick={handleExport}
                 className="neumorphism-button px-6 py-3"

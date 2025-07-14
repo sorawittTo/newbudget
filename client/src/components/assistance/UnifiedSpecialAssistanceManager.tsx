@@ -17,6 +17,7 @@ import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from 
 import { getRatesForEmployee, formatCurrency } from '../../utils/calculations';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
+import { SaveButton } from '../ui/SaveButton';
 import { exportSpecialAssistanceToExcel } from '../../utils/excel';
 
 interface UnifiedSpecialAssistanceManagerProps {
@@ -711,13 +712,10 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                 onToggle={(active) => toggleEditMode()}
               />
               
-              <button
+              <SaveButton
                 onClick={handleSave}
-                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                บันทึก
-              </button>
+                size="md"
+              />
               
               <button
                 onClick={handleExport}

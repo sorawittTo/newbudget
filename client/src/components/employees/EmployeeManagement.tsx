@@ -5,11 +5,11 @@ import { Button } from '../ui/Button';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
+import { SaveButton } from '../ui/SaveButton';
 import { exportEmployeesToExcel, exportMasterRatesToExcel } from '../../utils/excel';
 import { 
   Plus, 
   Trash2, 
-  Save, 
   Download, 
   Upload, 
   RotateCcw,
@@ -187,10 +187,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   label="แก้ไข"
                   size="sm"
                 />
-                <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
-                  <Save className="w-4 h-4 mr-2" />
-                  บันทึก
-                </Button>
+                <SaveButton onClick={onSave} size="sm" />
                 <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
                   <FileText className="w-4 h-4 mr-2" />
                   ส่งออก Excel
@@ -410,10 +407,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   label="แก้ไข"
                   size="sm"
                 />
-                <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
-                  <Save className="w-4 h-4 mr-2" />
-                  บันทึก
-                </Button>
+                <SaveButton onClick={onSave} size="sm" />
                 <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
                   <FileText className="w-4 h-4 mr-2" />
                   ส่งออก Excel
