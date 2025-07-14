@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SpecialAssistData, SpecialAssistItem } from '../../types';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
+import { NeumorphismIconButton } from '../ui/NeumorphismIconButton';
 import { formatCurrency } from '../../utils/calculations';
 import { Save, ChevronLeft, ChevronRight, Plus, Trash2, Banknote, FileText, Calculator } from 'lucide-react';
 
@@ -71,30 +72,32 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
           {/* Year Navigation and Save */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-white/80 p-2 rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
-              <button
+              <NeumorphismIconButton
+                icon={ChevronLeft}
+                label="ปีก่อนหน้า"
                 onClick={() => onYearChange(calcYear - 1)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5 text-slate-600" />
-              </button>
+                variant="secondary"
+                size="sm"
+              />
               <div className="px-4 py-2 font-bold text-lg text-slate-800">
                 ปี {calcYear}
               </div>
-              <button
+              <NeumorphismIconButton
+                icon={ChevronRight}
+                label="ปีถัดไป"
                 onClick={() => onYearChange(calcYear + 1)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-600" />
-              </button>
+                variant="secondary"
+                size="sm"
+              />
             </div>
             
-            <button
+            <NeumorphismIconButton
+              icon={Save}
+              label="บันทึก"
               onClick={onSave}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] transition-all duration-300 font-medium flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              บันทึก
-            </button>
+              variant="success"
+              size="md"
+            />
           </div>
         </div>
       </div>
@@ -121,13 +124,13 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
         <div className="p-6 border-b border-slate-200/50">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-bold text-slate-800">รายการเงินช่วยเหลือพิเศษ</h3>
-            <button
+            <NeumorphismIconButton
+              icon={Plus}
+              label="เพิ่มรายการ"
               onClick={handleAddItem}
-              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] transition-all duration-200 font-medium flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              เพิ่มรายการ
-            </button>
+              variant="primary"
+              size="md"
+            />
           </div>
         </div>
 
@@ -196,12 +199,13 @@ export const ModernSpecialAssist1CalculationTable: React.FC<ModernSpecialAssist1
                         <span className="font-bold text-emerald-700">{formatCurrency(calculateItemTotal(item))}</span>
                       </div>
                     </div>
-                    <button
+                    <NeumorphismIconButton
+                      icon={Trash2}
+                      label="ลบรายการ"
                       onClick={() => handleDeleteItem(index)}
-                      className="mt-2 w-8 h-8 rounded-lg bg-red-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#d1d5db,-4px_-4px_8px_#ffffff] flex items-center justify-center text-red-600 transition-all duration-200"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                      variant="danger"
+                      size="sm"
+                    />
                   </div>
                 </div>
               </div>

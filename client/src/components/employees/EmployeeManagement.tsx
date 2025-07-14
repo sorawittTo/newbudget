@@ -7,6 +7,7 @@ import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { SaveButton } from '../ui/SaveButton';
 import { NeumorphismButton } from '../ui/NeumorphismButton';
+import { NeumorphismIconButton } from '../ui/NeumorphismIconButton';
 import { exportEmployeesToExcel, exportMasterRatesToExcel } from '../../utils/excel';
 import { 
   Plus, 
@@ -178,7 +179,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-gray-900">รายชื่อพนักงาน</h3>
               <div className="flex gap-3 items-center">
-                <NeumorphismButton
+                <NeumorphismIconButton
                   icon={Plus}
                   label="เพิ่มพนักงาน"
                   onClick={onAddEmployee}
@@ -192,7 +193,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   size="sm"
                 />
                 <SaveButton onClick={onSave} size="sm" />
-                <NeumorphismButton
+                <NeumorphismIconButton
                   icon={FileText}
                   label="ส่งออก Excel"
                   onClick={handleExportClick}
@@ -225,7 +226,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       <div className="flex flex-col items-center gap-3">
                         <User className="w-12 h-12 text-gray-300" />
                         <p>ไม่มีข้อมูลพนักงาน</p>
-                        <NeumorphismButton
+                        <NeumorphismIconButton
                           icon={Plus}
                           label="เพิ่มพนักงานคนแรก"
                           onClick={onAddEmployee}
@@ -387,7 +388,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         />
                       </td>
                       <td className="p-3 text-center">
-                        <NeumorphismButton
+                        <NeumorphismIconButton
                           icon={Trash2}
                           label="ลบพนักงาน"
                           onClick={() => onDeleteEmployee(index)}
@@ -418,7 +419,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   size="sm"
                 />
                 <SaveButton onClick={onSave} size="sm" />
-                <NeumorphismButton
+                <NeumorphismIconButton
                   icon={FileText}
                   label="ส่งออก Excel"
                   onClick={handleExportClick}

@@ -1,0 +1,359 @@
+/* High-Level Neumorphism 3D Icon Button Styles */
+.neumorphism-icon-btn {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  background: #c9d5e0;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow:
+    20px 20px 40px -5px rgba(0, 0, 0, 0.2),
+    inset 15px 15px 20px rgba(255, 255, 255, 0.8),
+    -15px -15px 30px rgba(255, 255, 255, 0.6),
+    inset -3px -3px 15px rgba(0, 0, 0, 0.25);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+.neumorphism-icon-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:
+    25px 25px 50px -5px rgba(0, 0, 0, 0.25),
+    inset 20px 20px 25px rgba(255, 255, 255, 0.9),
+    -20px -20px 40px rgba(255, 255, 255, 0.7),
+    inset -5px -5px 20px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15));
+}
+
+.neumorphism-icon-btn:active {
+  transform: translateY(-2px) scale(0.98);
+  box-shadow:
+    15px 15px 30px -5px rgba(0, 0, 0, 0.3),
+    inset 10px 10px 15px rgba(255, 255, 255, 0.75),
+    -10px -10px 20px rgba(255, 255, 255, 0.55),
+    inset -2px -2px 10px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+}
+
+.neumorphism-icon-btn-outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  background: #acbaca;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  box-shadow:
+    8px 8px 16px 0 rgba(21, 43, 74, 0.4),
+    inset 8px 8px 12px rgba(255, 255, 255, 0.6),
+    -8px -8px 16px rgba(255, 255, 255, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neumorphism-icon-btn:hover .neumorphism-icon-btn-outer {
+  background: #b8c8d8;
+  box-shadow:
+    12px 12px 24px 0 rgba(21, 43, 74, 0.5),
+    inset 12px 12px 18px rgba(255, 255, 255, 0.7),
+    -12px -12px 24px rgba(255, 255, 255, 1);
+}
+
+.neumorphism-icon-btn:active .neumorphism-icon-btn-outer {
+  background: #9eb4c8;
+  box-shadow:
+    6px 6px 12px 0 rgba(21, 43, 74, 0.6),
+    inset 6px 6px 9px rgba(255, 255, 255, 0.65),
+    -6px -6px 12px rgba(255, 255, 255, 0.9);
+}
+
+.neumorphism-icon-btn-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #d0dce8, #a8b8c8);
+  border-radius: 50%;
+  box-shadow:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.15),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neumorphism-icon-btn:hover .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #dce8f4, #b4c8d8);
+  box-shadow:
+    inset 6px 6px 12px rgba(0, 0, 0, 0.2),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.85);
+}
+
+.neumorphism-icon-btn:active .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #a8b8c8, #94a8b8);
+  box-shadow:
+    inset 8px 8px 16px rgba(0, 0, 0, 0.25),
+    inset -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+.neumorphism-icon-btn-icon {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #374151;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.neumorphism-icon-btn:hover .neumorphism-icon-btn-icon {
+  transform: scale(1.1) rotate(5deg);
+  color: #1f2937;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+}
+
+.neumorphism-icon-btn:active .neumorphism-icon-btn-icon {
+  transform: scale(0.95) rotate(-2deg);
+  color: #111827;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Loading State */
+.neumorphism-icon-btn.loading .neumorphism-icon-btn-outer {
+  background: #b0c0d0;
+  animation: neumorphism-pulse 2s infinite ease-in-out;
+}
+
+.neumorphism-icon-btn-loader {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #c9d5e0;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  mix-blend-mode: hard-light;
+  box-shadow:
+    15px 15px 30px -3px rgba(0, 0, 0, 0.2),
+    inset 10px 10px 15px rgba(255, 255, 255, 0.8),
+    -10px -10px 20px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.neumorphism-icon-btn-circle {
+  position: absolute;
+  inset: 20%;
+  background: #acbaca;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  box-shadow:
+    4px 4px 8px 0 rgba(21, 43, 74, 0.5),
+    inset 4px 4px 6px rgba(255, 255, 255, 0.6),
+    -4px -4px 8px rgba(255, 255, 255, 1);
+}
+
+.neumorphism-icon-btn-circle::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(145deg, #2196f3, #e91e63);
+  mix-blend-mode: color-burn;
+  border-radius: 50%;
+  animation: neumorphism-3d-spin 2s linear infinite;
+}
+
+.neumorphism-icon-btn-circle::after {
+  content: "";
+  position: absolute;
+  inset: 25%;
+  filter: blur(0.8px);
+  background: #acbaca;
+  border-radius: 50%;
+  z-index: 1000;
+}
+
+@keyframes neumorphism-3d-spin {
+  0% {
+    transform: rotate(0deg) rotateX(0deg);
+    filter: blur(1px);
+  }
+  50% {
+    transform: rotate(180deg) rotateX(20deg);
+    filter: blur(2px);
+  }
+  100% {
+    transform: rotate(360deg) rotateX(0deg);
+    filter: blur(1px);
+  }
+}
+
+@keyframes neumorphism-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Size Variants */
+.neumorphism-icon-btn-sm {
+  width: 48px;
+  height: 48px;
+  font-size: 0.8rem;
+}
+
+.neumorphism-icon-btn-sm .neumorphism-icon-btn-outer {
+  padding: 6px;
+}
+
+.neumorphism-icon-btn-sm .neumorphism-icon-btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.neumorphism-icon-btn-md {
+  width: 56px;
+  height: 56px;
+  font-size: 0.9rem;
+}
+
+.neumorphism-icon-btn-md .neumorphism-icon-btn-outer {
+  padding: 8px;
+}
+
+.neumorphism-icon-btn-md .neumorphism-icon-btn-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.neumorphism-icon-btn-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 1rem;
+}
+
+.neumorphism-icon-btn-lg .neumorphism-icon-btn-outer {
+  padding: 10px;
+}
+
+.neumorphism-icon-btn-lg .neumorphism-icon-btn-icon {
+  width: 26px;
+  height: 26px;
+}
+
+/* Color Variants */
+.neumorphism-icon-btn-primary .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #dbeafe, #bfdbfe);
+}
+
+.neumorphism-icon-btn-primary .neumorphism-icon-btn-icon {
+  color: #1e40af;
+}
+
+.neumorphism-icon-btn-secondary .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #e5e7eb, #d1d5db);
+}
+
+.neumorphism-icon-btn-secondary .neumorphism-icon-btn-icon {
+  color: #6b7280;
+}
+
+.neumorphism-icon-btn-success .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #d1fae5, #bbf7d0);
+}
+
+.neumorphism-icon-btn-success .neumorphism-icon-btn-icon {
+  color: #059669;
+}
+
+.neumorphism-icon-btn-danger .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #fecaca, #fca5a5);
+}
+
+.neumorphism-icon-btn-danger .neumorphism-icon-btn-icon {
+  color: #dc2626;
+}
+
+.neumorphism-icon-btn-warning .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #fef3c7, #fde68a);
+}
+
+.neumorphism-icon-btn-warning .neumorphism-icon-btn-icon {
+  color: #d97706;
+}
+
+/* Disabled State */
+.neumorphism-icon-btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.neumorphism-icon-btn.disabled:hover {
+  transform: none;
+  box-shadow:
+    20px 20px 40px -5px rgba(0, 0, 0, 0.2),
+    inset 15px 15px 20px rgba(255, 255, 255, 0.8),
+    -15px -15px 30px rgba(255, 255, 255, 0.6),
+    inset -3px -3px 15px rgba(0, 0, 0, 0.25);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1)) grayscale(0.5);
+}
+
+.neumorphism-icon-btn.disabled .neumorphism-icon-btn-inner {
+  background: linear-gradient(145deg, #9ca3af, #6b7280);
+}
+
+.neumorphism-icon-btn.disabled .neumorphism-icon-btn-icon {
+  color: #9ca3af;
+}
+
+/* Focus States */
+.neumorphism-icon-btn:focus-visible {
+  outline: 3px solid #2196f3;
+  outline-offset: 4px;
+}
+
+/* Glow effect for active state */
+.neumorphism-icon-btn:hover::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.8;
+  animation: neumorphism-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes neumorphism-glow {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* 3D Depth Enhancement */
+.neumorphism-icon-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neumorphism-icon-btn:hover::after {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(1.1);
+}

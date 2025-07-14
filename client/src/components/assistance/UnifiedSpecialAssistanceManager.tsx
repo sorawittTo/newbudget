@@ -19,6 +19,7 @@ import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { SaveButton } from '../ui/SaveButton';
 import { NeumorphismButton } from '../ui/NeumorphismButton';
+import { NeumorphismIconButton } from '../ui/NeumorphismIconButton';
 import { exportSpecialAssistanceToExcel } from '../../utils/excel';
 
 interface UnifiedSpecialAssistanceManagerProps {
@@ -718,7 +719,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                 size="md"
               />
               
-              <NeumorphismButton
+              <NeumorphismIconButton
                 icon={FileText}
                 label="ส่งออก Excel"
                 onClick={handleExport}
