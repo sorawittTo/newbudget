@@ -1,0 +1,40 @@
+<button data-replit-metadata="client/src/components/layout/AppLayout.tsx:158:12" data-component-name="Button" class="inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-sm p-2 hover:bg-gray-100" tabindex="0" style="background: rgb(201, 213, 224); border-radius: 20px; border: none; position: relative; transform-style: preserve-3d; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif; font-weight: 500; box-shadow: rgba(0, 0, 0, 0.2) 20px 20px 40px -5px, rgba(255, 255, 255, 0.8) 15px 15px 20px inset, rgba(255, 255, 255, 0.6) -15px -15px 30px, rgba(0, 0, 0, 0.25) -3px -3px 15px inset; filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 10px 20px); color: rgb(107, 114, 128);">
+Open in Elements
+Request
+https://f4303800-ffb3-4ce0-b0f3-b602a356e595-00-3qin60usn13ri.kirk.replit.dev/
+Further Reading
+Learn more about this axe rule at Deque University
+Learn why this is important and how to fix it on webhint.io
+<button data-replit-metadata="client/src/components/layout/AppLayout.tsx:291:16" data-component-name="Button" class="inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-sm p-2 hover:bg-gray-100" tabindex="0" style="background: rgb(201, 213, 224); border-radius: 20px; border: none; position: relative; transform-style: preserve-3d; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif; font-weight: 500; box-shadow: rgba(0, 0, 0, 0.2) 20px 20px 40px -5px, rgba(255, 255, 255, 0.8) 15px 15px 20px inset, rgba(255, 255, 255, 0.6) -15px -15px 30px, rgba(0, 0, 0, 0.25) -3px -3px 15px inset; filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 10px 20px); color: rgb(107, 114, 128);">
+Open in Elements
+Request
+https://f4303800-ffb3-4ce0-b0f3-b602a356e595-00-3qin60usn13ri.kirk.replit.dev/
+Further Reading
+Learn more about this axe rule at Deque University
+Learn why this is important and how to fix it on webhint.io
+<button data-replit-metadata="client/src/components/layout/AppLayout.tsx:300:16" data-component-name="Button" class="inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-sm p-2 hover:bg-gray-100" tabindex="0" style="background: rgb(201, 213, 224); border-radius: 20px; border: none; position: relative; transform-style: preserve-3d; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif; font-weight: 500; box-shadow: rgba(0, 0, 0, 0.2) 20px 20px 40px -5px, rgba(255, 255, 255, 0.8) 15px 15px 20px inset, rgba(255, 255, 255, 0.6) -15px -15px 30px, rgba(0, 0, 0, 0.25) -3px -3px 15px inset; filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 10px 20px); color: rgb(107, 114, 128);">
+Open in Elements
+Request
+https://f4303800-ffb3-4ce0-b0f3-b602a356e595-00-3qin60usn13ri.kirk.replit.dev/
+Further Reading
+Learn more about this axe rule at Deque University
+Learn why this is important and how to fix it on webhint.io
+<button data-replit-metadata="client/src/components/layout/AppLayout.tsx:309:16" data-component-name="Button" class="inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-sm p-2 hover:bg-gray-100 relative" tabindex="0" style="background: rgb(201, 213, 224); border-radius: 20px; border: none; position: relative; transform-style: preserve-3d; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif; font-weight: 500; box-shadow: rgba(0, 0, 0, 0.2) 20px 20px 40px -5px, rgba(255, 255, 255, 0.8) 15px 15px 20px inset, rgba(255, 255, 255, 0.6) -15px -15px 30px, rgba(0, 0, 0, 0.25) -3px -3px 15px inset; filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 10px 20px); color: rgb(107, 114, 128);">
+Open in Elements
+Request
+https://f4303800-ffb3-4ce0-b0f3-b602a356e595-00-3qin60usn13ri.kirk.replit.dev/
+Further Reading
+Learn more about this axe rule at Deque University
+Learn why this is important and how to fix it on webhint.io
+<button data-replit-metadata="client/src/components/layout/AppLayout.tsx:320:18" data-component-name="Button" class="inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-sm p-2 hover:bg-gray-100" tabindex="0" style="background: rgb(201, 213, 224); border-radius: 20px; border: none; position: relative; transform-style: preserve-3d; transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif; font-weight: 500; box-shadow: rgba(0, 0, 0, 0.2) 20px 20px 40px -5px, rgba(255, 255, 255, 0.8) 15px 15px 20px inset, rgba(255, 255, 255, 0.6) -15px -15px 30px, rgba(0, 0, 0, 0.25) -3px -3px 15px inset; filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 10px 20px); color: rgb(107, 114, 128);">
+Open in Elements
+Request
+https://f4303800-ffb3-4ce0-b0f3-b602a356e595-00-3qin60usn13ri.kirk.replit.dev/
+Further Reading
+Learn more about this axe rule at Deque University
+Learn why this is important and how to fix it on webhint.io
+Compatibility
+'-webkit-text-size-adjust' is not supported by Chrome, Chrome Android, Edge 79+, Firefox, Safari. Add 'text-size-adjust' to support Chrome 54+, Chrome Android 54+, Edge 79+.
+'text-size-adjust' is not supported by Firefox, Safari.
+Other
+A form field element should have an id or name attribute

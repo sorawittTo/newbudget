@@ -694,6 +694,8 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => onYearChange(calcYear - 1)}
                 className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                aria-label="ปีก่อนหน้า"
+                title="ปีก่อนหน้า"
               >
                 <ChevronLeft className="w-5 h-5 text-slate-600" />
               </button>
@@ -703,6 +705,8 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
               <button
                 onClick={() => onYearChange(calcYear + 1)}
                 className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                aria-label="ปีถัดไป"
+                title="ปีถัดไป"
               >
                 <ChevronRight className="w-5 h-5 text-slate-600" />
               </button>

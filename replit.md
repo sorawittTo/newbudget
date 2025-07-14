@@ -130,6 +130,8 @@ Changelog:
   * Added accessibility attributes to all checkbox inputs in employee table (select all, individual selection)
   * Enhanced ToggleSwitch component with proper name, aria-label, and title attributes
   * Added accessibility attributes to all employee table input fields (ID, name, etc.)
+  * Enhanced AppLayout navigation and header buttons with proper aria-label and title attributes
+  * Added accessibility attributes to year navigation buttons in assistance manager
   * Fixed service worker cache control to use no-cache instead of no-store
   * All form elements now fully comply with WCAG accessibility standards
   * System now passes comprehensive web standards validation
