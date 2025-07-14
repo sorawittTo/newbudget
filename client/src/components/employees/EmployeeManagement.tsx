@@ -4,6 +4,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { NeumorphismSelect } from '../ui/NeumorphismSelect';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { exportEmployeesToExcel, exportMasterRatesToExcel } from '../../utils/excel';
 import { 
   Plus, 
@@ -175,22 +176,17 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-gray-900">รายชื่อพนักงาน</h3>
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-center">
                 <Button onClick={onAddEmployee}>
                   <Plus className="w-4 h-4 mr-2" />
                   เพิ่มพนักงาน
                 </Button>
-                <Button 
-                  onClick={() => setGlobalEditMode(!globalEditMode)}
-                  variant={globalEditMode ? "secondary" : "primary"}
-                  className={globalEditMode 
-                    ? "bg-orange-600 hover:bg-orange-700 text-white" 
-                    : "bg-purple-600 hover:bg-purple-700 text-white"
-                  }
-                >
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
-                </Button>
+                <ToggleSwitch 
+                  isActive={globalEditMode}
+                  onToggle={setGlobalEditMode}
+                  label="แก้ไข"
+                  size="sm"
+                />
                 <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
                   <Save className="w-4 h-4 mr-2" />
                   บันทึก
@@ -407,18 +403,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-gray-900">ตารางอัตราค่าใช้จ่ายมาตรฐาน</h3>
-              <div className="flex gap-3">
-                <Button 
-                  onClick={() => setGlobalEditMode(!globalEditMode)}
-                  variant={globalEditMode ? "secondary" : "primary"}
-                  className={globalEditMode 
-                    ? "bg-orange-600 hover:bg-orange-700 text-white" 
-                    : "bg-purple-600 hover:bg-purple-700 text-white"
-                  }
-                >
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  {globalEditMode ? 'ปิดการแก้ไข' : 'แก้ไข'}
-                </Button>
+              <div className="flex gap-3 items-center">
+                <ToggleSwitch 
+                  isActive={globalEditMode}
+                  onToggle={setGlobalEditMode}
+                  label="แก้ไข"
+                  size="sm"
+                />
                 <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
                   <Save className="w-4 h-4 mr-2" />
                   บันทึก

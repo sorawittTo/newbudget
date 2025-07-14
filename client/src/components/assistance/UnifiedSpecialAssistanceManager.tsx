@@ -16,6 +16,7 @@ import {
 import { Employee, MasterRates, SpecialAssistData, OvertimeData, Holiday } from '../../types';
 import { getRatesForEmployee, formatCurrency } from '../../utils/calculations';
 import { NeumorphismInput } from '../ui/NeumorphismInput';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { exportSpecialAssistanceToExcel } from '../../utils/excel';
 
 interface UnifiedSpecialAssistanceManagerProps {
@@ -705,17 +706,10 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={toggleEditMode}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
-                  editMode
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
-                    : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]'
-                }`}
-              >
-                {editMode ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                {editMode ? 'เสร็จสิ้น' : 'แก้ไข'}
-              </button>
+              <ToggleSwitch
+                isActive={editMode}
+                onToggle={toggleEditMode}
+              />
               
               <button
                 onClick={handleSave}

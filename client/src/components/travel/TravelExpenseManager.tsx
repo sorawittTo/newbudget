@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Employee, MasterRates } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { ModernTravelCalculationTable } from '../calculations/ModernTravelCalculationTable';
 import { 
   Car, 
@@ -258,23 +259,12 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
             </div>
             
             <div className="flex items-center gap-3">
-              <Button
-                variant={globalEditMode ? "danger" : "default"}
-                onClick={() => setGlobalEditMode(!globalEditMode)}
-                className="neumorphism-button px-6 py-3"
-              >
-                {globalEditMode ? (
-                  <>
-                    <X className="w-4 h-4 mr-2" />
-                    ปิดการแก้ไข
-                  </>
-                ) : (
-                  <>
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    แก้ไข
-                  </>
-                )}
-              </Button>
+              <ToggleSwitch 
+                isActive={globalEditMode}
+                onToggle={setGlobalEditMode}
+                label="แก้ไข"
+                size="md"
+              />
               <Button 
                 onClick={onSave}
                 className="neumorphism-button px-6 py-3"

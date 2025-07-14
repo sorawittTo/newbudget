@@ -1,0 +1,191 @@
+/* Toggle Switch Wrapper */
+.toggle-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toggle-switch-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  user-select: none;
+}
+
+/* Switch Container - Default (md) */
+.switch-container {
+  position: relative;
+  width: 150px;
+  height: 60px;
+  background: #d6d6d6;
+  border-radius: 50px;
+  box-shadow:
+    inset -8px -8px 16px #ffffff,
+    inset 8px 8px 16px #b0b0b0;
+}
+
+/* Size Variants */
+.toggle-switch-sm {
+  width: 120px;
+  height: 48px;
+}
+
+.toggle-switch-lg {
+  width: 180px;
+  height: 72px;
+}
+
+/* Hidden Checkbox */
+.toggle-checkbox {
+  display: none;
+}
+
+/* Switch Label (Interactive Area) */
+.switch {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateY(-50%);
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Toggle Button - Default (md) */
+.toggle {
+  position: absolute;
+  width: 80px;
+  height: 50px;
+  background: linear-gradient(145deg, #d9d9d9, #bfbfbf);
+  border-radius: 50px;
+  top: 5px;
+  left: 5px;
+  box-shadow:
+    -4px -4px 8px #ffffff,
+    4px 4px 8px #b0b0b0;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+
+/* Size-specific toggle dimensions */
+.toggle-switch-sm .toggle {
+  width: 64px;
+  height: 38px;
+  top: 5px;
+  left: 5px;
+  padding-left: 8px;
+}
+
+.toggle-switch-lg .toggle {
+  width: 96px;
+  height: 62px;
+  top: 5px;
+  left: 5px;
+  padding-left: 12px;
+}
+
+/* LED Light - Default (md) */
+.led {
+  width: 10px;
+  height: 10px;
+  background: grey;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Size-specific LED dimensions */
+.toggle-switch-sm .led {
+  width: 8px;
+  height: 8px;
+}
+
+.toggle-switch-lg .led {
+  width: 12px;
+  height: 12px;
+}
+
+/* Active State for Toggle (ON) - Default (md) */
+.toggle-checkbox:checked + .switch .toggle {
+  left: 65px;
+  background: linear-gradient(145deg, #cfcfcf, #a9a9a9);
+  box-shadow:
+    -4px -4px 8px #ffffff,
+    4px 4px 8px #8a8a8a;
+}
+
+/* Size-specific active positions */
+.toggle-switch-sm .toggle-checkbox:checked + .switch .toggle {
+  left: 51px;
+}
+
+.toggle-switch-lg .toggle-checkbox:checked + .switch .toggle {
+  left: 79px;
+}
+
+/* Active LED */
+.toggle-checkbox:checked + .switch .led {
+  background: #fbbf24;
+  box-shadow: 0 0 15px 4px #fbbf24;
+}
+
+/* Hover Effect */
+.switch:hover .toggle {
+  box-shadow:
+    -4px -4px 12px #ffffff,
+    4px 4px 12px #9b9b9b;
+}
+
+/* Focus styles for accessibility */
+.toggle-checkbox:focus + .switch {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.toggle-checkbox:disabled + .switch {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-checkbox:disabled + .switch .toggle {
+  background: linear-gradient(145deg, #f3f4f6, #e5e7eb);
+}
+
+.toggle-checkbox:disabled + .switch .led {
+  background: #9ca3af;
+  box-shadow: none;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .toggle-switch-label {
+    color: #d1d5db;
+  }
+  
+  .switch-container {
+    background: #4b5563;
+    box-shadow:
+      inset -8px -8px 16px #6b7280,
+      inset 8px 8px 16px #374151;
+  }
+  
+  .toggle {
+    background: linear-gradient(145deg, #6b7280, #4b5563);
+    box-shadow:
+      -4px -4px 8px #6b7280,
+      4px 4px 8px #374151;
+  }
+  
+  .toggle-checkbox:checked + .switch .toggle {
+    background: linear-gradient(145deg, #5b6472, #3f4954);
+    box-shadow:
+      -4px -4px 8px #6b7280,
+      4px 4px 8px #2d3748;
+  }
+}

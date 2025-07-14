@@ -4,6 +4,7 @@ import { Employee, FamilyVisitEmployee } from '../../types';
 import { formatCurrency, calculateFamilyVisit } from '../../utils/calculations';
 import { Save, Info, Edit3, Check, X, Users, MapPin, Calculator, AlertCircle, TrendingUp, Target, Award } from 'lucide-react';
 import { Card } from '../ui/Card';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 
 interface ModernFamilyVisitCalculationTableProps {
   employees: Employee[];

@@ -5,6 +5,7 @@ import { formatCurrency, getRatesForEmployee } from '../../utils/calculations';
 import { Save, RotateCcw, MapPin, Edit3, Check, X, Plane, Car, Hotel, DollarSign, Award, Calculator, TrendingUp, Users } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 
 interface ModernManagerRotationCalculationTableProps {
   employees: Employee[];
