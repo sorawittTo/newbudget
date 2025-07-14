@@ -280,11 +280,13 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     }
     
     console.log(`Calculating ${summaryName} for year ${year}:`, subItems);
+    console.log(`Available budgetItems:`, budgetItems.map(item => ({ name: item.name, year: item.year, amount: item.amount, type: item.type })));
     
     const total = subItems.reduce((total, subItemName) => {
       const subItemGroups = budgetItems.filter(item => 
         item.name === subItemName && item.year === year && !item.type
       );
+      console.log(`  Filtered items for ${subItemName}:`, subItemGroups);
       const subTotal = subItemGroups.reduce((sum, item) => {
         console.log(`  Item: ${item.name}, Amount: ${item.amount}`);
         return sum + (item.amount || 0);
