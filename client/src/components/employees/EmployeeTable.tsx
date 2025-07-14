@@ -189,10 +189,14 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <th className="px-4 py-3 w-16 text-center">
                   <div className="flex items-center justify-center">
                     <input
+                      id="select-all-employees"
+                      name="select-all-employees"
                       type="checkbox"
                       checked={selectedTravelEmployees.length === employees.length && employees.length > 0}
                       onChange={(e) => e.target.checked ? handleSelectAll() : handleSelectNone()}
                       className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      aria-label="เลือกพนักงานทั้งหมด"
+                      title="เลือกพนักงานทั้งหมด"
                     />
                   </div>
                 </th>
@@ -221,28 +225,38 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   }`}>
                     <td className="px-4 py-3 text-center">
                       <input
+                        id={`select-employee-${emp.id}`}
+                        name={`select-employee-${emp.id}`}
                         type="checkbox"
                         checked={isEmployeeSelected(emp.id)}
                         onChange={(e) => handleSelectionChange(emp.id, e.target.checked)}
                         className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        aria-label={`เลือกพนักงาน ${emp.name}`}
+                        title={`เลือกพนักงาน ${emp.name}`}
                       />
                     </td>
                     <td className="p-3">
                       <input
+                        id={`employee-id-${index}`}
+                        name={`employee-id-${index}`}
                         type="text"
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.id}
                         onChange={(e) => updateEmployeeField(index, 'id', e.target.value)}
                         disabled={!globalEditMode}
+                        aria-label={`รหัสพนักงาน ${emp.name}`}
                       />
                     </td>
                     <td className="p-3">
                       <input
+                        id={`employee-name-${index}`}
+                        name={`employee-name-${index}`}
                         type="text"
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={emp.name}
                         onChange={(e) => updateEmployeeField(index, 'name', e.target.value)}
                         disabled={!globalEditMode}
+                        aria-label={`ชื่อ-สกุล พนักงาน ${emp.name}`}
                       />
                     </td>
                     <td className="p-3">

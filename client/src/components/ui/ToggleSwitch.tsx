@@ -33,9 +33,12 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         <input
           className="toggle-input"
           id={toggleId}
+          name={toggleId}
           type="checkbox"
           checked={isActive}
           onChange={(e) => onToggle(e.target.checked)}
+          aria-label={label}
+          title={label}
         />
         <div className="toggle-handle-wrapper">
           <div className="toggle-handle">
