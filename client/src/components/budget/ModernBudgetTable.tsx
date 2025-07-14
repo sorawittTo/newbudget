@@ -528,7 +528,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
       <Card className="overflow-hidden">
         {renderTableHeader()}
         
-        <div className="max-h-96 overflow-y-auto">
+        <div>
           {groupedItems.map((group, index) => renderBudgetItem(group, index))}
         </div>
         
