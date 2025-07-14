@@ -274,28 +274,23 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
   // Helper function to calculate summary total
   const calculateSummaryTotal = (summaryName: string, year: number): number => {
     const subItems = summaryItems[summaryName as keyof typeof summaryItems];
-    if (!subItems) {
-      console.log(`No sub-items found for ${summaryName}`);
-      return 0;
+    if (!subItems) return 0;
+    
+    let total = 0;
+    
+    for (const subItemName of subItems) {
+      const matchingItems = budgetItems.filter(item => 
+        item.name === subItemName && 
+        item.year === year && 
+        (!item.type || item.type === null)
+      );
+      
+      for (const item of matchingItems) {
+        const amount = parseFloat(String(item.amount)) || 0;
+        total += amount;
+      }
     }
     
-    console.log(`Calculating ${summaryName} for year ${year}:`, subItems);
-    console.log(`Available budgetItems:`, budgetItems.map(item => ({ name: item.name, year: item.year, amount: item.amount, type: item.type })));
-    
-    const total = subItems.reduce((total, subItemName) => {
-      const subItemGroups = budgetItems.filter(item => 
-        item.name === subItemName && item.year === year && !item.type
-      );
-      console.log(`  Filtered items for ${subItemName}:`, subItemGroups);
-      const subTotal = subItemGroups.reduce((sum, item) => {
-        console.log(`  Item: ${item.name}, Amount: ${item.amount}`);
-        return sum + (item.amount || 0);
-      }, 0);
-      console.log(`  Subtotal for ${subItemName}: ${subTotal}`);
-      return total + subTotal;
-    }, 0);
-    
-    console.log(`Total for ${summaryName} (${year}): ${total}`);
     return total;
   };
 
