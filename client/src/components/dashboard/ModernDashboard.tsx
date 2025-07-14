@@ -96,12 +96,6 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
     
     // Calculate special assistance from real data
     const specialAssistCurrentYear = specialAssist1DataByYear[currentYear] || { items: [] };
-    console.log('Dashboard specialAssist1DataByYear ALL KEYS:', Object.keys(specialAssist1DataByYear));
-    console.log('Dashboard specialAssist1DataByYear:', JSON.stringify(specialAssist1DataByYear, null, 2));
-    console.log('Dashboard specialAssistCurrentYear:', JSON.stringify(specialAssistCurrentYear, null, 2));
-    console.log('Dashboard currentYear:', currentYear);
-    console.log('Dashboard specialAssistCurrentYear.items:', specialAssistCurrentYear.items);
-    console.log('Dashboard specialAssistCurrentYear.items.length:', specialAssistCurrentYear.items?.length);
     
     const specialAssistTotal = (specialAssistCurrentYear.items || []).reduce((sum, item) => {
       const timesPerYear = Number(item.timesPerYear) || 0;
@@ -109,11 +103,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
       const people = Number(item.people) || 0;
       const rate = Number(item.rate) || 0;
       const itemTotal = timesPerYear * days * people * rate;
-      console.log('Dashboard special assist item:', { item, timesPerYear, days, people, rate, itemTotal });
       return sum + (isNaN(itemTotal) ? 0 : itemTotal);
     }, 0);
-    
-    console.log('Dashboard specialAssistTotal:', specialAssistTotal);
     
     // Calculate family visit - only eligible employees (status = มีสิทธิ์)
     const familyVisitEligible = employees.filter(emp => emp.status === 'มีสิทธิ์');

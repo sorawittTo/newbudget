@@ -237,9 +237,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
   );
 
   const renderSpecialTab = () => {
-    console.log('renderSpecialTab - specialAssist1Data:', specialAssist1Data);
-    console.log('renderSpecialTab - specialAssist1Data.items:', specialAssist1Data.items);
-    
     return (
       <div className="space-y-6">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-[20px_20px_40px_#d1d5db,-20px_-20px_40px_#ffffff] border border-slate-200/50">
@@ -257,7 +254,6 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
                           const days = Number(item.days) || 0;
                           const people = Number(item.people) || 0;
                           const rate = Number(item.rate) || 0;
-                          console.log('Special assist calculation:', { item, timesPerYear, days, people, rate, total: timesPerYear * days * people * rate });
                           return sum + (timesPerYear * days * people * rate);
                         }, 0)
                       )}

@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useBudgetData } from './hooks/useBudgetData';
 import { AppLayout } from './components/layout/AppLayout';
 import { ModernDashboard } from './components/dashboard/ModernDashboard';
@@ -33,7 +32,6 @@ function App() {
     addEmployee,
     deleteEmployee,
     updateMasterRate,
-    setEmployees,
     getSpecialAssist1DataForYear,
     getOvertimeDataForYear,
     updateSpecialAssist1Item,
@@ -47,7 +45,6 @@ function App() {
     setSelectedCompanyTripEmployees,
     setSelectedManagerRotationEmployees,
     saveAllData,
-    resetAllData
   } = useBudgetData();
 
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -81,8 +78,6 @@ function App() {
       console.error('Save error:', error);
     }
   }, [saveAllData, showToast]);
-
-
 
   const handleExportEmployees = useCallback(() => {
     try {
@@ -228,8 +223,6 @@ function App() {
 
 
       default:
-        console.log('App.tsx - Passing specialAssist1DataByYear to Dashboard:', JSON.stringify(specialAssist1DataByYear, null, 2));
-        console.log('App.tsx - calcYear:', calcYear);
         return (
           <ModernDashboard
             employees={employees}
