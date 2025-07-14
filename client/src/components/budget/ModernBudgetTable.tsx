@@ -93,38 +93,123 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     return filtered;
   }, [budgetItems, searchTerm, filterType]);
 
-  // Create grouped items for display with proper ordering
-  const groupedItems = useMemo(() => {
-    const groups = new Map<string, BudgetItem[]>();
+  // Create organized items for display with proper category structure
+  const organizedItems = useMemo(() => {
+    const organized: BudgetItem[] = [];
     
-    // Group items by name and code
+    // Define the category structure and item mappings in proper order
+    const categoryStructure = [
+      {
+        name: 'รวมงบประมาณรายจ่ายดำเนินงาน',
+        type: 'main_header',
+        items: []
+      },
+      {
+        name: 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน',
+        type: 'header',
+        items: ['ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร']
+      },
+      {
+        name: 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป',
+        type: 'header',
+        items: [
+          'ค่าไฟฟ้า', 'ค่าน้ำประปา', 'ค่าโทรศัพท์', 'ค่าวัสดุทั่วไป', 'ค่าวัสดุงานธนบัตร',
+          'ค่าน้ำมันเชื้อเพลิง', 'ค่าจ้าง', 'ค่าไปรษณียากรและพัสดุไปรษณีย์', 'ค่าขนส่ง',
+          'ค่าจ้างแรงงานและทำของ', 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก',
+          'ค่าซ่อมแซมและบำรุงรักษา', 'ค่าตอบแทน', 'ค่าเช่า', 'ค่าเช่าเครื่องถ่ายเอกสาร',
+          'ค่าเช่ายานพาหนะ', 'ค่าธรรมเนียม', 'ค่ารับรอง', 'ค่าใช้จ่ายในการเดินทาง',
+          'ค่าทรัพยากรสาสนเทศห้องสมุด', 'ค่าจัดประชุม/ชี้แจง', 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ',
+          'ค่าใช้จ่ายเบ็ดเตล็ด'
+        ]
+      },
+      {
+        name: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค',
+        type: 'header',
+        items: ['เงินบริจาค']
+      },
+      {
+        name: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต',
+        type: 'header',
+        items: ['ค่าวัสดุผลิต - ทั่วไป']
+      },
+      {
+        name: 'รวมงบประมาณรายจ่ายสินทรัพย์',
+        type: 'main_header',
+        items: []
+      },
+      {
+        name: 'หมวด 7 : สินทรัพย์ถาวร',
+        type: 'header',
+        items: [
+          'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', 'ครุภัณฑ์เบ็ดเตล็ด', 'ครุภัณฑ์ยานพาหนะและขนส่ง',
+          'ค่าเสริมสร้างปรับปรุงอาคารสถานที่'
+        ]
+      }
+    ];
+    
+    // Group items by name+code
+    const itemGroups = new Map<string, BudgetItem[]>();
     filteredItems.forEach(item => {
       const key = `${item.name}-${item.code || ''}`;
-      if (!groups.has(key)) {
-        groups.set(key, []);
+      if (!itemGroups.has(key)) {
+        itemGroups.set(key, []);
       }
-      groups.get(key)!.push(item);
+      itemGroups.get(key)!.push(item);
     });
     
-    // Sort groups by category priority
-    const sortedGroups = Array.from(groups.values())
-      .filter(group => group.length >= 2) // Only show groups with both years
-      .sort((a, b) => {
-        const aItem = a[0];
-        const bItem = b[0];
+    // Process each category in order
+    categoryStructure.forEach(category => {
+      const categoryKey = `${category.name}-`;
+      const categoryGroup = itemGroups.get(categoryKey);
+      
+      if (categoryGroup && categoryGroup.length >= 2) {
+        // Add category header
+        organized.push(...categoryGroup);
         
-        // Sort by type first (main_header, header, regular items)
-        if (aItem.type === 'main_header' && bItem.type !== 'main_header') return -1;
-        if (bItem.type === 'main_header' && aItem.type !== 'main_header') return 1;
-        if (aItem.type === 'header' && bItem.type === null) return -1;
-        if (bItem.type === 'header' && aItem.type === null) return 1;
-        
-        // Then sort by name
-        return aItem.name.localeCompare(bItem.name, 'th');
-      });
+        // Add items under this category
+        category.items.forEach(itemName => {
+          const itemKey = `${itemName}-`;
+          const itemGroup = itemGroups.get(itemKey);
+          if (itemGroup && itemGroup.length >= 2) {
+            organized.push(...itemGroup);
+          }
+          
+          // Also check for items with codes
+          Array.from(itemGroups.entries())
+            .filter(([key, group]) => {
+              return key.startsWith(itemName + '-') && 
+                     key !== itemKey && 
+                     group.length >= 2 &&
+                     group[0].type === null;
+            })
+            .sort(([, a], [, b]) => a[0].name.localeCompare(b[0].name, 'th'))
+            .forEach(([, group]) => {
+              organized.push(...group);
+            });
+        });
+      }
+    });
     
-    return sortedGroups;
+    return organized;
   }, [filteredItems]);
+  
+  // Create grouped items for display
+  const groupedItems = useMemo(() => {
+    const groups: BudgetItem[][] = [];
+    
+    for (let i = 0; i < organizedItems.length; i += 2) {
+      const year1Item = organizedItems[i];
+      const year2Item = organizedItems[i + 1];
+      
+      if (year1Item && year2Item && 
+          year1Item.name === year2Item.name && 
+          year1Item.code === year2Item.code) {
+        groups.push([year1Item, year2Item]);
+      }
+    }
+    
+    return groups;
+  }, [organizedItems]);
 
   const handleAmountChange = (id: number, amount: number) => {
     setBudgetItems(prev => 
