@@ -274,16 +274,26 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
   // Helper function to calculate summary total
   const calculateSummaryTotal = (summaryName: string, year: number): number => {
     const subItems = summaryItems[summaryName as keyof typeof summaryItems];
-    if (!subItems) return 0;
+    if (!subItems) {
+      console.log(`No sub-items found for ${summaryName}`);
+      return 0;
+    }
+    
+    console.log(`Calculating ${summaryName} for year ${year}:`, subItems);
     
     const total = subItems.reduce((total, subItemName) => {
       const subItemGroups = budgetItems.filter(item => 
         item.name === subItemName && item.year === year && !item.type
       );
-      const subTotal = subItemGroups.reduce((sum, item) => sum + item.amount, 0);
+      const subTotal = subItemGroups.reduce((sum, item) => {
+        console.log(`  Item: ${item.name}, Amount: ${item.amount}`);
+        return sum + (item.amount || 0);
+      }, 0);
+      console.log(`  Subtotal for ${subItemName}: ${subTotal}`);
       return total + subTotal;
     }, 0);
     
+    console.log(`Total for ${summaryName} (${year}): ${total}`);
     return total;
   };
 
@@ -325,7 +335,9 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     const year1Amount = isSummary ? calculateSummaryTotal(year1Item.name, year1Item.year) : year1Item.amount;
     const year2Amount = isSummary ? calculateSummaryTotal(year2Item.name, year2Item.year) : year2Item.amount;
     
-    const { diff, percentage } = calculateDifference(year1Amount, year2Amount);
+    const safeYear1Amount = isNaN(year1Amount) ? 0 : year1Amount;
+    const safeYear2Amount = isNaN(year2Amount) ? 0 : year2Amount;
+    const { diff, percentage } = calculateDifference(safeYear1Amount, safeYear2Amount);
     
     const getRowStyle = () => {
       if (year1Item.type === 'main_header') {
@@ -375,7 +387,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
-                {year1Item.type ? '-' : formatCurrency(isSummary ? year1Amount : year1Item.amount)}
+                {year1Item.type ? '-' : formatCurrency(isSummary ? (isNaN(year1Amount) ? 0 : year1Amount) : year1Item.amount)}
                 {isSummary && (
                   <div className="text-xs text-yellow-600 mt-1">
                     ผลรวม {summaryItems[year1Item.name as keyof typeof summaryItems].length} รายการ
@@ -402,7 +414,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
-                {year2Item.type ? '-' : formatCurrency(isSummary ? year2Amount : year2Item.amount)}
+                {year2Item.type ? '-' : formatCurrency(isSummary ? (isNaN(year2Amount) ? 0 : year2Amount) : year2Item.amount)}
                 {isSummary && (
                   <div className="text-xs text-yellow-600 mt-1">
                     ผลรวม {summaryItems[year2Item.name as keyof typeof summaryItems].length} รายการ
