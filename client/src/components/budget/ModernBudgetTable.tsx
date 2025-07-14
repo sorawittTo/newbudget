@@ -276,12 +276,17 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     const subItems = summaryItems[summaryName as keyof typeof summaryItems];
     if (!subItems) return 0;
     
-    return subItems.reduce((total, subItemName) => {
+    const total = subItems.reduce((total, subItemName) => {
       const subItemGroups = budgetItems.filter(item => 
         item.name === subItemName && item.year === year
       );
-      return total + subItemGroups.reduce((sum, item) => sum + item.amount, 0);
+      const subTotal = subItemGroups.reduce((sum, item) => sum + item.amount, 0);
+      console.log(`${summaryName} - ${subItemName} (${year}): ${subTotal}`);
+      return total + subTotal;
     }, 0);
+    
+    console.log(`${summaryName} total for ${year}: ${total}`);
+    return total;
   };
 
   const calculateCategoryTotals = (type: string) => {
