@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
-import './SaveButton.css';
+import { NeumorphismIconButton } from './NeumorphismIconButton';
 
 interface SaveButtonProps {
   onClick: () => void;
@@ -15,22 +15,15 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
   disabled = false,
   className = ''
 }) => {
-  const sizeClasses = {
-    sm: 'save-button-sm',
-    md: 'save-button-md',
-    lg: 'save-button-lg'
-  };
-
   return (
-    <button
-      className={`save-button ${sizeClasses[size]} ${disabled ? 'disabled' : ''} ${className}`}
+    <NeumorphismIconButton
+      icon={Check}
+      label="บันทึก"
       onClick={onClick}
+      variant="success"
+      size={size}
       disabled={disabled}
-      title="บันทึก"
-    >
-      <div className="save-button-content">
-        <Check className="save-button-icon" />
-      </div>
-    </button>
+      className={className}
+    />
   );
 };

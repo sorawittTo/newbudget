@@ -31,38 +31,51 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const getNeumorphismStyle = () => {
+  const getAdvancedNeumorphismStyle = () => {
     if (disabled || loading) {
       return {
-        boxShadow: 'inset 3px 3px 6px #d1d5db, inset -3px -3px 6px #ffffff',
-        backgroundColor: '#f3f4f6'
+        background: '#e5e7eb',
+        boxShadow: 'inset 8px 8px 16px rgba(0, 0, 0, 0.15), inset -8px -8px 16px rgba(255, 255, 255, 0.8)',
+        color: '#9ca3af',
+        cursor: 'not-allowed',
+        filter: 'grayscale(0.5)'
       };
     }
     
+    const baseStyle = {
+      background: '#c9d5e0',
+      borderRadius: '20px',
+      border: 'none',
+      position: 'relative',
+      transformStyle: 'preserve-3d',
+      transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+      overflow: 'hidden',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      fontWeight: '500',
+      boxShadow: '20px 20px 40px -5px rgba(0, 0, 0, 0.2), inset 15px 15px 20px rgba(255, 255, 255, 0.8), -15px -15px 30px rgba(255, 255, 255, 0.6), inset -3px -3px 15px rgba(0, 0, 0, 0.25)',
+      filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1))'
+    };
+
     switch (variant) {
       case 'primary':
         return {
-          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-          backgroundColor: '#3b82f6',
-          color: '#ffffff'
+          ...baseStyle,
+          color: '#1e40af'
         };
       case 'success':
         return {
-          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-          backgroundColor: '#10b981',
-          color: '#ffffff'
+          ...baseStyle,
+          color: '#059669'
         };
       case 'danger':
         return {
-          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-          backgroundColor: '#ef4444',
-          color: '#ffffff'
+          ...baseStyle,
+          color: '#dc2626'
         };
       default:
         return {
-          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
-          backgroundColor: '#f9fafb',
-          color: '#374151'
+          ...baseStyle,
+          color: '#6b7280'
         };
     }
   };
@@ -70,21 +83,25 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <motion.button
       whileHover={{ 
-        scale: disabled || loading ? 1 : 1.02,
+        scale: disabled || loading ? 1 : 1.05,
         boxShadow: disabled || loading ? 
-          'inset 3px 3px 6px #d1d5db, inset -3px -3px 6px #ffffff' :
-          '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff'
+          'inset 8px 8px 16px rgba(0, 0, 0, 0.15), inset -8px -8px 16px rgba(255, 255, 255, 0.8)' :
+          '25px 25px 50px -5px rgba(0, 0, 0, 0.25), inset 20px 20px 25px rgba(255, 255, 255, 0.9), -20px -20px 40px rgba(255, 255, 255, 0.7), inset -5px -5px 20px rgba(0, 0, 0, 0.3)',
+        filter: disabled || loading ? 'grayscale(0.5)' : 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15))',
+        y: disabled || loading ? 0 : -5
       }}
       whileTap={{ 
         scale: disabled || loading ? 1 : 0.98,
-        boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
+        boxShadow: 'inset 15px 15px 30px -5px rgba(0, 0, 0, 0.3), inset 10px 10px 15px rgba(255, 255, 255, 0.75), -10px -10px 20px rgba(255, 255, 255, 0.55), inset -2px -2px 10px rgba(0, 0, 0, 0.4)',
+        filter: 'drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2))',
+        y: disabled || loading ? 0 : -2
       }}
       className={clsx(
-        'inline-flex items-center justify-center font-medium rounded-2xl border-0 transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center font-medium border-0 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
         sizeVariants[size],
         className
       )}
-      style={getNeumorphismStyle()}
+      style={getAdvancedNeumorphismStyle()}
       disabled={disabled || loading}
       {...props}
     >

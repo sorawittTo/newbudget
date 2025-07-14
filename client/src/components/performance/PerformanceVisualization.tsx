@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { NeumorphismIconButton } from '../ui/NeumorphismIconButton';
 import { PerformanceCard } from './PerformanceCard';
 import { PerformanceRadarChart } from './PerformanceRadarChart';
 import { 
@@ -360,7 +361,7 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
       <Card className="p-4">
         <div className="flex flex-wrap gap-2">
           <Button
-            variant={activeView === 'overview' ? 'default' : 'outline'}
+            variant={activeView === 'overview' ? 'primary' : 'secondary'}
             onClick={() => setActiveView('overview')}
             className="flex items-center gap-2"
           >
@@ -368,7 +369,7 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
             Overview
           </Button>
           <Button
-            variant={activeView === 'individual' ? 'default' : 'outline'}
+            variant={activeView === 'individual' ? 'primary' : 'secondary'}
             onClick={() => setActiveView('individual')}
             className="flex items-center gap-2"
           >
@@ -376,7 +377,7 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
             Individual
           </Button>
           <Button
-            variant={activeView === 'team' ? 'default' : 'outline'}
+            variant={activeView === 'team' ? 'primary' : 'secondary'}
             onClick={() => setActiveView('team')}
             className="flex items-center gap-2"
           >
@@ -384,7 +385,7 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
             Team
           </Button>
           <Button
-            variant={activeView === 'achievements' ? 'default' : 'outline'}
+            variant={activeView === 'achievements' ? 'primary' : 'secondary'}
             onClick={() => setActiveView('achievements')}
             className="flex items-center gap-2"
           >
@@ -402,7 +403,7 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
             {performanceData.map((employee) => (
               <Button
                 key={employee.id}
-                variant={selectedEmployee === employee.id ? 'default' : 'outline'}
+                variant={selectedEmployee === employee.id ? 'primary' : 'secondary'}
                 onClick={() => setSelectedEmployee(employee.id)}
                 className="justify-start"
               >
@@ -433,22 +434,36 @@ export const PerformanceVisualization: React.FC<PerformanceVisualizationProps> =
       <Card className="p-4">
         <div className="flex justify-between items-center">
           <div className="flex gap-2">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Set Goals
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              View Trends
-            </Button>
+            <NeumorphismIconButton
+              icon={Target}
+              label="Set Goals"
+              onClick={() => {}}
+              variant="secondary"
+              size="md"
+            />
+            <NeumorphismIconButton
+              icon={TrendingUp}
+              label="View Trends"
+              onClick={() => {}}
+              variant="secondary"
+              size="md"
+            />
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              Export Report
-            </Button>
-            <Button onClick={onSave}>
-              Save
-            </Button>
+            <NeumorphismIconButton
+              icon={Activity}
+              label="Export Report"
+              onClick={() => {}}
+              variant="secondary"
+              size="md"
+            />
+            <NeumorphismIconButton
+              icon={Trophy}
+              label="Save"
+              onClick={onSave}
+              variant="success"
+              size="md"
+            />
           </div>
         </div>
       </Card>

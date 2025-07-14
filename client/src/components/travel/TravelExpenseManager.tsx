@@ -236,28 +236,26 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
           <div className="flex items-center gap-4">
             {/* Year Selection */}
             <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/80" style={{ boxShadow: 'inset 8px 8px 16px #d1d5db, inset -8px -8px 16px #ffffff' }}>
-              <Button
-                variant="outline"
-                size="sm"
+              <NeumorphismIconButton
+                icon={ChevronLeft}
+                label="ปีก่อนหน้า"
                 onClick={() => onYearChange(calcYear - 1)}
-                className="neumorphism-button w-10 h-10 p-0"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
+                variant="secondary"
+                size="sm"
+              />
               
               <div className="text-center px-4">
                 <div className="text-sm text-slate-500">คำนวณสำหรับปี</div>
                 <div className="font-bold text-lg text-slate-800">{calcYear}</div>
               </div>
               
-              <Button
-                variant="outline"
-                size="sm"
+              <NeumorphismIconButton
+                icon={ChevronRight}
+                label="ปีถัดไป"
                 onClick={() => onYearChange(calcYear + 1)}
-                className="neumorphism-button w-10 h-10 p-0"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
+                variant="secondary"
+                size="sm"
+              />
             </div>
             
             <div className="flex items-center gap-3">
