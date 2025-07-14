@@ -8,8 +8,10 @@ app.use(express.urlencoded({ extended: false }));
 
 // Add security headers and cache control
 app.use((req, res, next) => {
-  // Security headers
+  // Security headers - apply to all responses
   res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('X-XSS-Protection', '1; mode=block');
   res.removeHeader('X-Powered-By');
   
   // Don't cache API responses

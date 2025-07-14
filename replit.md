@@ -121,7 +121,7 @@ Changelog:
   * Fixed form element accessibility: Added proper id, name, and aria-label attributes to budget search and filter controls
   * Fixed viewport meta tag by removing prohibited maximum-scale directive
   * Added proper webkit-text-size-adjust support with fallback to text-size-adjust in correct order
-  * Enhanced server security headers: X-Content-Type-Options, removed X-Powered-By header
+  * Enhanced server security headers: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, removed X-Powered-By header
   * Fixed content-type headers for proper UTF-8 charset and MIME types for JS/CSS/ICO files
   * Updated cache control headers to remove deprecated Pragma and Expires headers, replaced no-store with no-cache
   * Enhanced NeumorphismInput component to auto-generate unique IDs and names for accessibility
