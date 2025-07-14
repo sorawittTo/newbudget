@@ -93,19 +93,94 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     return filtered;
   }, [budgetItems, searchTerm, filterType]);
 
-  // Group items by name for comparison
-  const groupedItems = useMemo(() => {
-    const groups = new Map<string, BudgetItem[]>();
+  // Organize items by category structure
+  const organizedDisplayItems = useMemo(() => {
+    const organized: BudgetItem[] = [];
     
+    // Define the proper order of categories and their items
+    const categoryStructure = [
+      {
+        header: 'รวมงบประมาณรายจ่ายดำเนินงาน',
+        isMainHeader: true,
+        items: []
+      },
+      {
+        header: 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน',
+        isMainHeader: false,
+        items: ['ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร']
+      },
+      {
+        header: 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป',
+        isMainHeader: false,
+        items: [
+          'ค่าไฟฟ้า', 'ค่าน้ำประปา', 'ค่าโทรศัพท์', 'ค่าวัสดุทั่วไป', 'ค่าวัสดุงานธนบัตร',
+          'ค่าน้ำมันเชื้อเพลิง', 'ค่าจ้าง', 'ค่าไปรษณียากรและพัสดุไปรษณีย์', 'ค่าขนส่ง',
+          'ค่าจ้างแรงงานและทำของ', 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก',
+          'ค่าซ่อมแซมและบำรุงรักษา', 'ค่าตอบแทน', 'ค่าเช่า', 'ค่าเช่าเครื่องถ่ายเอกสาร',
+          'ค่าเช่ายานพาหนะ', 'ค่าธรรมเนียม', 'ค่ารับรอง', 'ค่าใช้จ่ายในการเดินทาง',
+          'ค่าทรัพยากรสาสนเทศห้องสมุด', 'ค่าจัดประชุม/ชี้แจง', 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ',
+          'ค่าใช้จ่ายเบ็ดเตล็ด'
+        ]
+      },
+      {
+        header: 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค',
+        isMainHeader: false,
+        items: ['เงินบริจาค']
+      },
+      {
+        header: 'หมวด 58: ค่าใช้จ่ายด้านการผลิต',
+        isMainHeader: false,
+        items: ['ค่าวัสดุผลิต - ทั่วไป']
+      },
+      {
+        header: 'รวมงบประมาณรายจ่ายสินทรัพย์',
+        isMainHeader: true,
+        items: []
+      },
+      {
+        header: 'หมวด 7 : สินทรัพย์ถาวร',
+        isMainHeader: false,
+        items: [
+          'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', 'ครุภัณฑ์เบ็ดเตล็ด', 'ครุภัณฑ์ยานพาหนะและขนส่ง',
+          'ค่าเสริมสร้างปรับปรุงอาคารสถานที่'
+        ]
+      }
+    ];
+
+    // Create a map of all items for quick lookup
+    const itemMap = new Map<string, BudgetItem>();
     filteredItems.forEach(item => {
       const key = `${item.name}-${item.code || ''}`;
-      if (!groups.has(key)) {
-        groups.set(key, []);
-      }
-      groups.get(key)!.push(item);
+      itemMap.set(key, item);
     });
-    
-    return Array.from(groups.values()).filter(group => group.length > 0);
+
+    // Build organized structure
+    categoryStructure.forEach(category => {
+      // Add category header
+      const headerKey = `${category.header}-`;
+      const headerItem = itemMap.get(headerKey);
+      if (headerItem) {
+        organized.push(headerItem);
+      }
+      
+      // Add items under this category
+      category.items.forEach(itemName => {
+        const itemKey = `${itemName}-`;
+        const item = itemMap.get(itemKey);
+        if (item) {
+          organized.push(item);
+        }
+        
+        // Also check for items with codes
+        itemMap.forEach((item, key) => {
+          if (key.startsWith(itemName + '-') && key !== itemKey) {
+            organized.push(item);
+          }
+        });
+      });
+    });
+
+    return organized;
   }, [filteredItems]);
 
   const handleAmountChange = (id: number, amount: number) => {
@@ -184,18 +259,24 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     </div>
   );
 
-  const renderBudgetItem = (group: BudgetItem[], index: number) => {
-    const year1Item = group.find(item => item.year === selectedYear1);
-    const year2Item = group.find(item => item.year === selectedYear2);
+  const renderBudgetItem = (item: BudgetItem, index: number) => {
+    const correspondingItem = organizedDisplayItems.find(i => 
+      i.name === item.name && 
+      i.code === item.code && 
+      i.year === (item.year === selectedYear1 ? selectedYear2 : selectedYear1)
+    );
     
-    if (!year1Item || !year2Item) return null;
+    if (!correspondingItem) return null;
+    
+    const year1Item = item.year === selectedYear1 ? item : correspondingItem;
+    const year2Item = item.year === selectedYear2 ? item : correspondingItem;
     
     const { diff, percentage } = calculateDifference(year1Item.amount, year2Item.amount);
     
     const getRowStyle = () => {
-      if (year1Item.type === 'main_header') {
+      if (item.type === 'main_header') {
         return 'bg-gradient-to-r from-blue-100 to-indigo-100 border-l-4 border-blue-500 font-bold text-blue-900';
-      } else if (year1Item.type === 'header') {
+      } else if (item.type === 'header') {
         return 'bg-gradient-to-r from-slate-100 to-gray-100 border-l-4 border-slate-400 font-semibold text-slate-800';
       }
       return 'bg-white hover:bg-slate-50 border-l-4 border-transparent';
@@ -203,7 +284,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
     return (
       <motion.div
-        key={`${year1Item.name}-${year1Item.code || ''}`}
+        key={`${item.name}-${item.code || ''}-${item.year}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
@@ -212,20 +293,20 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
         <div className="grid grid-cols-12 gap-4 items-center">
           {/* Item Name */}
           <div className="col-span-3">
-            <div className="font-medium">{year1Item.name}</div>
-            {year1Item.code && (
-              <div className="text-xs text-slate-500 mt-1">{year1Item.code}</div>
+            <div className="font-medium">{item.name}</div>
+            {item.code && (
+              <div className="text-xs text-slate-500 mt-1">{item.code}</div>
             )}
           </div>
           
           {/* Code */}
           <div className="col-span-1 text-sm text-slate-600">
-            {year1Item.code || '-'}
+            {item.code || '-'}
           </div>
           
           {/* Year 1 Amount */}
           <div className="col-span-2">
-            {editMode && !year1Item.type ? (
+            {editMode && !item.type ? (
               <input
                 type="text"
                 value={year1Item.amount.toLocaleString()}
@@ -240,14 +321,14 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
               />
             ) : (
               <div className="text-right font-mono">
-                {formatCurrency(year1Item.amount)}
+                {item.type ? '-' : formatCurrency(year1Item.amount)}
               </div>
             )}
           </div>
           
           {/* Year 2 Amount */}
           <div className="col-span-2">
-            {editMode && !year2Item.type ? (
+            {editMode && !item.type ? (
               <input
                 type="text"
                 value={year2Item.amount.toLocaleString()}
@@ -262,28 +343,34 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
               />
             ) : (
               <div className="text-right font-mono">
-                {formatCurrency(year2Item.amount)}
+                {item.type ? '-' : formatCurrency(year2Item.amount)}
               </div>
             )}
           </div>
           
           {/* Difference */}
           <div className="col-span-2 text-center">
-            <div className={`font-mono text-sm ${diff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {diff >= 0 ? '+' : ''}{formatCurrency(diff)}
-            </div>
-            <div className={`text-xs ${diff >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {percentage >= 0 ? '+' : ''}{percentage.toFixed(1)}%
-            </div>
+            {!item.type ? (
+              <>
+                <div className={`font-mono text-sm ${diff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {diff >= 0 ? '+' : ''}{formatCurrency(diff)}
+                </div>
+                <div className={`text-xs ${diff >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {percentage >= 0 ? '+' : ''}{percentage.toFixed(1)}%
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-slate-400">-</div>
+            )}
           </div>
           
           {/* Notes */}
           <div className="col-span-2">
-            {editMode ? (
+            {editMode && !item.type ? (
               <input
                 type="text"
-                value={year1Item.notes || ''}
-                onChange={(e) => handleNotesChange(year1Item.id!, e.target.value)}
+                value={item.notes || ''}
+                onChange={(e) => handleNotesChange(item.id!, e.target.value)}
                 placeholder="หมายเหตุ..."
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 style={{
@@ -291,7 +378,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 }}
               />
             ) : (
-              <div className="text-sm text-slate-600">{year1Item.notes || '-'}</div>
+              <div className="text-sm text-slate-600">{item.notes || '-'}</div>
             )}
           </div>
         </div>
@@ -420,7 +507,9 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
         {renderTableHeader()}
         
         <div className="max-h-96 overflow-y-auto">
-          {groupedItems.map((group, index) => renderBudgetItem(group, index))}
+          {organizedDisplayItems
+            .filter(item => item.year === selectedYear1)
+            .map((item, index) => renderBudgetItem(item, index))}
         </div>
         
         {/* Summary Footer */}

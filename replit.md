@@ -117,6 +117,17 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- January 14, 2025. Complete Budget Table System Implementation with Category Organization
+  * Implemented comprehensive budget table system with year-based comparison functionality
+  * Added budget_items table to PostgreSQL database with year and amount columns
+  * Inserted 30 budget items with real data for years 2568-2569 (Buddhist Era calendar)
+  * Added category headers: main headers (รวมงบประมาณรายจ่ายดำเนินงาน, รวมงบประมาณรายจ่ายสินทรัพย์) and sub-headers (หมวด 1-7)
+  * Created ModernBudgetTable component with advanced neumorphism 3D design consistency
+  * Organized budget items by category structure with proper hierarchical display
+  * Added budget navigation menu to main application with purple color theme
+  * Implemented search and filter functionality for budget items
+  * Added year comparison feature with percentage change calculations
+  * System now supports comprehensive budget management with category separation
 - January 14, 2025. Complete System-Wide Advanced Neumorphism 3D Button Technology Implementation
   * Updated entire system to use advanced neumorphism 3D button technology with modern UI standards
   * Enhanced Button component with sophisticated 3D styling: 20px 20px 40px shadows, transform-style preserve-3d, cubic-bezier animations
