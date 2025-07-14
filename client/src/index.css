@@ -5,8 +5,8 @@
 /* Base HTML and text sizing */
 html,
 :host {
-  text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Force remove all arrow controls from number inputs and selects */

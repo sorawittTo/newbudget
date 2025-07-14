@@ -11,19 +11,27 @@ export const NeumorphismInput: React.FC<NeumorphismInputProps> = ({
   error,
   className,
   type,
+  id,
+  name,
   ...props
 }) => {
   // Force all numeric inputs to be text type to prevent arrow controls
   const inputType = type === 'number' ? 'text' : type;
   
+  // Generate unique ID if not provided
+  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  const inputName = name || inputId;
+  
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-2">
           {label}
         </label>
       )}
       <input
+        id={inputId}
+        name={inputName}
         type={inputType}
         className={clsx(
           'w-full px-4 py-3 bg-gray-100 border-0 rounded-2xl transition-all duration-300 focus:outline-none text-gray-900 placeholder-gray-500',

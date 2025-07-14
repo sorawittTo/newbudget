@@ -371,6 +371,8 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           <div className="col-span-2">
             {editMode && !year1Item.type && !isSummary ? (
               <input
+                id={`amount-${year1Item.id}-${selectedYear1}`}
+                name={`amount-${year1Item.id}-${selectedYear1}`}
                 type="text"
                 value={year1Item.amount.toLocaleString()}
                 onChange={(e) => {
@@ -381,6 +383,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 style={{
                   boxShadow: 'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.8)'
                 }}
+                aria-label={`จำนวนเงินปี ${selectedYear1} สำหรับ ${year1Item.name}`}
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
@@ -398,6 +401,8 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           <div className="col-span-2">
             {editMode && !year2Item.type && !isSummary ? (
               <input
+                id={`amount-${year2Item.id}-${selectedYear2}`}
+                name={`amount-${year2Item.id}-${selectedYear2}`}
                 type="text"
                 value={year2Item.amount.toLocaleString()}
                 onChange={(e) => {
@@ -408,6 +413,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 style={{
                   boxShadow: 'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.8)'
                 }}
+                aria-label={`จำนวนเงินปี ${selectedYear2} สำหรับ ${year2Item.name}`}
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>

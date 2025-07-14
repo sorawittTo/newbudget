@@ -14,12 +14,12 @@ app.use((req, res, next) => {
   
   // Don't cache API responses
   if (req.path.startsWith('/api/')) {
-    res.set('Cache-Control', 'no-store, no-cache, private');
+    res.set('Cache-Control', 'no-cache, max-age=0, private');
     res.set('Content-Type', 'application/json; charset=utf-8');
   }
   // Don't cache static assets in development
   if (process.env.NODE_ENV === 'development') {
-    res.set('Cache-Control', 'no-store, no-cache, private');
+    res.set('Cache-Control', 'no-cache, max-age=0, private');
   }
   
   // Set proper content types for specific file types

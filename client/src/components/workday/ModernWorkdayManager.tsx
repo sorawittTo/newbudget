@@ -212,22 +212,28 @@ export const ModernWorkdayManager: React.FC<ModernWorkdayManagerProps> = ({
         <h3 className="text-lg font-bold text-slate-800 mb-4">เพิ่มวันหยุดใหม่</h3>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-2">วันที่</label>
+            <label htmlFor="holiday-date" className="block text-sm font-medium text-slate-700 mb-2">วันที่</label>
             <input
+              id="holiday-date"
+              name="holiday-date"
               type="date"
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700"
               value={newHoliday.date}
               onChange={(e) => setNewHoliday(prev => ({ ...prev, date: e.target.value }))}
+              aria-label="วันที่วันหยุด"
             />
           </div>
           <div className="flex-2">
-            <label className="block text-sm font-medium text-slate-700 mb-2">ชื่อวันหยุด</label>
+            <label htmlFor="holiday-name" className="block text-sm font-medium text-slate-700 mb-2">ชื่อวันหยุด</label>
             <input
+              id="holiday-name"
+              name="holiday-name"
               type="text"
               placeholder="ระบุชื่อวันหยุด"
               className="w-full p-3 bg-white/80 border-0 rounded-xl shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff] focus:outline-none focus:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition-all duration-300 text-slate-700"
               value={newHoliday.name}
               onChange={(e) => setNewHoliday(prev => ({ ...prev, name: e.target.value }))}
+              aria-label="ชื่อวันหยุด"
             />
           </div>
           <div className="flex items-end">

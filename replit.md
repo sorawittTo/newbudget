@@ -120,11 +120,14 @@ Changelog:
 - January 14, 2025. Web Standards and Accessibility Improvements
   * Fixed form element accessibility: Added proper id, name, and aria-label attributes to budget search and filter controls
   * Fixed viewport meta tag by removing prohibited maximum-scale directive
-  * Added proper webkit-text-size-adjust support with fallback to text-size-adjust
+  * Added proper webkit-text-size-adjust support with fallback to text-size-adjust in correct order
   * Enhanced server security headers: X-Content-Type-Options, removed X-Powered-By header
   * Fixed content-type headers for proper UTF-8 charset and MIME types for JS/CSS/ICO files
-  * Updated cache control headers to remove deprecated Pragma and Expires headers
-  * Improved form accessibility with screen reader support and proper labeling
+  * Updated cache control headers to remove deprecated Pragma and Expires headers, replaced no-store with no-cache
+  * Enhanced NeumorphismInput component to auto-generate unique IDs and names for accessibility
+  * Added proper form field labels and ARIA attributes to budget table amount inputs
+  * Improved holiday management form with proper accessibility attributes
+  * All form elements now comply with web accessibility standards
 - January 14, 2025. Budget Summary Calculation System Successfully Implemented
   * Fixed automatic calculation system for ค่าจ้าง and ค่าเช่า summary items
   * ค่าจ้าง = ค่าจ้างแรงงานและทำของ + ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก + ค่าไปรษณียากรและพัสดุไปรษณีย์ + ค่าขนส่ง
