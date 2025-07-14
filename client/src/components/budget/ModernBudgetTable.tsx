@@ -114,8 +114,8 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
         type: 'header',
         items: [
           'ค่าไฟฟ้า', 'ค่าน้ำประปา', 'ค่าโทรศัพท์', 'ค่าวัสดุทั่วไป', 'ค่าวัสดุงานธนบัตร',
-          'ค่าน้ำมันเชื้อเพลิง', 'ค่าจ้าง', 'ค่าไปรษณียากรและพัสดุไปรษณีย์', 'ค่าขนส่ง',
-          'ค่าจ้างแรงงานและทำของ', 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก',
+          'ค่าน้ำมันเชื้อเพลิง', 'ค่าจ้าง', 'ค่าจ้างแรงงานและทำของ', 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก',
+          'ค่าไปรษณียากรและพัสดุไปรษณีย์', 'ค่าขนส่ง',
           'ค่าซ่อมแซมและบำรุงรักษา', 'ค่าตอบแทน', 'ค่าเช่า', 'ค่าเช่าเครื่องถ่ายเอกสาร',
           'ค่าเช่ายานพาหนะ', 'ค่าธรรมเนียม', 'ค่ารับรอง', 'ค่าใช้จ่ายในการเดินทาง',
           'ค่าทรัพยากรสาสนเทศห้องสมุด', 'ค่าจัดประชุม/ชี้แจง', 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ',
@@ -260,6 +260,30 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     return { diff, percentage };
   };
 
+  // Define summary items and their sub-items
+  const summaryItems = {
+    'ค่าจ้าง': ['ค่าจ้างแรงงานและทำของ', 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก'],
+    'ค่าเช่า': ['ค่าเช่าเครื่องถ่ายเอกสาร', 'ค่าเช่ายานพาหนะ']
+  };
+
+  // Helper function to check if an item is a summary item
+  const isSummaryItem = (itemName: string): boolean => {
+    return Object.keys(summaryItems).includes(itemName);
+  };
+
+  // Helper function to calculate summary total
+  const calculateSummaryTotal = (summaryName: string, year: number): number => {
+    const subItems = summaryItems[summaryName as keyof typeof summaryItems];
+    if (!subItems) return 0;
+    
+    return subItems.reduce((total, subItemName) => {
+      const subItemGroups = budgetItems.filter(item => 
+        item.name === subItemName && item.year === year
+      );
+      return total + subItemGroups.reduce((sum, item) => sum + item.amount, 0);
+    }, 0);
+  };
+
   const calculateCategoryTotals = (type: string) => {
     let year1Total = 0;
     let year2Total = 0;
@@ -293,7 +317,12 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
     
     if (!year1Item || !year2Item) return null;
     
-    const { diff, percentage } = calculateDifference(year1Item.amount, year2Item.amount);
+    // Check if this is a summary item and calculate totals
+    const isSummary = isSummaryItem(year1Item.name);
+    const year1Amount = isSummary ? calculateSummaryTotal(year1Item.name, year1Item.year) : year1Item.amount;
+    const year2Amount = isSummary ? calculateSummaryTotal(year2Item.name, year2Item.year) : year2Item.amount;
+    
+    const { diff, percentage } = calculateDifference(year1Amount, year2Amount);
     
     const getRowStyle = () => {
       if (year1Item.type === 'main_header') {
@@ -328,7 +357,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           
           {/* Year 1 Amount */}
           <div className="col-span-2">
-            {editMode && !year1Item.type ? (
+            {editMode && !year1Item.type && !isSummary ? (
               <input
                 type="text"
                 value={year1Item.amount.toLocaleString()}
@@ -342,15 +371,20 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 }}
               />
             ) : (
-              <div className="text-right font-mono">
-                {year1Item.type ? '-' : formatCurrency(year1Item.amount)}
+              <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
+                {year1Item.type ? '-' : formatCurrency(year1Amount)}
+                {isSummary && (
+                  <div className="text-xs text-yellow-600 mt-1">
+                    ผลรวม {summaryItems[year1Item.name as keyof typeof summaryItems].length} รายการ
+                  </div>
+                )}
               </div>
             )}
           </div>
           
           {/* Year 2 Amount */}
           <div className="col-span-2">
-            {editMode && !year2Item.type ? (
+            {editMode && !year2Item.type && !isSummary ? (
               <input
                 type="text"
                 value={year2Item.amount.toLocaleString()}
@@ -364,8 +398,13 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 }}
               />
             ) : (
-              <div className="text-right font-mono">
-                {year2Item.type ? '-' : formatCurrency(year2Item.amount)}
+              <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
+                {year2Item.type ? '-' : formatCurrency(year2Amount)}
+                {isSummary && (
+                  <div className="text-xs text-yellow-600 mt-1">
+                    ผลรวม {summaryItems[year2Item.name as keyof typeof summaryItems].length} รายการ
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -388,7 +427,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           
           {/* Notes */}
           <div className="col-span-2">
-            {editMode && !year1Item.type ? (
+            {editMode && !year1Item.type && !isSummary ? (
               <input
                 type="text"
                 value={year1Item.notes || ''}
@@ -400,7 +439,9 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 }}
               />
             ) : (
-              <div className="text-sm text-slate-600">{year1Item.notes || '-'}</div>
+              <div className={`text-sm ${isSummary ? 'text-yellow-600 font-medium' : 'text-slate-600'}`}>
+                {isSummary ? 'คำนวณอัตโนมัติ' : (year1Item.notes || '-')}
+              </div>
             )}
           </div>
         </div>
