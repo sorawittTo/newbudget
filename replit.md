@@ -117,6 +117,15 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- January 14, 2025. Budget Summary Calculation System Successfully Implemented
+  * Fixed automatic calculation system for ค่าจ้าง and ค่าเช่า summary items
+  * ค่าจ้าง = ค่าจ้างแรงงานและทำของ + ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก + ค่าไปรษณียากรและพัสดุไปรษณีย์ + ค่าขนส่ง
+  * ค่าเช่า = ค่าเช่าเครื่องถ่ายเอกสาร + ค่าเช่ายานพาหนะ
+  * Summary items display calculated totals: ค่าจ้าง shows 1,180,000 (2568) and 1,245,000 (2569)
+  * Summary items display calculated totals: ค่าเช่า shows 370,000 (2568) and 385,000 (2569)
+  * Summary items are non-editable, highlighted in yellow with "คำนวณอัตโนมัติ" indicator
+  * Database stores summary items with amount 0, calculations performed client-side
+  * Resolved NaN display issues with proper float parsing and null checking
 - January 14, 2025. Complete Budget Table System Implementation with Category Organization
   * Implemented comprehensive budget table system with year-based comparison functionality
   * Added budget_items table to PostgreSQL database with year and amount columns
