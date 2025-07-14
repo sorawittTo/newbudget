@@ -117,6 +117,14 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
+- January 14, 2025. Web Standards and Accessibility Improvements
+  * Fixed form element accessibility: Added proper id, name, and aria-label attributes to budget search and filter controls
+  * Fixed viewport meta tag by removing prohibited maximum-scale directive
+  * Added proper webkit-text-size-adjust support with fallback to text-size-adjust
+  * Enhanced server security headers: X-Content-Type-Options, removed X-Powered-By header
+  * Fixed content-type headers for proper UTF-8 charset and MIME types for JS/CSS/ICO files
+  * Updated cache control headers to remove deprecated Pragma and Expires headers
+  * Improved form accessibility with screen reader support and proper labeling
 - January 14, 2025. Budget Summary Calculation System Successfully Implemented
   * Fixed automatic calculation system for ค่าจ้าง and ค่าเช่า summary items
   * ค่าจ้าง = ค่าจ้างแรงงานและทำของ + ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก + ค่าไปรษณียากรและพัสดุไปรษณีย์ + ค่าขนส่ง

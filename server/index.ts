@@ -6,20 +6,31 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Add cache control headers to prevent caching issues
+// Add security headers and cache control
 app.use((req, res, next) => {
+  // Security headers
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.removeHeader('X-Powered-By');
+  
   // Don't cache API responses
   if (req.path.startsWith('/api/')) {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+    res.set('Cache-Control', 'no-store, no-cache, private');
+    res.set('Content-Type', 'application/json; charset=utf-8');
   }
   // Don't cache static assets in development
   if (process.env.NODE_ENV === 'development') {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+    res.set('Cache-Control', 'no-store, no-cache, private');
   }
+  
+  // Set proper content types for specific file types
+  if (req.path.endsWith('.js') || req.path.endsWith('.jsx') || req.path.endsWith('.ts') || req.path.endsWith('.tsx')) {
+    res.set('Content-Type', 'application/javascript; charset=utf-8');
+  } else if (req.path.endsWith('.css')) {
+    res.set('Content-Type', 'text/css; charset=utf-8');
+  } else if (req.path.endsWith('.ico')) {
+    res.set('Content-Type', 'image/x-icon');
+  }
+  
   next();
 });
 

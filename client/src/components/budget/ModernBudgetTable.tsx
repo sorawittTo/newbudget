@@ -543,20 +543,29 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
       <Card className="p-4">
         <div className="flex flex-col lg:flex-row gap-4 items-center">
           <div className="flex-1 relative">
+            <label htmlFor="budget-search" className="sr-only">ค้นหารายการงบประมาณ</label>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
+              id="budget-search"
+              name="budget-search"
               type="text"
               placeholder="ค้นหารายการงบประมาณ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="ค้นหารายการงบประมาณ"
             />
           </div>
           
+          <label htmlFor="budget-filter" className="sr-only">กรองประเภทรายการ</label>
           <select
+            id="budget-filter"
+            name="budget-filter"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as any)}
             className="px-4 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none"
+            aria-label="กรองประเภทรายการ"
+            title="กรองประเภทรายการ"
           >
             <option value="all">ทั้งหมด</option>
             <option value="main_header">หัวข้อหลัก</option>
