@@ -160,8 +160,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               size="sm"
               onClick={toggleSidebar}
               className="p-2 hover:bg-gray-100"
-              aria-label={sidebarCollapsed ? "ขยายเมนู" : "ย่อเมนู"}
-              title={sidebarCollapsed ? "ขยายเมนู" : "ย่อเมนู"}
             >
               {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </Button>
@@ -187,8 +185,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               }}
               whileHover={{ scale: sidebarCollapsed ? 1 : 1.02 }}
               whileTap={{ scale: 0.98 }}
-              aria-label={`เปิดหน้า ${item.label}`}
-              title={`เปิดหน้า ${item.label}`}
             >
               {activeTab === item.id && (
                 <motion.div
@@ -279,8 +275,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
-                  id="header-search"
-                  name="header-search"
                   type="text"
                   placeholder="ค้นหา..."
                   value={searchQuery}
@@ -289,7 +283,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   style={{
                     boxShadow: 'inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff'
                   }}
-                  aria-label="ค้นหาข้อมูล"
                 />
               </div>
 
@@ -300,8 +293,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   size="sm"
                   onClick={onRefresh}
                   className="p-2 hover:bg-gray-100"
-                  aria-label="รีเฟรชข้อมูล"
-                  title="รีเฟรชข้อมูล"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
@@ -311,8 +302,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   size="sm"
                   onClick={toggleDarkMode}
                   className="p-2 hover:bg-gray-100"
-                  aria-label={isDarkMode ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"}
-                  title={isDarkMode ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"}
                 >
                   {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 </Button>
@@ -321,8 +310,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   variant="secondary"
                   size="sm"
                   className="p-2 hover:bg-gray-100 relative"
-                  aria-label="การแจ้งเตือน"
-                  title="การแจ้งเตือน"
                 >
                   <Bell className="w-4 h-4" />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
@@ -335,8 +322,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                     size="sm"
                     onClick={toggleUserMenu}
                     className="p-2 hover:bg-gray-100"
-                    aria-label="เมนูผู้ใช้"
-                    title="เมนูผู้ใช้"
                   >
                     <User className="w-4 h-4" />
                   </Button>
@@ -353,19 +338,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                           <p className="text-sm font-medium text-gray-900">ผู้ใช้งาน</p>
                           <p className="text-xs text-gray-500">admin@example.com</p>
                         </div>
-                        <button 
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                          aria-label="ตั้งค่า"
-                          title="ตั้งค่า"
-                        >
+                        <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
                           <Settings className="w-4 h-4" />
                           ตั้งค่า
                         </button>
-                        <button 
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                          aria-label="ออกจากระบบ"
-                          title="ออกจากระบบ"
-                        >
+                        <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
                           <LogOut className="w-4 h-4" />
                           ออกจากระบบ
                         </button>

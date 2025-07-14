@@ -371,8 +371,6 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           <div className="col-span-2">
             {editMode && !year1Item.type && !isSummary ? (
               <input
-                id={`amount-${year1Item.id}-${selectedYear1}`}
-                name={`amount-${year1Item.id}-${selectedYear1}`}
                 type="text"
                 value={year1Item.amount.toLocaleString()}
                 onChange={(e) => {
@@ -383,7 +381,6 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 style={{
                   boxShadow: 'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.8)'
                 }}
-                aria-label={`จำนวนเงินปี ${selectedYear1} สำหรับ ${year1Item.name}`}
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
@@ -401,8 +398,6 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
           <div className="col-span-2">
             {editMode && !year2Item.type && !isSummary ? (
               <input
-                id={`amount-${year2Item.id}-${selectedYear2}`}
-                name={`amount-${year2Item.id}-${selectedYear2}`}
                 type="text"
                 value={year2Item.amount.toLocaleString()}
                 onChange={(e) => {
@@ -413,7 +408,6 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
                 style={{
                   boxShadow: 'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.8)'
                 }}
-                aria-label={`จำนวนเงินปี ${selectedYear2} สำหรับ ${year2Item.name}`}
               />
             ) : (
               <div className={`text-right font-mono ${isSummary ? 'bg-yellow-50 p-2 rounded border-2 border-yellow-200' : ''}`}>
@@ -549,29 +543,20 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
       <Card className="p-4">
         <div className="flex flex-col lg:flex-row gap-4 items-center">
           <div className="flex-1 relative">
-            <label htmlFor="budget-search" className="sr-only">ค้นหารายการงบประมาณ</label>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
-              id="budget-search"
-              name="budget-search"
               type="text"
               placeholder="ค้นหารายการงบประมาณ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="ค้นหารายการงบประมาณ"
             />
           </div>
           
-          <label htmlFor="budget-filter" className="sr-only">กรองประเภทรายการ</label>
           <select
-            id="budget-filter"
-            name="budget-filter"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as any)}
             className="px-4 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none"
-            aria-label="กรองประเภทรายการ"
-            title="กรองประเภทรายการ"
           >
             <option value="all">ทั้งหมด</option>
             <option value="main_header">หัวข้อหลัก</option>

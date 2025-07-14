@@ -27,7 +27,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request, {
-      cache: 'no-cache'
+      cache: 'no-store'
     }).catch(() => {
       // Return error response if offline
       return new Response('Offline', {

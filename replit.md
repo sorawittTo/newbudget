@@ -117,24 +117,6 @@ This is a comprehensive employee management system built for organizational expe
 
 ```
 Changelog:
-- January 14, 2025. Complete Web Standards and Accessibility Compliance
-  * Fixed form element accessibility: Added proper id, name, and aria-label attributes to budget search and filter controls
-  * Fixed viewport meta tag by removing prohibited maximum-scale directive
-  * Added proper webkit-text-size-adjust support with fallback to text-size-adjust in correct order
-  * Enhanced server security headers: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, removed X-Powered-By header
-  * Fixed content-type headers for proper UTF-8 charset and MIME types for JS/CSS/ICO files
-  * Updated cache control headers to remove deprecated Pragma and Expires headers, replaced no-store with no-cache
-  * Enhanced NeumorphismInput component to auto-generate unique IDs and names for accessibility
-  * Added proper form field labels and ARIA attributes to budget table amount inputs
-  * Improved holiday management form with proper accessibility attributes
-  * Added accessibility attributes to all checkbox inputs in employee table (select all, individual selection)
-  * Enhanced ToggleSwitch component with proper name, aria-label, and title attributes
-  * Added accessibility attributes to all employee table input fields (ID, name, etc.)
-  * Enhanced AppLayout navigation and header buttons with proper aria-label and title attributes
-  * Added accessibility attributes to year navigation buttons in assistance manager
-  * Fixed service worker cache control to use no-cache instead of no-store
-  * All form elements now fully comply with WCAG accessibility standards
-  * System now passes comprehensive web standards validation
 - January 14, 2025. Budget Summary Calculation System Successfully Implemented
   * Fixed automatic calculation system for ค่าจ้าง and ค่าเช่า summary items
   * ค่าจ้าง = ค่าจ้างแรงงานและทำของ + ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก + ค่าไปรษณียากรและพัสดุไปรษณีย์ + ค่าขนส่ง
