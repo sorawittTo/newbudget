@@ -6,6 +6,7 @@ import { NeumorphismInput } from '../ui/NeumorphismInput';
 import { NeumorphismSelect } from '../ui/NeumorphismSelect';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { SaveButton } from '../ui/SaveButton';
+import { NeumorphismButton } from '../ui/NeumorphismButton';
 import { exportEmployeesToExcel, exportMasterRatesToExcel } from '../../utils/excel';
 import { 
   Plus, 
@@ -177,10 +178,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-gray-900">รายชื่อพนักงาน</h3>
               <div className="flex gap-3 items-center">
-                <Button onClick={onAddEmployee}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  เพิ่มพนักงาน
-                </Button>
+                <NeumorphismButton
+                  icon={Plus}
+                  label="เพิ่มพนักงาน"
+                  onClick={onAddEmployee}
+                  variant="success"
+                  size="sm"
+                />
                 <ToggleSwitch 
                   isActive={globalEditMode}
                   onToggle={(active) => setGlobalEditMode(active)}
@@ -188,10 +192,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   size="sm"
                 />
                 <SaveButton onClick={onSave} size="sm" />
-                <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
-                  <FileText className="w-4 h-4 mr-2" />
-                  ส่งออก Excel
-                </Button>
+                <NeumorphismButton
+                  icon={FileText}
+                  label="ส่งออก Excel"
+                  onClick={handleExportClick}
+                  variant="secondary"
+                  size="sm"
+                />
               </div>
             </div>
           </div>
@@ -218,10 +225,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       <div className="flex flex-col items-center gap-3">
                         <User className="w-12 h-12 text-gray-300" />
                         <p>ไม่มีข้อมูลพนักงาน</p>
-                        <Button onClick={onAddEmployee} size="sm">
-                          <Plus className="w-4 h-4 mr-2" />
-                          เพิ่มพนักงานคนแรก
-                        </Button>
+                        <NeumorphismButton
+                          icon={Plus}
+                          label="เพิ่มพนักงานคนแรก"
+                          onClick={onAddEmployee}
+                          variant="success"
+                          size="sm"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -377,13 +387,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         />
                       </td>
                       <td className="p-3 text-center">
-                        <Button
+                        <NeumorphismButton
+                          icon={Trash2}
+                          label="ลบพนักงาน"
+                          onClick={() => onDeleteEmployee(index)}
                           variant="danger"
                           size="sm"
-                          onClick={() => onDeleteEmployee(index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        />
                       </td>
                     </tr>
                   ))
@@ -408,10 +418,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   size="sm"
                 />
                 <SaveButton onClick={onSave} size="sm" />
-                <Button onClick={handleExportClick} variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white">
-                  <FileText className="w-4 h-4 mr-2" />
-                  ส่งออก Excel
-                </Button>
+                <NeumorphismButton
+                  icon={FileText}
+                  label="ส่งออก Excel"
+                  onClick={handleExportClick}
+                  variant="secondary"
+                  size="sm"
+                />
               </div>
             </div>
           </div>

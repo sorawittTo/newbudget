@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { SaveButton } from '../ui/SaveButton';
+import { NeumorphismButton } from '../ui/NeumorphismButton';
 import { ModernTravelCalculationTable } from '../calculations/ModernTravelCalculationTable';
 import { 
   Car, 
@@ -269,13 +270,13 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
                 onClick={onSave}
                 size="md"
               />
-              <Button 
+              <NeumorphismButton
+                icon={FileText}
+                label="ส่งออก Excel"
                 onClick={handleExport}
-                className="neumorphism-button px-6 py-3"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                ส่งออก Excel
-              </Button>
+                variant="secondary"
+                size="md"
+              />
             </div>
           </div>
         </div>
