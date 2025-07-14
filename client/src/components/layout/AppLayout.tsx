@@ -23,7 +23,8 @@ import {
   Download,
   Upload,
   Save,
-  RefreshCw
+  RefreshCw,
+  Trophy
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -87,6 +88,14 @@ const navigationItems: NavigationItem[] = [
     description: 'จัดการวันหยุด',
     color: 'text-indigo-600',
     gradient: 'from-indigo-500 to-indigo-600'
+  },
+  {
+    id: 'performance',
+    label: 'ผลงานพนักงาน',
+    icon: <Trophy className="w-5 h-5" />,
+    description: 'ระบบแสดงผลงาน',
+    color: 'text-emerald-600',
+    gradient: 'from-emerald-500 to-emerald-600'
   }
 ];
 

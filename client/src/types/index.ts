@@ -130,3 +130,65 @@ export interface TabConfig {
   label: string;
   icon: React.ReactNode;
 }
+
+// Gamified Employee Performance Interfaces
+export interface PerformanceMetrics {
+  productivity: number; // 0-100
+  collaboration: number; // 0-100
+  innovation: number; // 0-100
+  leadership: number; // 0-100
+  reliability: number; // 0-100
+  adaptability: number; // 0-100
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: 'productivity' | 'collaboration' | 'innovation' | 'leadership' | 'milestone' | 'special';
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  unlockedAt?: Date;
+  progress?: number; // 0-100 for progress-based achievements
+  target?: number; // target value for completion
+}
+
+export interface EmployeePerformance extends Employee {
+  metrics: PerformanceMetrics;
+  achievements: Achievement[];
+  totalScore: number;
+  rank: number;
+  level: number;
+  experience: number;
+  nextLevelXp: number;
+  streak: number; // consecutive performance days
+  badges: string[];
+  lastUpdated: Date;
+}
+
+export interface PerformanceComparison {
+  employeeId: string;
+  previousScore: number;
+  currentScore: number;
+  improvement: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+export interface TeamPerformance {
+  averageScore: number;
+  topPerformers: EmployeePerformance[];
+  improvementLeaders: PerformanceComparison[];
+  departmentRankings: { department: string; score: number }[];
+}
+
+export interface PerformanceGoal {
+  id: string;
+  title: string;
+  description: string;
+  target: number;
+  current: number;
+  deadline: Date;
+  category: keyof PerformanceMetrics;
+  reward: string;
+  isCompleted: boolean;
+}

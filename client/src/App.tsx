@@ -8,6 +8,7 @@ import { EmployeeManagement } from './components/employees/EmployeeManagement';
 import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { UnifiedSpecialAssistanceManager } from './components/assistance/UnifiedSpecialAssistanceManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
+import { PerformanceVisualization } from './components/performance/PerformanceVisualization';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
 import { exportEmployeesToExcel } from './utils/excel';
@@ -203,6 +204,14 @@ function App() {
             onYearChange={setCalcYear}
             onAddHoliday={addHoliday}
             onDeleteHoliday={deleteHoliday}
+            onSave={handleSave}
+          />
+        );
+
+      case 'performance':
+        return (
+          <PerformanceVisualization
+            employees={employees}
             onSave={handleSave}
           />
         );
