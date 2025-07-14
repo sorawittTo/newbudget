@@ -183,10 +183,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 </Button>
                 <ToggleSwitch 
                   isActive={globalEditMode}
-                  onToggle={(active) => {
-                    console.log('Employee management toggle changed:', active);
-                    setGlobalEditMode(active);
-                  }}
+                  onToggle={(active) => setGlobalEditMode(active)}
                   label="แก้ไข"
                   size="sm"
                 />

@@ -35,10 +35,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           id={toggleId}
           type="checkbox"
           checked={isActive}
-          onChange={(e) => {
-            console.log('Toggle switch changed:', e.target.checked);
-            onToggle(e.target.checked);
-          }}
+          onChange={(e) => onToggle(e.target.checked)}
         />
         <label className="switch" htmlFor={toggleId}>
           <div className="toggle">

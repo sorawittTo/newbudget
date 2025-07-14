@@ -6,7 +6,7 @@
 }
 
 .toggle-switch-label {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #374151;
   user-select: none;
@@ -15,24 +15,24 @@
 /* Switch Container - Default (md) */
 .switch-container {
   position: relative;
-  width: 150px;
-  height: 60px;
+  width: 100px;
+  height: 40px;
   background: #d6d6d6;
-  border-radius: 50px;
+  border-radius: 30px;
   box-shadow:
-    inset -8px -8px 16px #ffffff,
-    inset 8px 8px 16px #b0b0b0;
+    inset -6px -6px 12px #ffffff,
+    inset 6px 6px 12px #b0b0b0;
 }
 
 /* Size Variants */
 .toggle-switch-sm {
-  width: 120px;
-  height: 48px;
+  width: 80px;
+  height: 32px;
 }
 
 .toggle-switch-lg {
-  width: 180px;
-  height: 72px;
+  width: 120px;
+  height: 48px;
 }
 
 /* Hidden Checkbox */
@@ -56,89 +56,89 @@
 /* Toggle Button - Default (md) */
 .toggle {
   position: absolute;
-  width: 80px;
-  height: 50px;
+  width: 52px;
+  height: 32px;
   background: linear-gradient(145deg, #d9d9d9, #bfbfbf);
-  border-radius: 50px;
-  top: 5px;
-  left: 5px;
+  border-radius: 30px;
+  top: 4px;
+  left: 4px;
   box-shadow:
-    -4px -4px 8px #ffffff,
-    4px 4px 8px #b0b0b0;
+    -3px -3px 6px #ffffff,
+    3px 3px 6px #b0b0b0;
   transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 10px;
+  padding-left: 8px;
 }
 
 /* Size-specific toggle dimensions */
 .toggle-switch-sm .toggle {
-  width: 64px;
-  height: 38px;
-  top: 5px;
-  left: 5px;
-  padding-left: 8px;
+  width: 42px;
+  height: 24px;
+  top: 4px;
+  left: 4px;
+  padding-left: 6px;
 }
 
 .toggle-switch-lg .toggle {
-  width: 96px;
-  height: 62px;
-  top: 5px;
-  left: 5px;
-  padding-left: 12px;
+  width: 62px;
+  height: 40px;
+  top: 4px;
+  left: 4px;
+  padding-left: 10px;
 }
 
 /* LED Light - Default (md) */
 .led {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   background: grey;
   border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
 }
 
 /* Size-specific LED dimensions */
 .toggle-switch-sm .led {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 .toggle-switch-lg .led {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 /* Active State for Toggle (ON) - Default (md) */
 .toggle-checkbox:checked + .switch .toggle {
-  left: 65px;
+  left: 44px;
   background: linear-gradient(145deg, #cfcfcf, #a9a9a9);
   box-shadow:
-    -4px -4px 8px #ffffff,
-    4px 4px 8px #8a8a8a;
+    -3px -3px 6px #ffffff,
+    3px 3px 6px #8a8a8a;
 }
 
 /* Size-specific active positions */
 .toggle-switch-sm .toggle-checkbox:checked + .switch .toggle {
-  left: 51px;
+  left: 34px;
 }
 
 .toggle-switch-lg .toggle-checkbox:checked + .switch .toggle {
-  left: 79px;
+  left: 54px;
 }
 
 /* Active LED */
 .toggle-checkbox:checked + .switch .led {
   background: #fbbf24;
-  box-shadow: 0 0 15px 4px #fbbf24;
+  box-shadow: 0 0 12px 3px #fbbf24;
 }
 
 /* Hover Effect */
 .switch:hover .toggle {
   box-shadow:
-    -4px -4px 12px #ffffff,
-    4px 4px 12px #9b9b9b;
+    -3px -3px 9px #ffffff,
+    3px 3px 9px #9b9b9b;
 }
 
 /* Focus styles for accessibility */

@@ -708,10 +708,7 @@ export const UnifiedSpecialAssistanceManager: React.FC<UnifiedSpecialAssistanceM
             <div className="flex items-center gap-3">
               <ToggleSwitch
                 isActive={editMode}
-                onToggle={(active) => {
-                  console.log('Unified special assistance manager toggle changed:', active);
-                  toggleEditMode();
-                }}
+                onToggle={(active) => toggleEditMode()}
               />
               
               <button

@@ -261,10 +261,7 @@ export const TravelExpenseManager: React.FC<TravelExpenseManagerProps> = ({
             <div className="flex items-center gap-3">
               <ToggleSwitch 
                 isActive={globalEditMode}
-                onToggle={(active) => {
-                  console.log('Travel expense manager toggle changed:', active);
-                  setGlobalEditMode(active);
-                }}
+                onToggle={(active) => setGlobalEditMode(active)}
                 label="แก้ไข"
                 size="md"
               />
