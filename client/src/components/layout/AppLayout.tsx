@@ -90,6 +90,14 @@ const navigationItems: NavigationItem[] = [
     gradient: 'from-indigo-500 to-indigo-600'
   },
   {
+    id: 'budget',
+    label: 'ตารางงบประมาณ',
+    icon: <Calculator className="w-5 h-5" />,
+    description: 'เปรียบเทียบงบประมาณ',
+    color: 'text-purple-600',
+    gradient: 'from-purple-500 to-purple-600'
+  },
+  {
     id: 'performance',
     label: 'ผลงานพนักงาน',
     icon: <Trophy className="w-5 h-5" />,

@@ -53,11 +53,14 @@ export const budgetItems = pgTable("budget_items", {
   code: text("code"),
   accountCode: text("account_code"), // รหัสบัญชีสำหรับการอ้างอิง
   name: text("name").notNull(),
-  values: json("values").$type<Record<number, number>>().default({}),
+  year: integer("year").notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).default('0'),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+
 
 export const specialAssistItems = pgTable("special_assist_items", {
   id: serial("id").primaryKey(),

@@ -9,6 +9,7 @@ import { TravelExpenseManager } from './components/travel/TravelExpenseManager';
 import { UnifiedSpecialAssistanceManager } from './components/assistance/UnifiedSpecialAssistanceManager';
 import { ModernWorkdayManager } from './components/workday/ModernWorkdayManager';
 import { PerformanceVisualization } from './components/performance/PerformanceVisualization';
+import { ModernBudgetTable } from './components/budget/ModernBudgetTable';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Toast } from './components/ui/Toast';
 import { exportEmployeesToExcel } from './utils/excel';
@@ -205,6 +206,14 @@ function App() {
             onAddHoliday={addHoliday}
             onDeleteHoliday={deleteHoliday}
             onSave={handleSave}
+          />
+        );
+
+      case 'budget':
+        return (
+          <ModernBudgetTable
+            onSave={handleSave}
+            onNavigate={setActiveTab}
           />
         );
 
