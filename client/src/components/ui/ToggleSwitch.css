@@ -12,180 +12,171 @@
   user-select: none;
 }
 
-/* Switch Container - Default (md) */
-.switch-container {
+/* Main Toggle Container */
+.toggle-container {
+  --knob-size: 1.75em;
+  display: flex;
+  justify-content: center;
   position: relative;
-  width: 100px;
-  height: 40px;
-  background: #d6d6d6;
-  border-radius: 30px;
-  box-shadow:
-    inset -6px -6px 12px #ffffff,
-    inset 6px 6px 12px #b0b0b0;
+}
+
+.toggle-input {
+  position: absolute;
+  z-index: 2;
+  bottom: 132.5%;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  transform-origin: 50% 4.75em;
+  width: var(--knob-size);
+  height: var(--knob-size);
+  opacity: 0;
+  /* fix em sizing */
+  font: inherit;
+  transition: transform .24s cubic-bezier(.65, 1.35, .5, 1);
+  cursor: pointer;
+}
+
+.toggle-input:checked {
+  transform: rotate(25deg);
+}
+
+.toggle-handle-wrapper {
+  position: absolute;
+  z-index: 1;
+  bottom: -135%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62.125%, transparent 50%);
+  mask-image: linear-gradient(to bottom, #000 62.125%, transparent 50%);
+  width: 200%;
+  overflow: hidden;
+}
+
+.toggle-handle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(-25deg);
+  transform-origin: bottom center;
+  transition: transform .24s cubic-bezier(.65, 1.35, .5, 1);
+}
+
+.toggle-input:checked + .toggle-handle-wrapper > .toggle-handle {
+  transform: rotate(25deg);
+}
+
+.toggle-handle-knob {
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  width: var(--knob-size);
+  height: var(--knob-size);
+  background-image: radial-gradient(farthest-corner at 70% 30%, #fedee2 4%, #d63534 12% 24%, #a81a1a 50% 65%, #d63534 75%);
+  transition: transform .24s cubic-bezier(.65, 1.35, .5, 1);
+}
+
+.toggle-input:checked + .toggle-handle-wrapper .toggle-handle-knob {
+  transform: rotate(-90deg);
+}
+
+/* toggle handle knob hover inner shadow */
+.toggle-handle-knob::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 8px 2px rgb(255 255 255 / .4);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+@media (hover: hover) {
+  .toggle-input:hover + .toggle-handle-wrapper .toggle-handle-knob::after,
+  .toggle-input:focus-visible + .toggle-handle-wrapper .toggle-handle-knob::after {
+    opacity: 1;
+  }
+}
+
+.toggle-handle-bar-wrapper {
+  position: relative;
+  width: .5em;
+  height: 3em;
+}
+
+.toggle-handle-bar {
+  position: absolute;
+  top: calc(var(--knob-size) / 2 * -1);
+  left: 0;
+  width: 100%;
+  height: calc(100% + var(--knob-size) / 2);
+  background-image: linear-gradient(to right, #777475, #a4a4a4, #fff 45% 55%, #a4a4a4, #777475);
+  background-position-x: .06125em;
+  transition: background-position-x .24s cubic-bezier(.65, 1.35, .5, 1);
+  box-shadow: inset 0 1em .25em rgb(0 0 0 / .4);
+}
+
+.toggle-input:checked + .toggle-handle-wrapper .toggle-handle-bar {
+  background-position-x: -.06125em;
+}
+
+.toggle-base {
+  position: relative;
+  border-radius: 3.125em;
+  padding: .25em;
+  width: 3.5em;
+  height: 1.125em;
+  background-color: #fff;
+  background-image: linear-gradient(to bottom, #fff, #d7d7d7);
+  box-shadow: 0 -.25em .5em #fff, 0 .25em .5em #d7d7d7;
+}
+
+.toggle-base-inside {
+  position: relative;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom, #a6a6a6, #7d7d7d);
+  box-shadow: inset 0 .0625em rgb(255 255 255 / .2), inset 0 -.03125em rgb(255 255 255 / 1), inset 0 -.0625em .25em rgb(0 0 0 / .1);
+}
+
+/* toggle base inside active */
+.toggle-base-inside::after {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom, #5ab054, #438c3c);
+  box-shadow: inherit;
+  opacity: 0;
+  transition: opacity .24s cubic-bezier(.65, 1.35, .5, 1);
+}
+
+.toggle-input:checked ~ .toggle-base .toggle-base-inside::after {
+  opacity: 1;
 }
 
 /* Size Variants */
 .toggle-switch-sm {
-  width: 80px;
-  height: 32px;
+  --knob-size: 1.4em;
+}
+
+.toggle-switch-sm .toggle-base {
+  width: 2.8em;
+  height: 0.9em;
 }
 
 .toggle-switch-lg {
-  width: 120px;
-  height: 48px;
+  --knob-size: 2.1em;
 }
 
-/* Hidden Checkbox */
-.toggle-checkbox {
-  display: none;
+.toggle-switch-lg .toggle-base {
+  width: 4.2em;
+  height: 1.35em;
 }
 
-/* Switch Label (Interactive Area) */
-.switch {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform: translateY(-50%);
-  border-radius: 50px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-/* Toggle Button - Default (md) */
-.toggle {
-  position: absolute;
-  width: 52px;
-  height: 32px;
-  background: linear-gradient(145deg, #d9d9d9, #bfbfbf);
-  border-radius: 30px;
-  top: 4px;
-  left: 4px;
-  box-shadow:
-    -3px -3px 6px #ffffff,
-    3px 3px 6px #b0b0b0;
-  transition: all 0.3s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 8px;
-}
-
-/* Size-specific toggle dimensions */
-.toggle-switch-sm .toggle {
-  width: 42px;
-  height: 24px;
-  top: 4px;
-  left: 4px;
-  padding-left: 6px;
-}
-
-.toggle-switch-lg .toggle {
-  width: 62px;
-  height: 40px;
-  top: 4px;
-  left: 4px;
-  padding-left: 10px;
-}
-
-/* LED Light - Default (md) */
-.led {
-  width: 8px;
-  height: 8px;
-  background: grey;
-  border-radius: 50%;
-  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
-}
-
-/* Size-specific LED dimensions */
-.toggle-switch-sm .led {
-  width: 6px;
-  height: 6px;
-}
-
-.toggle-switch-lg .led {
-  width: 10px;
-  height: 10px;
-}
-
-/* Active State for Toggle (ON) - Default (md) */
-.toggle-checkbox:checked + .switch .toggle {
-  left: 44px;
-  background: linear-gradient(145deg, #cfcfcf, #a9a9a9);
-  box-shadow:
-    -3px -3px 6px #ffffff,
-    3px 3px 6px #8a8a8a;
-}
-
-/* Size-specific active positions */
-.toggle-switch-sm .toggle-checkbox:checked + .switch .toggle {
-  left: 34px;
-}
-
-.toggle-switch-lg .toggle-checkbox:checked + .switch .toggle {
-  left: 54px;
-}
-
-/* Active LED */
-.toggle-checkbox:checked + .switch .led {
-  background: #fbbf24;
-  box-shadow: 0 0 12px 3px #fbbf24;
-}
-
-/* Hover Effect */
-.switch:hover .toggle {
-  box-shadow:
-    -3px -3px 9px #ffffff,
-    3px 3px 9px #9b9b9b;
-}
-
-/* Focus styles for accessibility */
-.toggle-checkbox:focus + .switch {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-/* Disabled state */
-.toggle-checkbox:disabled + .switch {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.toggle-checkbox:disabled + .switch .toggle {
-  background: linear-gradient(145deg, #f3f4f6, #e5e7eb);
-}
-
-.toggle-checkbox:disabled + .switch .led {
-  background: #9ca3af;
-  box-shadow: none;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .toggle-switch-label {
-    color: #d1d5db;
-  }
-  
-  .switch-container {
-    background: #4b5563;
-    box-shadow:
-      inset -8px -8px 16px #6b7280,
-      inset 8px 8px 16px #374151;
-  }
-  
-  .toggle {
-    background: linear-gradient(145deg, #6b7280, #4b5563);
-    box-shadow:
-      -4px -4px 8px #6b7280,
-      4px 4px 8px #374151;
-  }
-  
-  .toggle-checkbox:checked + .switch .toggle {
-    background: linear-gradient(145deg, #5b6472, #3f4954);
-    box-shadow:
-      -4px -4px 8px #6b7280,
-      4px 4px 8px #2d3748;
-  }
+/* Medium is default - no additional styles needed */
+.toggle-switch-md {
+  --knob-size: 1.75em;
 }

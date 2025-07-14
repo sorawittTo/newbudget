@@ -29,19 +29,25 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       {label && (
         <span className="toggle-switch-label">{label}</span>
       )}
-      <div className={`switch-container ${sizeClasses[size]}`}>
+      <div className={`toggle-container ${sizeClasses[size]}`}>
         <input
-          className="toggle-checkbox"
+          className="toggle-input"
           id={toggleId}
           type="checkbox"
           checked={isActive}
           onChange={(e) => onToggle(e.target.checked)}
         />
-        <label className="switch" htmlFor={toggleId}>
-          <div className="toggle">
-            <div className="led"></div>
+        <div className="toggle-handle-wrapper">
+          <div className="toggle-handle">
+            <div className="toggle-handle-knob"></div>
+            <div className="toggle-handle-bar-wrapper">
+              <div className="toggle-handle-bar"></div>
+            </div>
           </div>
-        </label>
+        </div>
+        <div className="toggle-base">
+          <div className="toggle-base-inside"></div>
+        </div>
       </div>
     </div>
   );
