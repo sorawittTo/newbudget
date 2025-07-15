@@ -13,9 +13,12 @@ if (!DATABASE_URL || DATABASE_URL === 'your_neon_postgresql_url_here') {
   export const pool = null;
   export const db = null;
 } else {
-  export const pool = new Pool({ connectionString: DATABASE_URL });
-  export const db = drizzle({ client: pool, schema });
+  try {
+    export const pool = new Pool({ connectionString: DATABASE_URL });
+    export const db = drizzle({ client: pool, schema });
+  } catch (error) {
+    console.warn('Warning: Failed to connect to database. Using mock database connection.');
+    export const pool = null;
+    export const db = null;
+  }
 }
-
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle({ client: pool, schema });
