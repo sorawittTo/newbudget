@@ -2,6 +2,12 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
 import * as schema from "../shared/schema";
+// Mock data for when database is not available
+const mockEmployees: any[] = [];
+const mockMasterRates: any[] = [];
+const mockBudgetItems: any[] = [];
+const mockOvertimeItems: any[] = [];
+
 import type { 
   User, 
   InsertUser, 
@@ -34,25 +40,37 @@ export interface IStorage {
   deleteEmployee(id: number): Promise<void>;
   
   // Master Rates methods
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return mockEmployees;
+    }
   getMasterRates(): Promise<MasterRate[]>;
   createMasterRate(rate: InsertMasterRate): Promise<MasterRate>;
   updateMasterRate(id: number, rate: Partial<InsertMasterRate>): Promise<MasterRate>;
   
-  // Budget Items methods
+      return mockEmployees;
   getBudgetItems(): Promise<BudgetItem[]>;
   createBudgetItem(item: InsertBudgetItem): Promise<BudgetItem>;
   updateBudgetItem(id: number, item: Partial<InsertBudgetItem>): Promise<BudgetItem>;
   
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id: Date.now(), ...data };
+    }
   // Special Assist Items methods
   getSpecialAssistItems(): Promise<SpecialAssistItem[]>;
   createSpecialAssistItem(item: InsertSpecialAssistItem): Promise<SpecialAssistItem>;
   updateSpecialAssistItem(id: number, item: Partial<InsertSpecialAssistItem>): Promise<SpecialAssistItem>;
   
-  // Overtime Items methods
+      return { id: Date.now(), ...data };
   getOvertimeItems(): Promise<OvertimeItem[]>;
   createOvertimeItem(item: InsertOvertimeItem): Promise<OvertimeItem>;
   updateOvertimeItem(id: number, item: Partial<InsertOvertimeItem>): Promise<OvertimeItem>;
 }
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id, ...data };
+    }
 
 export class DatabaseStorage implements IStorage {
   // User methods
@@ -61,39 +79,55 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+      return { id, ...data };
     const result = await db.select().from(schema.users).where(eq(schema.users.username, username));
     return result[0];
   }
 
+    if (!db) {
+      console.warn('Database not available, mock delete');
+      return;
+    }
   async createUser(insertUser: InsertUser): Promise<User> {
     const result = await db.insert(schema.users).values(insertUser).returning();
     return result[0];
   }
-
+      // Fail silently for mock
   // Employee methods
   async getEmployees(): Promise<Employee[]> {
     return await db.select().from(schema.employees);
   }
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return mockMasterRates;
+    }
 
   async getEmployee(id: number): Promise<Employee | undefined> {
     const result = await db.select().from(schema.employees).where(eq(schema.employees.id, id));
     return result[0];
-  }
+      return mockMasterRates;
 
   async createEmployee(employee: InsertEmployee): Promise<Employee> {
     const result = await db.insert(schema.employees).values(employee).returning();
     return result[0];
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id: Date.now(), ...data };
+    }
   }
 
   async updateEmployee(id: number, employee: Partial<InsertEmployee>): Promise<Employee> {
     const result = await db.update(schema.employees)
       .set({ ...employee, updatedAt: new Date() })
-      .where(eq(schema.employees.id, id))
+      return { id: Date.now(), ...data };
       .returning();
     return result[0];
   }
 
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id, ...data };
+    }
   async deleteEmployee(id: number): Promise<void> {
     await db.delete(schema.employees).where(eq(schema.employees.id, id));
   }
@@ -102,30 +136,42 @@ export class DatabaseStorage implements IStorage {
   async getMasterRates(): Promise<MasterRate[]> {
     return await db.select().from(schema.masterRates);
   }
-
+      return { id, ...data };
   async createMasterRate(rate: InsertMasterRate): Promise<MasterRate> {
     const result = await db.insert(schema.masterRates).values(rate).returning();
     return result[0];
   }
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return mockBudgetItems;
+    }
 
   async updateMasterRate(id: number, rate: Partial<InsertMasterRate>): Promise<MasterRate> {
     const result = await db.update(schema.masterRates)
       .set({ ...rate, updatedAt: new Date() })
-      .where(eq(schema.masterRates.id, id))
+      return mockBudgetItems;
       .returning();
     return result[0];
   }
 
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id: Date.now(), ...data };
+    }
   // Budget Items methods
   async getBudgetItems(): Promise<BudgetItem[]> {
     return await db.select().from(schema.budgetItems);
   }
 
-  async createBudgetItem(item: InsertBudgetItem): Promise<BudgetItem> {
+      return { id: Date.now(), ...data };
     const result = await db.insert(schema.budgetItems).values(item).returning();
     return result[0];
   }
 
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id, ...data };
+    }
   async updateBudgetItem(id: number, item: Partial<InsertBudgetItem>): Promise<BudgetItem> {
     const result = await db.update(schema.budgetItems)
       .set({ ...item, updatedAt: new Date() })
@@ -134,30 +180,42 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
   
-  // Special Assist Items methods
+      return { id, ...data };
   async getSpecialAssistItems(): Promise<SpecialAssistItem[]> {
     return await db.select().from(schema.specialAssistItems);
   }
 
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return mockOvertimeItems;
+    }
   async createSpecialAssistItem(item: InsertSpecialAssistItem): Promise<SpecialAssistItem> {
     const result = await db.insert(schema.specialAssistItems).values(item).returning();
     return result[0];
   }
-
+      return mockOvertimeItems;
   async updateSpecialAssistItem(id: number, item: Partial<InsertSpecialAssistItem>): Promise<SpecialAssistItem> {
     const result = await db.update(schema.specialAssistItems)
       .set({ ...item, updatedAt: new Date() })
       .where(eq(schema.specialAssistItems.id, id))
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id: Date.now(), ...data };
+    }
       .returning();
     return result[0];
   }
   
   // Overtime Items methods
-  async getOvertimeItems(): Promise<OvertimeItem[]> {
+      return { id: Date.now(), ...data };
     return await db.select().from(schema.overtimeItems);
   }
 
   async createOvertimeItem(item: InsertOvertimeItem): Promise<OvertimeItem> {
+    if (!db) {
+      console.warn('Database not available, returning mock data');
+      return { id, ...data };
+    }
     const result = await db.insert(schema.overtimeItems).values(item).returning();
     return result[0];
   }
@@ -166,7 +224,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db.update(schema.overtimeItems)
       .set({ ...item, updatedAt: new Date() })
       .where(eq(schema.overtimeItems.id, id))
-      .returning();
+      return { id, ...data };
     return result[0];
   }
 }

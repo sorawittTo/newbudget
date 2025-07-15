@@ -59,10 +59,22 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
       try {
         setLoading(true);
         const response = await fetch('/api/budget-items');
-        const data = await response.json();
-        setBudgetItems(data);
+        if (response.ok) {
+          const data = await response.json();
+          // Ensure data is an array
+          if (Array.isArray(data)) {
+            setBudgetItems(data);
+          } else {
+            console.warn('Budget items response is not an array:', data);
+            setBudgetItems([]);
+          }
+        } else {
+          console.error('Failed to fetch budget items:', response.status);
+          setBudgetItems([]);
+        }
       } catch (error) {
         console.error('Error fetching budget items:', error);
+        setBudgetItems([]);
       } finally {
         setLoading(false);
       }
@@ -73,6 +85,12 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
   // Filter and search budget items
   const filteredItems = useMemo(() => {
+    // Ensure budgetItems is always an array
+    if (!Array.isArray(budgetItems)) {
+      console.warn('budgetItems is not an array:', budgetItems);
+      return [];
+    }
+    
     let filtered = budgetItems;
     
     if (searchTerm) {
@@ -95,6 +113,12 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
 
   // Create organized items for display with proper category structure
   const organizedItems = useMemo(() => {
+    // Ensure filteredItems is an array
+    if (!Array.isArray(filteredItems)) {
+      console.warn('filteredItems is not an array:', filteredItems);
+      return [];
+    }
+    
     const organized: BudgetItem[] = [];
     
     // Define the category structure and item mappings in proper order
