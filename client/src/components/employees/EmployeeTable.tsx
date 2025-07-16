@@ -382,29 +382,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => {
-                          console.log('=== DELETE BUTTON CLICKED ===');
-                          console.log('Employee full data:', emp);
-                          console.log('Employee ID:', emp.id);
-                          console.log('Database ID:', emp.dbId);
-                          console.log('Employee name:', emp.name);
-                          console.log('dbId type:', typeof emp.dbId);
-                          console.log('globalEditMode:', globalEditMode);
-                          
-                          if (!globalEditMode) {
-                            console.log('BLOCKED: Edit mode is not enabled');
-                            alert('กรุณากดปุ่ม Edit ก่อนลบพนักงาน');
-                            return;
-                          }
-                          
-                          if (typeof emp.dbId === 'number' && emp.dbId > 0) {
-                            console.log('SUCCESS: Calling onDeleteEmployee with dbId:', emp.dbId);
-                            onDeleteEmployee(emp.dbId);
-                          } else {
-                            console.error('ERROR: Invalid dbId found for employee:', emp);
-                            alert('ไม่สามารถลบพนักงานได้ เนื่องจากไม่มีข้อมูล ID ในฐานข้อมูล');
-                          }
-                        }}
+                        onClick={() => onDeleteEmployee(emp.id)}
                         disabled={!globalEditMode}
                       >
                         <Trash2 className="w-4 h-4" />

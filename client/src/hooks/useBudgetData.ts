@@ -131,7 +131,6 @@ export const useBudgetData = () => {
         if (employees.length > 0) {
           const formattedEmployees = employees.map((emp: any) => ({
             id: emp.employeeId || emp.employee_id || emp.id.toString(),
-            dbId: emp.id, // Database ID for delete operations
             name: emp.name,
             gender: emp.gender,
             startYear: emp.startYear || emp.start_year,
@@ -281,51 +280,6 @@ export const useBudgetData = () => {
       return [...validIds, ...newIds];
     });
   }, [employees]);
-
-  const loadEmployeesFromDatabase = async () => {
-    try {
-      const response = await fetch('/api/employees');
-      const employeesData = await response.json();
-      
-      // Transform employees data to match the expected format
-      const formattedEmployees = employeesData.map((emp: any) => ({
-        id: emp.employeeId || emp.id.toString(),
-        dbId: emp.id, // Database ID for delete operations
-        employeeId: emp.employeeId,
-        name: emp.name,
-        gender: emp.gender,
-        startYear: emp.startYear,
-        level: emp.level,
-        status: emp.status || 'มีสิทธิ์',
-        visitProvince: emp.visitProvince || '',
-        homeVisitBusFare: parseFloat(emp.homeVisitBusFare) || 0,
-        workingDays: emp.workingDays || 1,
-        travelWorkingDays: emp.travelWorkingDays || 1,
-        customTravelRates: emp.customTravelRates || null
-      }));
-      
-      console.log('Formatted employees with dbId:', formattedEmployees.map(emp => ({ 
-        id: emp.id, 
-        dbId: emp.dbId, 
-        name: emp.name 
-      })));
-      
-      setEmployees(formattedEmployees);
-      
-      // Update employee selections to remove deleted employees
-      const allEmployeeIds = formattedEmployees.map(emp => emp.id);
-      setSelectedTravelEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
-      setSelectedSpecialAssistEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
-      setSelectedFamilyVisitEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
-      setSelectedCompanyTripEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
-      setSelectedManagerRotationEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
-      
-      return formattedEmployees;
-    } catch (error) {
-      console.error('Error loading employees from database:', error);
-      return [];
-    }
-  };
 
   const saveAllData = async () => {
     try {
@@ -513,39 +467,21 @@ export const useBudgetData = () => {
     setEmployees(prev => [newEmployee, ...prev]);
   };
 
-  const deleteEmployee = async (dbId: number) => {
+  const deleteEmployee = async (id: number) => {
     try {
-      console.log('=== DELETE EMPLOYEE FUNCTION CALLED ===');
-      console.log('Attempting to delete employee with dbId:', dbId);
-      
-      const url = `/api/employees/${dbId}`;
-      console.log('DELETE URL:', url);
-      
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+      const response = await fetch(`/api/employees/${id}`, {
+        method: 'DELETE'
       });
       
-      console.log('DELETE response status:', response.status);
-      console.log('DELETE response ok:', response.ok);
-      
       if (response.ok) {
-        console.log('SUCCESS: Employee deleted successfully from database');
-        // Refresh data from database to ensure consistency
-        await loadEmployeesFromDatabase();
-        console.log('SUCCESS: Employee data reloaded from database');
+        // Remove from local state
+        setEmployees(prev => prev.filter(emp => emp.id !== id));
       } else {
-        console.error('ERROR: Failed to delete employee, status:', response.status);
-        const errorText = await response.text();
-        console.error('Error details:', errorText);
-        throw new Error(`Failed to delete employee: ${response.status}`);
+        throw new Error('Failed to delete employee');
       }
     } catch (error) {
-      console.error('=== DELETE EMPLOYEE ERROR ===');
       console.error('Error deleting employee:', error);
-      alert('เกิดข้อผิดพลาดในการลบพนักงาน: ' + error);
+      // Handle error appropriately
     }
   };
 
