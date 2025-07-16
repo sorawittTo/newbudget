@@ -6,13 +6,10 @@ import * as schema from "@shared/schema";
 // Configure WebSocket for Supabase compatibility
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+// Force Supabase URL - remove Neon dependency
+const SUPABASE_URL = "postgresql://postgres.pytyjeugghucgeexhatr:0927895299Sorawitt@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres";
 
-console.log('Connecting to database with URL:', process.env.DATABASE_URL?.slice(0, 50) + '...');
+console.log('🚀 Connecting to Supabase database...');
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const pool = new Pool({ connectionString: SUPABASE_URL });
 export const db = drizzle({ client: pool, schema });
