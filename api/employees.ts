@@ -95,10 +95,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('API Error:', error);
-    console.error('Error details:', error?.message || error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error details:', errorMessage);
     return res.status(500).json({ 
       error: 'Internal Server Error',
-      details: error?.message || 'Unknown error',
+      details: errorMessage,
       database: 'Supabase'
     });
   }

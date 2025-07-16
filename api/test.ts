@@ -46,10 +46,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
   } catch (error) {
     console.error('Test API Error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
     return res.status(500).json({
       error: 'Test failed',
-      details: error.message,
-      stack: error.stack,
+      details: errorMessage,
+      stack: errorStack,
       timestamp: new Date().toISOString()
     });
   }

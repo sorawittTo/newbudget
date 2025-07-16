@@ -24,6 +24,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(404).json({ error: 'Not Found' });
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: errorMessage 
+    });
   }
 }
