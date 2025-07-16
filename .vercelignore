@@ -1,47 +1,14 @@
-# Dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Development
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Build artifacts
-dist/
-build/
-out/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+node_modules
+.git
+.env
 *.log
-logs/
-
-# Runtime
-.cache/
-.temp/
-.tmp/
-
-# Database
-*.db
-*.sqlite
-
-# Backup files
+dist
+tmp
+attached_assets
+*.md
 database_backup.sql
-
-# Replit specific
-.replit
-replit.nix
-.upm/
+employees_current.json
+test-save.html
+SUPABASE_MIGRATION_COMPLETE.md
+NEON_REMOVAL_COMPLETE.md
+VERCEL_DEPLOYMENT_READY.md

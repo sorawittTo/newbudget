@@ -1,26 +1,19 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
-    "target": "ES2022",
     "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
-    "allowJs": true,
-    "checkJs": false,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "noEmit": false,
     "outDir": "dist",
-    "declaration": false,
-    "sourceMap": false,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "baseUrl": ".",
-    "types": ["node"],
-    "paths": {
-      "@shared/*": ["./shared/*"]
-    }
+    "rootDir": "."
   },
-  "include": ["api/**/*", "server/**/*", "shared/**/*"],
-  "exclude": ["node_modules", "client/**/*", "dist/**/*", "**/*.test.ts"]
+  "include": [
+    "api/**/*",
+    "shared/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "client/**/*",
+    "server/**/*",
+    "dist"
+  ]
 }
