@@ -21,6 +21,7 @@ import {
   RefreshCw,
   Download
 } from 'lucide-react';
+import { exportBudgetToExcel } from '../../utils/excel';
 import { formatCurrency } from '../../utils/calculations';
 
 interface BudgetItem {
@@ -252,14 +253,14 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
   };
 
   const handleAddItem = () => {
-    if (newItem.name) {
+    if (newItem.name && newItem.name.trim()) {
       const newId = Math.max(...budgetItems.map(item => item.id || 0)) + 1;
       
-      [selectedYear1, selectedYear2].forEach(year => {
+      [selectedYear1, selectedYear2].forEach((year, index) => {
         setBudgetItems(prev => [...prev, {
-          id: newId + year,
-          name: newItem.name!,
-          code: newItem.code,
+          id: newId + index,
+          name: newItem.name!.trim(),
+          code: newItem.code || '',
           year,
           amount: 0,
           notes: newItem.notes || ''
@@ -276,6 +277,23 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
         !(item.name === name && item.code === code)
       )
     );
+  };
+
+  const handleExport = async () => {
+    try {
+      const budgetDataForExport = budgetItems.map(item => ({
+        ...item,
+        type: item.type || null,
+        accountCode: item.accountCode || item.code || '',
+        values: {
+          [item.year]: item.amount
+        }
+      }));
+      
+      await exportBudgetToExcel(budgetDataForExport, selectedYear1, selectedYear2);
+    } catch (error) {
+      console.error('Error exporting budget data:', error);
+    }
   };
 
   const calculateDifference = (year1Amount: number, year2Amount: number) => {
@@ -554,7 +572,7 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
               <NeumorphismIconButton
                 icon={Download}
                 label="ส่งออก Excel"
-                onClick={() => {}}
+                onClick={handleExport}
                 variant="secondary"
                 size="md"
               />
@@ -598,8 +616,84 @@ export const ModernBudgetTable: React.FC<ModernBudgetTableProps> = ({
             variant="secondary"
             size="md"
           />
+          
+          {editMode && (
+            <NeumorphismIconButton
+              icon={Plus}
+              label="เพิ่มรายการ"
+              onClick={() => {
+                // Show add item form
+                setNewItem({
+                  name: 'รายการใหม่',
+                  code: '',
+                  notes: ''
+                });
+              }}
+              variant="success"
+              size="md"
+            />
+          )}
         </div>
       </Card>
+
+      {/* Add New Item Form */}
+      {editMode && newItem.name && (
+        <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+          <h3 className="text-lg font-bold text-green-800 mb-4 flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            เพิ่มรายการงบประมาณใหม่
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-green-700 mb-2">ชื่อรายการ</label>
+              <input
+                type="text"
+                value={newItem.name || ''}
+                onChange={(e) => setNewItem(prev => ({ ...prev, name: e.target.value }))}
+                className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="ชื่อรายการใหม่"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-green-700 mb-2">รหัสบัญชี</label>
+              <input
+                type="text"
+                value={newItem.code || ''}
+                onChange={(e) => setNewItem(prev => ({ ...prev, code: e.target.value }))}
+                className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="รหัสบัญชี"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-green-700 mb-2">หมายเหตุ</label>
+              <input
+                type="text"
+                value={newItem.notes || ''}
+                onChange={(e) => setNewItem(prev => ({ ...prev, notes: e.target.value }))}
+                className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="หมายเหตุ"
+              />
+            </div>
+            <div className="flex items-end gap-2">
+              <Button
+                onClick={handleAddItem}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                size="md"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                เพิ่ม
+              </Button>
+              <Button
+                onClick={() => setNewItem({})}
+                variant="secondary"
+                size="md"
+              >
+                ยกเลิก
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Budget Table */}
       <Card className="overflow-hidden">
