@@ -1,0 +1,105 @@
+-- Data Migration to Supabase
+
+-- Insert employees
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('62539086', 'พัทธดนย์ ทรัพย์ประสม', 'ชาย', 2539, '7', 'มีสิทธิ์', 'พิษณุโลก', 1200.00, 5, 1, '{"other":4500}'::jsonb);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('52531175', 'พีรนุช ธนบดีภัทร', 'หญิง', 2531, '6', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('42538092', 'สมควร กลิ่นสนธิ์', 'หญิง', 2538, '5.5', 'หมดสิทธิ์', '', 0.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('52542046', 'สรวิชญ์ ธรศุภเดชา', 'ชาย', 2542, '5.5', 'หมดสิทธิ์', '', 0.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('42538115', 'อุณารักษ์ เดสันเทียะ', 'หญิง', 2538, '5.5', 'หมดสิทธิ์', '', 0.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('82538194', 'ชัญญ์ญาจิตร์  จุลเกษม', 'หญิง', 2538, '5', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('82536096', 'นุสรา อัศวโชคชัย', 'หญิง', 2536, '5', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('22538173', 'ประภัสนันท์  เล็กตระกูลธารา', 'หญิง', 2538, '5', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('82542011', 'มลธิรา สุขสำราญ', 'หญิง', 2542, '5', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('62537025', 'วิชาญ  อุปนันท์', 'ชาย', 2537, '5', 'มีสิทธิ์', 'เชียงใหม่', 1200.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('72539071', 'สันติภาพ ทองประดี', 'ชาย', 2539, '5', 'มีสิทธิ์', 'ขอนแก่น', 600.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('52538087', 'สงวน ร้องเกาะเกิด', 'ชาย', 2538, '4.5', 'หมดสิทธิ์', '', 0.00, 1, 1, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('TEST002', 'ทดสอบ พนักงาน 2', 'หญิง', 2545, '4', 'มีสิทธิ์', 'เชียงใหม่', 1200.00, 2, 2, NULL);
+INSERT INTO employees (employee_id, name, gender, start_year, level, status, visit_province, home_visit_bus_fare, working_days, travel_working_days, custom_travel_rates) VALUES ('42540033', 'คมสันติ  นุขุนทด', 'ชาย', 2540, '3', 'หมดสิทธิ์', '', 0.00, 1, 1, NULL);
+
+-- Insert master rates
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('3', 'พนักงานปฏิบัติการ', 6500.00, 4750.00, 5000.00, 600.00, 500.00, 450.00, 1800.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('4', 'เจ้าหน้าที่', 8000.00, 5500.00, 6000.00, 600.00, 500.00, 450.00, 1800.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('5', 'เจ้าหน้าที่ชำนาญงาน', 8000.00, 5500.00, 6000.00, 600.00, 500.00, 450.00, 1800.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('6', 'ผู้บริหารทีม', 9500.00, 6250.00, 8000.00, 600.00, 500.00, 500.00, 2100.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('7', 'ผู้บริหารส่วน', 9500.00, 6250.00, 8000.00, 600.00, 500.00, 500.00, 2100.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('5.5', 'เจ้าหน้าที่ชำนาญงาน (ควบ)', 9500.00, 6250.00, 8000.00, 600.00, 500.00, 500.00, 2100.00);
+INSERT INTO master_rates (level, position, rent, monthly_assist, souvenir_allowance, travel, local, per_diem, hotel) VALUES ('4.5', 'เจ้าหน้าที่ (ควบ)', 8000.00, 5500.00, 6000.00, 600.00, 500.00, 450.00, 1800.00);
+
+-- Insert budget items
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010100', NULL, 'ค่าไปรษณียากรและพัสดุไปรษณีย์', 2568, 50000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100001', NULL, 'ค่าจ้าง', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '52021100', NULL, 'ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร', 2568, 150000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010200', NULL, 'ค่าไฟฟ้า', 2568, 500000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010300', NULL, 'ค่าน้ำประปา', 2569, 85000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010400', NULL, 'ค่าโทรศัพท์', 2568, 120000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040100', NULL, 'ค่าวัสดุทั่วไป', 2568, 300000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040200', NULL, 'ค่าวัสดุงานธนบัตร', 2568, 250000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050100', NULL, 'ค่าน้ำมันเชื้อเพลิง', 2568, 400000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010100', NULL, 'ค่าไปรษณียากรและพัสดุไปรษณีย์', 2569, 55000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100001', NULL, 'ค่าจ้าง', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '52021100', NULL, 'ค่าใช้จ่ายกิจกรรมส่งเสริมค่านิยมร่วมขององค์กร', 2569, 175000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010200', NULL, 'ค่าไฟฟ้า', 2569, 520000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010300', NULL, 'ค่าน้ำประปา', 2568, 80000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53010400', NULL, 'ค่าโทรศัพท์', 2569, 125000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040100', NULL, 'ค่าวัสดุทั่วไป', 2569, 310000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040200', NULL, 'ค่าวัสดุงานธนบัตร', 2569, 260000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050100', NULL, 'ค่าน้ำมันเชื้อเพลิง', 2569, 420000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '10', NULL, 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', 2569, 600000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050500', NULL, 'ค่าขนส่ง', 2569, 190000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('main_header', NULL, NULL, 'รวมงบประมาณรายจ่ายดำเนินงาน', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('main_header', NULL, NULL, 'รวมงบประมาณรายจ่ายดำเนินงาน', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 1 : ค่าใช้จ่ายเกี่ยวกับพนักงาน', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 2 : ค่าใช้จ่ายดำเนินงานทั่วไป', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 4 : เงินช่วยเหลือภายในนอกและเงินบริจาค', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 58: ค่าใช้จ่ายด้านการผลิต', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 58: ค่าใช้จ่ายด้านการผลิต', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('main_header', NULL, NULL, 'รวมงบประมาณรายจ่ายสินทรัพย์', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '5', NULL, 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', 2568, 1000000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '25', NULL, 'ครุภัณฑ์ยานพาหนะและขนส่ง', 2568, 800000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100400', NULL, 'ค่าจ้างแรงงานและทำของ', 2568, 350000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100400', NULL, 'ค่าจ้างแรงงานและทำของ', 2569, 370000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53103900', NULL, 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก', 2568, 600000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53103900', NULL, 'ค่าจ้างแรงงาน/ทำของ-งานตามพันธกิจหลัก', 2569, 630000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53021100', NULL, 'ค่าซ่อมแซมและบำรุงรักษา', 2568, 200000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53021100', NULL, 'ค่าซ่อมแซมและบำรุงรักษา', 2569, 210000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53060600', NULL, 'ค่าตอบแทน', 2568, 450000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53060600', NULL, 'ค่าตอบแทน', 2569, 470000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040300', NULL, 'ค่าเช่าเครื่องถ่ายเอกสาร', 2568, 120000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53040300', NULL, 'ค่าเช่าเครื่องถ่ายเอกสาร', 2569, 125000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050200', NULL, 'ค่าเช่ายานพาหนะ', 2568, 250000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050200', NULL, 'ค่าเช่ายานพาหนะ', 2569, 260000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53070400', NULL, 'ค่าธรรมเนียม', 2568, 75000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53070400', NULL, 'ค่าธรรมเนียม', 2569, 80000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100100', NULL, 'ค่ารับรอง', 2568, 100000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100100', NULL, 'ค่ารับรอง', 2569, 105000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100200', NULL, 'ค่าใช้จ่ายในการเดินทาง', 2568, 180000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100200', NULL, 'ค่าใช้จ่ายในการเดินทาง', 2569, 190000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53101000', NULL, 'ค่าทรัพยากรสาสนเทศห้องสมุด', 2568, 90000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53101000', NULL, 'ค่าทรัพยากรสาสนเทศห้องสมุด', 2569, 95000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53103600', NULL, 'ค่าจัดประชุม/ชี้แจง', 2568, 150000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53103600', NULL, 'ค่าจัดประชุม/ชี้แจง', 2569, 160000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53101500', NULL, 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', 2568, 200000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53101500', NULL, 'ค่าใช้จ่ายในการจัดงานและพิธีต่าง ๆ', 2569, 210000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53109900', NULL, 'ค่าใช้จ่ายเบ็ดเตล็ด', 2568, 100000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53109900', NULL, 'ค่าใช้จ่ายเบ็ดเตล็ด', 2569, 110000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '55080300', NULL, 'เงินบริจาค', 2568, 50000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '55080300', NULL, 'เงินบริจาค', 2569, 55000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53110700', NULL, 'ค่าวัสดุผลิต - ทั่วไป', 2568, 300000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53110700', NULL, 'ค่าวัสดุผลิต - ทั่วไป', 2569, 320000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '16', NULL, 'ครุภัณฑ์เบ็ดเตล็ด', 2568, 300000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '16', NULL, 'ครุภัณฑ์เบ็ดเตล็ด', 2569, 350000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '25', NULL, 'ครุภัณฑ์ยานพาหนะและขนส่ง', 2569, 900000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '5', NULL, 'ค่าเสริมสร้างปรับปรุงอาคารสถานที่', 2569, 1200000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53050500', NULL, 'ค่าขนส่ง', 2568, 180000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('main_header', NULL, NULL, 'รวมงบประมาณรายจ่ายสินทรัพย์', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 7 : สินทรัพย์ถาวร', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES ('header', NULL, NULL, 'หมวด 7 : สินทรัพย์ถาวร', 2569, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '10', NULL, 'ครุภัณฑ์เครื่องใช้ไฟฟ้าและประปา', 2568, 500000.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100004', NULL, 'ค่าเช่า', 2568, 0.00, '');
+INSERT INTO budget_items (type, code, account_code, name, year, amount, notes) VALUES (NULL, '53100004', NULL, 'ค่าเช่า', 2569, 0.00, '');
+
+-- Insert overtime items
+INSERT INTO overtime_items (year, item, instances, days, hours, people, rate, salary) VALUES (2569, 'ทำงานวันหยุด 1 เท่า', 1, 1, 7, 1, 714.29, 150000.00);
