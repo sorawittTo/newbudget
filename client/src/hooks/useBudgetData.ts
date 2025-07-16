@@ -467,8 +467,22 @@ export const useBudgetData = () => {
     setEmployees(prev => [newEmployee, ...prev]);
   };
 
-  const deleteEmployee = (index: number) => {
-    setEmployees(prev => prev.filter((_, i) => i !== index));
+  const deleteEmployee = async (id: number) => {
+    try {
+      const response = await fetch(`/api/employees/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        // Remove from local state
+        setEmployees(prev => prev.filter(emp => emp.id !== id));
+      } else {
+        throw new Error('Failed to delete employee');
+      }
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      // Handle error appropriately
+    }
   };
 
   const updateMasterRate = async (level: string, key: string, value: any) => {

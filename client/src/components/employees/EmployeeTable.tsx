@@ -14,7 +14,7 @@ interface EmployeeTableProps {
   selectedManagerRotationEmployees: string[];
   onUpdateEmployee: (index: number, employee: Employee) => void;
   onAddEmployee: () => void;
-  onDeleteEmployee: (index: number) => void;
+  onDeleteEmployee: (id: number) => void;
   onUpdateSelection: (type: string, employeeIds: string[]) => void;
   globalEditMode?: boolean;
 }
@@ -382,7 +382,8 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => onDeleteEmployee(index)}
+                        onClick={() => onDeleteEmployee(emp.id)}
+                        disabled={!globalEditMode}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
