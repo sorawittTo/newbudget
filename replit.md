@@ -23,10 +23,11 @@ This is a comprehensive employee management system built for organizational expe
 - **Development**: Hot module replacement with Vite integration
 
 ### Database Design
+- **Database**: Supabase (PostgreSQL) for production-ready database management
 - **ORM**: Drizzle ORM for type-safe database operations
 - **Schema**: Located in `shared/schema.ts` for type sharing between frontend and backend
 - **Migrations**: Managed through Drizzle Kit with PostgreSQL dialect
-- **Current Schema**: Basic user table with plans for budget-related tables
+- **Current Schema**: Complete database with 8 tables including users, employees, master_rates, budget_items, special_assist_items, overtime_items, holidays, assistance_data
 
 ## Key Components
 
@@ -110,7 +111,7 @@ This is a comprehensive employee management system built for organizational expe
 
 ### Environment Configuration
 - **NODE_ENV**: Controls development vs production behavior
-- **DATABASE_URL**: PostgreSQL connection string
+- **DATABASE_URL**: Supabase PostgreSQL connection string
 - **Replit Integration**: Special handling for Replit deployment environment
 
 ## Changelog
