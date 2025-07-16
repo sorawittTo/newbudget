@@ -9,6 +9,7 @@ export interface BudgetItem {
 
 export interface Employee {
   id: string;
+  dbId?: number; // Database ID for internal operations
   name: string;
   gender: 'ชาย' | 'หญิง';
   startYear: number;

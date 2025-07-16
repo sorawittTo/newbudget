@@ -382,7 +382,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => onDeleteEmployee(emp.id)}
+                        onClick={() => onDeleteEmployee(emp.dbId)}
                         disabled={!globalEditMode}
                       >
                         <Trash2 className="w-4 h-4" />

@@ -131,6 +131,7 @@ export const useBudgetData = () => {
         if (employees.length > 0) {
           const formattedEmployees = employees.map((emp: any) => ({
             id: emp.employeeId || emp.employee_id || emp.id.toString(),
+            dbId: emp.id, // Database ID for delete operations
             name: emp.name,
             gender: emp.gender,
             startYear: emp.startYear || emp.start_year,
@@ -288,7 +289,8 @@ export const useBudgetData = () => {
       
       // Transform employees data to match the expected format
       const formattedEmployees = employeesData.map((emp: any) => ({
-        id: emp.id,
+        id: emp.employeeId || emp.id.toString(),
+        dbId: emp.id, // Database ID for delete operations
         employeeId: emp.employeeId,
         name: emp.name,
         gender: emp.gender,
@@ -505,16 +507,15 @@ export const useBudgetData = () => {
     setEmployees(prev => [newEmployee, ...prev]);
   };
 
-  const deleteEmployee = async (id: number) => {
+  const deleteEmployee = async (dbId: number) => {
     try {
-      const response = await fetch(`/api/employees/${id}`, {
+      console.log('Deleting employee with dbId:', dbId);
+      const response = await fetch(`/api/employees/${dbId}`, {
         method: 'DELETE'
       });
       
       if (response.ok) {
-        // Remove from local state and refresh data from database
-        setEmployees(prev => prev.filter(emp => emp.id !== id));
-        
+        console.log('Employee deleted successfully from database');
         // Refresh data from database to ensure consistency
         await loadEmployeesFromDatabase();
       } else {
