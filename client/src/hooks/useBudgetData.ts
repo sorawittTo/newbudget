@@ -281,6 +281,44 @@ export const useBudgetData = () => {
     });
   }, [employees]);
 
+  const loadEmployeesFromDatabase = async () => {
+    try {
+      const response = await fetch('/api/employees');
+      const employeesData = await response.json();
+      
+      // Transform employees data to match the expected format
+      const formattedEmployees = employeesData.map((emp: any) => ({
+        id: emp.id,
+        employeeId: emp.employeeId,
+        name: emp.name,
+        gender: emp.gender,
+        startYear: emp.startYear,
+        level: emp.level,
+        status: emp.status || 'มีสิทธิ์',
+        visitProvince: emp.visitProvince || '',
+        homeVisitBusFare: parseFloat(emp.homeVisitBusFare) || 0,
+        workingDays: emp.workingDays || 1,
+        travelWorkingDays: emp.travelWorkingDays || 1,
+        customTravelRates: emp.customTravelRates || null
+      }));
+      
+      setEmployees(formattedEmployees);
+      
+      // Update employee selections to remove deleted employees
+      const allEmployeeIds = formattedEmployees.map(emp => emp.id);
+      setSelectedTravelEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
+      setSelectedSpecialAssistEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
+      setSelectedFamilyVisitEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
+      setSelectedCompanyTripEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
+      setSelectedManagerRotationEmployees(prev => prev.filter(id => allEmployeeIds.includes(id)));
+      
+      return formattedEmployees;
+    } catch (error) {
+      console.error('Error loading employees from database:', error);
+      return [];
+    }
+  };
+
   const saveAllData = async () => {
     try {
       console.log('Saving data to Neon PostgreSQL...');
@@ -474,8 +512,11 @@ export const useBudgetData = () => {
       });
       
       if (response.ok) {
-        // Remove from local state
+        // Remove from local state and refresh data from database
         setEmployees(prev => prev.filter(emp => emp.id !== id));
+        
+        // Refresh data from database to ensure consistency
+        await loadEmployeesFromDatabase();
       } else {
         throw new Error('Failed to delete employee');
       }
