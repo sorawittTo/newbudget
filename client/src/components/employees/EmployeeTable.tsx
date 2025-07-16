@@ -379,14 +379,51 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       />
                     </td>
                     <td className="p-3 text-center">
-                      <Button
-                        variant="danger"
-                        size="sm"
+                      <button
+                        type="button"
                         onClick={() => onDeleteEmployee(emp.id)}
                         disabled={!globalEditMode}
+                        className={`
+                          relative p-3 rounded-2xl transition-all duration-300 transform-gpu
+                          ${globalEditMode 
+                            ? 'bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:from-red-100 hover:to-red-200 hover:scale-105 active:scale-95' 
+                            : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400 cursor-not-allowed'
+                          }
+                        `}
+                        style={{
+                          boxShadow: globalEditMode 
+                            ? '20px 20px 40px rgba(220, 38, 38, 0.2), -20px -20px 40px rgba(255, 255, 255, 0.8), inset 0 0 0 rgba(220, 38, 38, 0.1)'
+                            : '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+                          transformStyle: 'preserve-3d'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (globalEditMode) {
+                            e.currentTarget.style.boxShadow = '25px 25px 50px rgba(220, 38, 38, 0.3), -25px -25px 50px rgba(255, 255, 255, 0.9), inset 2px 2px 4px rgba(220, 38, 38, 0.1)';
+                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (globalEditMode) {
+                            e.currentTarget.style.boxShadow = '20px 20px 40px rgba(220, 38, 38, 0.2), -20px -20px 40px rgba(255, 255, 255, 0.8), inset 0 0 0 rgba(220, 38, 38, 0.1)';
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                          }
+                        }}
+                        onMouseDown={(e) => {
+                          if (globalEditMode) {
+                            e.currentTarget.style.boxShadow = 'inset 10px 10px 20px rgba(220, 38, 38, 0.2), inset -10px -10px 20px rgba(255, 255, 255, 0.8)';
+                            e.currentTarget.style.transform = 'translateY(1px) scale(0.95)';
+                          }
+                        }}
+                        onMouseUp={(e) => {
+                          if (globalEditMode) {
+                            e.currentTarget.style.boxShadow = '25px 25px 50px rgba(220, 38, 38, 0.3), -25px -25px 50px rgba(255, 255, 255, 0.9), inset 2px 2px 4px rgba(220, 38, 38, 0.1)';
+                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                          }
+                        }}
+                        title="ลบพนักงาน"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <Trash2 className="w-5 h-5 transition-all duration-300" />
+                      </button>
                     </td>
                   </tr>
                 ))
