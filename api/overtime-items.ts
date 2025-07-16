@@ -1,11 +1,17 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from "drizzle-orm";
 import * as schema from "../shared/schema";
+import ws from 'ws';
 
-const sql = neon(process.env.DATABASE_URL || process.env.NEON_DATABASE_URL!);
-const db = drizzle(sql, { schema });
+// Configure WebSocket for Supabase compatibility
+neonConfig.webSocketConstructor = ws;
+
+// Force Supabase URL for Vercel
+const SUPABASE_URL = "postgresql://postgres.pytyjeugghucgeexhatr:0927895299Sorawitt@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres";
+const pool = new Pool({ connectionString: SUPABASE_URL });
+const db = drizzle({ client: pool, schema });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -19,14 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Check database URL
-    const dbUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
-    if (!dbUrl) {
-      return res.status(500).json({
-        error: 'Database URL not configured',
-        env: Object.keys(process.env).filter(key => key.includes('DATABASE') || key.includes('NEON'))
-      });
-    }
+    // Using Supabase directly
     
     switch (req.method) {
       case 'GET':
@@ -36,24 +35,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'POST':
         if (Array.isArray(req.body)) {
           // Bulk operations
-          const results = [];
-          for (const itemData of req.body) {
-            const result = await storage.createOvertimeItem(itemData);
-            results.push(result);
-          }
+          const results = await db.insert(schema.overtimeItems).values(req.body).returning();
           return res.status(201).json(results);
         } else {
           // Single item - check for upsert logic
-          const existingItems = await storage.getOvertimeItems();
+          const existingItems = await db.select().from(schema.overtimeItems);
           const existingItem = existingItems.find(item => item.year === req.body.year);
           
           if (existingItem) {
             // Update existing
-            const updated = await storage.updateOvertimeItem(existingItem.id, req.body);
+            const [updated] = await db.update(schema.overtimeItems)
+              .set(req.body)
+              .where(eq(schema.overtimeItems.id, existingItem.id))
+              .returning();
             return res.status(200).json(updated);
           } else {
             // Create new
-            const created = await storage.createOvertimeItem(req.body);
+            const [created] = await db.insert(schema.overtimeItems).values(req.body).returning();
             return res.status(201).json(created);
           }
         }
