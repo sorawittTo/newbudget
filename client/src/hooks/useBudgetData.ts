@@ -515,21 +515,37 @@ export const useBudgetData = () => {
 
   const deleteEmployee = async (dbId: number) => {
     try {
-      console.log('Deleting employee with dbId:', dbId);
-      const response = await fetch(`/api/employees/${dbId}`, {
-        method: 'DELETE'
+      console.log('=== DELETE EMPLOYEE FUNCTION CALLED ===');
+      console.log('Attempting to delete employee with dbId:', dbId);
+      
+      const url = `/api/employees/${dbId}`;
+      console.log('DELETE URL:', url);
+      
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
       
+      console.log('DELETE response status:', response.status);
+      console.log('DELETE response ok:', response.ok);
+      
       if (response.ok) {
-        console.log('Employee deleted successfully from database');
+        console.log('SUCCESS: Employee deleted successfully from database');
         // Refresh data from database to ensure consistency
         await loadEmployeesFromDatabase();
+        console.log('SUCCESS: Employee data reloaded from database');
       } else {
-        throw new Error('Failed to delete employee');
+        console.error('ERROR: Failed to delete employee, status:', response.status);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
+        throw new Error(`Failed to delete employee: ${response.status}`);
       }
     } catch (error) {
+      console.error('=== DELETE EMPLOYEE ERROR ===');
       console.error('Error deleting employee:', error);
-      // Handle error appropriately
+      alert('เกิดข้อผิดพลาดในการลบพนักงาน: ' + error);
     }
   };
 
