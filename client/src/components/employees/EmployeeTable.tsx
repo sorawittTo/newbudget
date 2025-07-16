@@ -383,12 +383,16 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                         variant="danger"
                         size="sm"
                         onClick={() => {
-                          console.log('Employee data:', emp);
-                          console.log('dbId:', emp.dbId);
-                          if (emp.dbId) {
+                          console.log('Delete clicked for employee:', emp);
+                          console.log('Employee ID:', emp.id);
+                          console.log('Database ID:', emp.dbId);
+                          console.log('Employee ID type:', typeof emp.dbId);
+                          if (typeof emp.dbId === 'number' && emp.dbId > 0) {
+                            console.log('Calling onDeleteEmployee with dbId:', emp.dbId);
                             onDeleteEmployee(emp.dbId);
                           } else {
-                            console.error('No dbId found for employee:', emp);
+                            console.error('Invalid dbId found for employee:', emp);
+                            alert('ไม่สามารถลบพนักงานได้ เนื่องจากไม่มีข้อมูล ID ในฐานข้อมูล');
                           }
                         }}
                         disabled={!globalEditMode}

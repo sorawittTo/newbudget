@@ -304,6 +304,12 @@ export const useBudgetData = () => {
         customTravelRates: emp.customTravelRates || null
       }));
       
+      console.log('Formatted employees with dbId:', formattedEmployees.map(emp => ({ 
+        id: emp.id, 
+        dbId: emp.dbId, 
+        name: emp.name 
+      })));
+      
       setEmployees(formattedEmployees);
       
       // Update employee selections to remove deleted employees
