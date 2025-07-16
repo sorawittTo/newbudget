@@ -391,9 +391,10 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         <NeumorphismIconButton
                           icon={Trash2}
                           label="ลบพนักงาน"
-                          onClick={() => onDeleteEmployee(index)}
+                          onClick={() => onDeleteEmployee(emp.id)}
                           variant="danger"
                           size="sm"
+                          disabled={!globalEditMode}
                         />
                       </td>
                     </tr>
