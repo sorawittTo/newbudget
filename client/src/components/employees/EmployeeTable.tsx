@@ -382,7 +382,15 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => onDeleteEmployee(emp.dbId)}
+                        onClick={() => {
+                          console.log('Employee data:', emp);
+                          console.log('dbId:', emp.dbId);
+                          if (emp.dbId) {
+                            onDeleteEmployee(emp.dbId);
+                          } else {
+                            console.error('No dbId found for employee:', emp);
+                          }
+                        }}
                         disabled={!globalEditMode}
                       >
                         <Trash2 className="w-4 h-4" />
